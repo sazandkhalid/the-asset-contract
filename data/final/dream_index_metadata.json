@@ -1,0 +1,104 @@
+{
+  "base_year": 2024,
+  "deflator": "CPIAUCSL (BLS CPI-U All Urban Consumers; annual mean of monthly NSA index)",
+  "dream_index_variants": {
+    "primary": {
+      "column": "dream_index",
+      "healthcare_anchor_2024_usd": 25272,
+      "healthcare_definition": "Full KFF average annual family premium (employer + employee share)",
+      "rationale": "Incidence theory: employer-paid premiums suppress wages, so the full premium is a real cost the household bears.",
+      "crossing_year": 2011
+    },
+    "lower_bound": {
+      "column": "dream_index_lower_bound",
+      "healthcare_anchor_2024_usd": 9640,
+      "healthcare_definition": "Employee premium share ($6,106) + average deductible ($3,534)",
+      "rationale": "Cash-flow conservative measure: only what the household directly pays out of pocket. Skeptic-proof lower bound.",
+      "crossing_year": 2022
+    },
+    "crossing_year_definition": "First year the index exceeds 1.0 (annual median household income)."
+  },
+  "components": {
+    "housing": {
+      "sources": [
+        "MSPUS (nominal, quarterly, 1963+)",
+        "MORTGAGE30US (rate %, weekly, 1971+)"
+      ],
+      "method": "Annual mortgage payment on real 2024 home price; 20% down, 80% financed, 30-year fixed amortization",
+      "is_proxy": false,
+      "actual_data_range": "1963-2024",
+      "extrapolated_range": "1960-1962",
+      "notes": [
+        "MSPUS held in real-2024 terms at 1963 value for 1960-1962. Spec called for Case-Shiller (CSUSHPISA) extrapolation, but CSUSHPISA does not begin until 1987.",
+        "Mortgage rate held at the 1971 annual mean for 1960-1970 (MORTGAGE30US starts 1971)."
+      ]
+    },
+    "healthcare": {
+      "primary": {
+        "anchor_2024_usd": 25272,
+        "anchor_source": "KFF 2024 Employer Health Benefits Survey, average annual total family premium",
+        "rationale": "Per economic incidence theory, employer-paid premiums are a cost the household ultimately bears (suppressed wages). Used as the primary 'cost of middle-class healthcare' figure.",
+        "method": "anchor * CPIMEDSL[y] / CPIMEDSL[2024]"
+      },
+      "lower_bound": {
+        "anchor_2024_usd": 9640,
+        "anchor_components": {
+          "employee_premium_share_2024": 6106,
+          "average_deductible_2024": 3534
+        },
+        "anchor_source": "KFF 2024 Employer Health Benefits Survey: employee premium share + average deductible",
+        "rationale": "Conservative cash-flow measure capturing only what the household directly pays. Excludes employer-paid premiums.",
+        "method": "anchor * CPIMEDSL[y] / CPIMEDSL[2024]"
+      },
+      "deflator": "CPIMEDSL (BLS Medical Care CPI)",
+      "is_proxy": true,
+      "notes": "Will be replaced with direct KFF survey microdata in a later step."
+    },
+    "education": {
+      "anchor_2024_usd": 11610,
+      "anchor_source": "NCES 2024 average tuition+fees+room+board, public 4-year, in-state",
+      "deflator": "CPIEDUSL (BLS Education CPI, 1993+); CPIAUCSL fallback for pre-1993",
+      "is_proxy": true,
+      "method": "anchor * CPIEDUSL[y] / CPIEDUSL[2024], with CPIAUCSL fallback before 1993"
+    },
+    "childcare": {
+      "anchor_2024_usd": 15000,
+      "anchor_source": "ChildCare Aware of America 2024 national median (center-based infant care)",
+      "deflator": "CUSR0000SEEB (BLS CPI Tuition, Other School Fees, and Childcare); CPIAUCSL fallback for pre-1978",
+      "is_proxy": true,
+      "deviation_from_spec": "Spec named CUSR0000SEEB03; that series ID does not exist on FRED. Substituted CUSR0000SEEB ('Tuition, Other School Fees, and Childcare'), the closest available BLS series. Bundles tuition with childcare."
+    },
+    "transportation": {
+      "anchor_2024_usd": 12182,
+      "anchor_source": "AAA 2024 Your Driving Costs, average annual new-vehicle ownership and operating cost",
+      "deflator": "CPITRNSL (BLS Transportation CPI)",
+      "method": "anchor * CPITRNSL[y] / CPITRNSL[2024]"
+    },
+    "food": {
+      "anchor_2024_usd": 9985,
+      "anchor_source": "BLS Consumer Expenditure Survey 2023 average food expenditure, inflated to 2024 with food CPI",
+      "deflator": "CPIUFDSL (BLS Food at Home CPI)",
+      "method": "anchor * CPIUFDSL[y] / CPIUFDSL[2024]"
+    }
+  },
+  "income": {
+    "primary_method": "Approach B: MEHOINUSA646N (nominal) * (CPI_2024/CPI_y) via CPIAUCSL annual means",
+    "spec_deviation": "Spec says 'Use dream_index_A as the final value', but A and B do not agree because Census's real series (MEHOINUSA672N) uses CPI-U-RS while the project's CORE mandate requires CPI-U (CPIAUCSL). Choosing B preserves internal consistency with every other component, which all use CPI-U.",
+    "approach_A_series": "MEHOINUSA672N (real, chained 2024 USD per latest Census rebase; implicit deflator = CPI-U-RS)",
+    "approach_B_series": "MEHOINUSA646N (nominal) deflated by CPIAUCSL",
+    "pre_1984_extension": "Years 1960-1983: extended using MEFAINUSA672N (median family income, chained 2024 USD) rescaled by the 1984 household/family ratio = 0.8480. Inherits Census's CPI-U-RS deflation (minor inconsistency relative to CPI-U used elsewhere).",
+    "FRED_rebase_note": "Spec described MEHOINUSA672N as 'chained 2017 dollars'; FRED has since rebased it to chained 2024 dollars (verified: 672N[2024] == 646N[2024] = 83,730). No CPI_2024/CPI_2017 rescaling applied."
+  },
+  "integrity_check": {
+    "comparison": "dream_index_A (Census's real income, CPI-U-RS basis) vs dream_index_B (CPI-U-deflated nominal)",
+    "compared_year_range": [
+      1984,
+      2024
+    ],
+    "max_pct_deviation": 11.998449861022022,
+    "worst_year": 1984,
+    "tolerance_pct": 1.0,
+    "passed": false,
+    "interpretation": "A failure here indicates Census's CPI-U-RS and our CPI-U deflators diverge for older years. This is a known, expected divergence; CPI-U-RS retroactively applies modern BLS methods to pre-1999 indexes, lowering measured inflation. Project chose CPI-U (Approach B) for cross-component consistency."
+  }
+}

@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>The Asset Contract</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7f1d657a60f4b4a99cb3f835f092a39b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-d063592200177265709054b4458d9cac.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-7f1d657a60f4b4a99cb3f835f092a39b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="styles/custom.css">
+</head>
+
+<body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = true;
+    const darkModeDefault = authorPrefersDark;
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">The Asset Contract</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">THE ASSET CONTRACT</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./#methodology"> 
+<span class="menu-text">Methodology</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 1: OPENING VIDEO — full-screen, no text  -->
+<!-- Robert, 68: "Either you eat or you pay rent..."  -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="opening-video">
+
+  <div class="yt-cover" id="yt-opening">
+    <iframe id="opening-iframe" src="https://www.youtube.com/embed/oM8u4ZK0qjw?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=oM8u4ZK0qjw&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;start=5&amp;enablejsapi=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen=""></iframe>
+  </div>
+
+  <button id="unmute-btn" class="unmute-btn" aria-label="Enable sound">
+    <svg width="14" height="14" viewbox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M3 6h2l3-3v10l-3-3H3V6z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"></path>
+      <path d="M11 5c1 1 1 5 0 6M13 3c2 2 2 8 0 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"></path>
+    </svg>
+    <span>Click for sound</span>
+  </button>
+
+  <video id="local-opening" class="video-local" autoplay="" loop="" muted="" playsinline="" style="display:none;">
+    <source src="assets/video/prelinger_family_1950.mp4" type="video/mp4">
+  </video>
+
+  <div class="video-gradient"></div>
+
+  <div class="scroll-arrow">
+    <span>scroll</span>
+    <svg width="20" height="20" viewbox="0 0 20 20" fill="none">
+      <path d="M10 4v12M4 10l6 6 6-6" stroke="#555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 2: OPENING STATEMENT                     -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="opening-statement">
+  <div class="inner fade-up">
+    <p>In 1960, a working American could afford a home,<br>
+    raise a family, and retire with dignity<br>
+    on a single income.</p>
+
+    <p>Today, that same life costs more<br>
+    than the median household earns.</p>
+
+    <p><span class="accent">This is not a personal failure.<br>
+    It is a structural one.</span></p>
+
+    <a href="#the-promise" class="begin-link">Begin the story ↓</a>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 3: THE PROMISE — 1945–1973               -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="the-promise" class="video-section">
+  <div class="yt-cover">
+    <iframe src="https://www.youtube.com/embed/Y6IpaZkAD48?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=Y6IpaZkAD48&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1&amp;start=15" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+  </div>
+  <div class="video-gradient"></div>
+
+  <div class="video-section__content fade-up">
+    <span class="section-eyebrow">1945 — 1973</span>
+    <h2 class="section-title anchored">The Promise</h2>
+    <p class="section-body">
+      For thirty years, America built a specific kind of
+      future for its working people. A house. A single
+      income that covered it. Healthcare that came with
+      the job. A degree the next generation could afford.
+    </p>
+    <p class="section-body">
+      These are the voices of Americans who lived inside
+      that promise — before the wages stopped tracking
+      productivity, before the contract changed.
+    </p>
+  </div>
+  <p class="video-source">
+    Studs Terkel, "Working Americans on Home Ownership" — 1971
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<section class="narrative-section">
+  <div class="inner">
+    <div class="fade-up">
+      <span class="section-eyebrow">The Architecture</span>
+      <h2 class="anchored">What was built, deliberately</h2>
+    </div>
+
+    <p class="fade-up">The GI Bill sent eight million veterans
+    to college on the federal government's account. The FHA
+    drove homeownership from 44% in 1940 to 62% by 1960.
+    Union membership reached 35% of the workforce. For the
+    people inside this architecture, it worked.</p>
+
+    <div class="pull-quote fade-up">
+      "In 1960, a median household spent 44 cents of every
+      earned dollar on the full basket of middle-class life.
+      That 44 cents would become $1.20 by 2024."
+    </div>
+
+    <p class="fade-up">But the architecture had exclusions built
+    in. The FHA's own manuals recommended against insuring
+    mortgages in racially mixed neighborhoods. Black veterans
+    found the GI Bill administered locally by the same people
+    who enforced segregation. The Dream was always rationed.</p>
+
+    <div class="place-card fade-up">
+      <p class="name">Mississippi Delta, 1960</p>
+      <p class="mechanism">Excluded by design since Reconstruction</p>
+      <p>In Sunflower County in 1960, 74% of residents lived
+      below the poverty line. The Promise was not delayed here.
+      It was never extended.</p>
+    </div>
+
+    <div class="place-card fade-up" style="border-color:#2D6A4F;">
+      <p class="name">Pine Ridge Reservation, 1960</p>
+      <p class="mechanism">Never inside the Dream — the colonial baseline</p>
+      <p>The Oglala Lakota Nation is the project's floor —
+      what complete structural exclusion looks like across
+      generations. The poverty rate has never fallen below 35%.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="analysis-section fade-up">
+  <div class="header">
+    <span class="eyebrow">Figure 2 — The Dream Index</span>
+    <h3 class="anchored">What the Dream cost in 1960, and what it costs now</h3>
+    <p class="desc">The basket of middle-class life as a multiple
+    of median household income. In 1960 it consumed 44 cents of
+    every dollar earned. Follow the line to see when that changed.
+    All values in real 2024 dollars.</p>
+  </div>
+  <div class="figure-box">
+    <iframe class="figure-iframe" src="outputs/figures/fig02_diverging_lines.html" height="640" loading="lazy" title="Figure 2 — The Diverging Lines"></iframe>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="analysis-section fade-up">
+  <div class="header">
+    <span class="eyebrow">Figure 3 — The Bifurcation</span>
+    <h3 class="anchored">What got cheaper. What got more expensive.</h3>
+    <p class="desc">Consumer goods collapsed in real price.
+    The essentials for building a life exploded. America made
+    consumption affordable and existence expensive.</p>
+  </div>
+  <div class="figure-box">
+    <iframe class="figure-iframe" src="outputs/figures/fig03_bifurcation.html" height="840" loading="lazy" title="Figure 3 — The Bifurcation"></iframe>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 4: THE BREAK — 1973–1984                 -->
+<!-- ════════════════════════════════════════════════ -->
+<section class="video-section">
+  <div class="yt-cover">
+    <iframe src="https://www.youtube.com/embed/ivGFfw3gqGg?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=ivGFfw3gqGg&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+  </div>
+  <div class="video-gradient"></div>
+
+  <div class="video-section__content fade-up">
+    <span class="section-eyebrow">1973 — 1984</span>
+    <h2 class="section-title anchored">The Break</h2>
+    <p class="section-body">
+      In 1973, wages stopped tracking productivity.
+      On September 19, 1977 — Black Monday — Youngstown
+      Sheet and Tube closed, laying off 5,000 workers.
+    </p>
+    <p class="section-body">
+      It was not an anomaly. It was the beginning of a
+      pattern that would hollow out manufacturing America
+      over the next fifty years.
+    </p>
+  </div>
+  <p class="video-source">
+    "Aftermath of the 1977 Youngstown Steel Mill Closure" — YouTube
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<section class="narrative-section">
+  <div class="inner">
+    <div class="fade-up">
+      <h2 class="anchored">When labor stopped being rewarded</h2>
+    </div>
+
+    <p class="fade-up">Union membership began its long decline
+    from 35% toward 10%. Trade policy opened manufacturing to
+    global competition. Corporate governance shifted toward
+    shareholder returns. Each change redirected productivity
+    gains away from workers and toward capital.</p>
+
+    <div class="pull-quote fade-up">
+      "If wages had tracked productivity since 1973, the median
+      American worker would earn approximately $20 more
+      per hour today."
+    </div>
+
+    <div class="place-card fade-up" style="border-color:#2C2C2C;">
+      <p class="name">Coal Country — McDowell County, WV</p>
+      <p class="mechanism">Extraction economy abandoned after the asset ran out</p>
+      <p>McDowell County peaked in the 1950s with 100,000 people
+      and wages above the national median. When the coal ran out
+      and strip mining mechanized extraction, nothing replaced it.
+      Today: 18,000 residents. Median income 47% of national.</p>
+    </div>
+
+    <div class="place-card fade-up" style="border-color:#8B4513;">
+      <p class="name">Rust Belt — Youngstown, OH / Janesville, WI</p>
+      <p class="mechanism">Manufacturing made disposable by globalization</p>
+      <p>Youngstown's Black Monday in 1977. Janesville's GM
+      closure in 2008. The same story, thirty years apart.
+      The local Dream Index collapsed in a single year both times.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="analysis-section fade-up">
+  <div class="header">
+    <span class="eyebrow">Figure 5 — The Scissor</span>
+    <h3 class="anchored">Wages vs. Productivity, 1960–2024</h3>
+    <p class="desc">Both indexed to 100 in 1960. The lines track
+    together through the postwar period, then separate in 1973.
+    The gap is the engine of the asset contract.</p>
+  </div>
+  <div class="figure-box">
+    <iframe class="figure-iframe" src="outputs/figures/fig05_wages_productivity.html" height="580" loading="lazy" title="Figure 5 — Wages vs. Productivity"></iframe>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 5: FIVE AMERICAS                         -->
+<!-- ════════════════════════════════════════════════ -->
+<section class="video-section">
+  <div class="yt-cover">
+    <iframe src="https://www.youtube.com/embed/MHTRzS-I9sI?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=MHTRzS-I9sI&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+  </div>
+  <div class="video-gradient"></div>
+
+  <div class="video-section__content fade-up">
+    <span class="section-eyebrow">Five Places — One Economy</span>
+    <h2 class="section-title anchored">Five Americas</h2>
+    <p class="section-body">
+      The national data tells one story. Five American
+      communities tell five others — each shaped by a
+      different mechanism of the same structural shift.
+    </p>
+  </div>
+  <p class="video-source">
+    SHARECROP: Delta Cotton — YouTube (2023)
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<section class="narrative-section">
+  <div class="inner">
+    <div class="fade-up">
+      <h2 class="anchored">Five mechanisms. One contract.</h2>
+    </div>
+
+    <div class="place-card fade-up" style="border-color:#B5451B;">
+      <p class="name">Mississippi Delta</p>
+      <p class="mechanism">Excluded by design since Reconstruction</p>
+      <p>The original exclusion. Sixty years of compounded returns
+      on an asset you were prevented from buying is the racial
+      wealth gap.</p>
+    </div>
+
+    <div class="place-card fade-up" style="border-color:#2C2C2C;">
+      <p class="name">Coal Country</p>
+      <p class="mechanism">Extraction economy abandoned after the asset ran out</p>
+      <p>When the coal ran out, the company left and took the
+      infrastructure with it. The opioid crisis is the final
+      chapter of economic abandonment.</p>
+    </div>
+
+    <div class="place-card fade-up" style="border-color:#8B4513;">
+      <p class="name">Rust Belt</p>
+      <p class="mechanism">Manufacturing made disposable by globalization</p>
+      <p>The plant was a social contract. When it closed, the
+      contract ended overnight.</p>
+    </div>
+
+    <div class="place-card fade-up" style="border-color:#2D6A4F;">
+      <p class="name">Pine Ridge</p>
+      <p class="mechanism">Never inside the Dream — the colonial baseline</p>
+      <p>Not a place where the Dream failed. A place the Dream
+      never reached. The poverty rate has never fallen below 35%.
+      </p>
+    </div>
+
+    <div class="place-card fade-up" style="border-color:#1A3A5C;">
+      <p class="name">Bay Area / NYC</p>
+      <p class="mechanism">What winning the asset economy looks like</p>
+      <p>The inverse. Even a median income at 1.5× the national
+      average cannot afford the local housing market. The Dream
+      is broken here too — in the opposite direction.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="analysis-section fade-up">
+  <div class="header">
+    <span class="eyebrow">Figure 4 — Five Americas</span>
+    <h3 class="anchored">Economic trajectories since 1960</h3>
+    <p class="desc">Median income, poverty rate, and homeownership
+    for each community against national benchmarks. The grey
+    dashed line is the national average. Hover to explore.</p>
+  </div>
+  <div class="figure-box">
+    <iframe class="figure-iframe" src="outputs/figures/fig04_five_places.html" height="920" loading="lazy" title="Figure 4 — Five Americas"></iframe>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="narrative-section">
+  <div class="inner">
+    <div class="fade-up">
+      <span class="section-eyebrow">Income vs. Wealth</span>
+      <h2 class="anchored">What didn't close.</h2>
+    </div>
+
+    <p class="fade-up">Civil rights and labor markets did move the
+    racial income gap. Census data show Black household income rose
+    from 58% of white household income in 1967 to 64% in 2024 — five
+    and a half percentage points of progress in fifty-seven years.</p>
+
+    <p class="fade-up">The wealth gap moved less than half as much
+    over a third of the time. In 1989, Black households held nine
+    cents on the white-household wealth dollar. In 2024, they held
+    twelve. Housing equity, retirement savings, and inheritance
+    compound for those who got in early. They cannot be retrofitted
+    by raising present-day wages.</p>
+
+    <div class="pull-quote fade-up">
+      "Wages move. Assets compound. The asset contract was about
+      access to capital, and access was rationed."
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="analysis-section fade-up">
+  <div class="header">
+    <span class="eyebrow">Figure 6 — Two stories of inequality</span>
+    <h3 class="anchored">Income gap narrowed. Wealth gap barely moved.</h3>
+    <p class="desc">Black household income as a share of white
+    household income (left) vs. Black household wealth as a share of
+    white household wealth (right). Income: Census H-5, 1967–2024.
+    Wealth: Federal Reserve SCF / DFA, 1989–2024.</p>
+  </div>
+  <div class="figure-box">
+    <iframe class="figure-iframe" src="outputs/figures/fig06_income_wealth_race.html" height="540" loading="lazy" title="Figure 6 — Income vs. Wealth by Race"></iframe>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 6: THE CROSSING — 2000–2015              -->
+<!-- ════════════════════════════════════════════════ -->
+<section class="video-section">
+  <div class="yt-cover">
+    <iframe src="https://www.youtube.com/embed/Tqu9ibhrlXo?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=Tqu9ibhrlXo&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+  </div>
+  <div class="video-gradient"></div>
+
+  <div class="video-section__content fade-up">
+    <span class="section-eyebrow">2000 — 2015</span>
+    <h2 class="section-title anchored">The Crossing</h2>
+    <p class="section-body">
+      In 2011, for the first time in American history,
+      the cost of a canonical middle-class life exceeded
+      the median household income.
+    </p>
+    <p class="section-body">
+      The Dream Index crossed 1.0. The math that had been
+      tilting for thirty years finally broke through.
+    </p>
+  </div>
+  <p class="video-source">
+    "Inside America's Capital of Despair: Youngstown" — YouTube
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<section class="narrative-section">
+  <div class="inner">
+    <div class="fade-up">
+      <h2 class="anchored">When the math finally broke</h2>
+    </div>
+
+    <p class="fade-up">The financial crisis of 2008 dropped
+    median incomes while healthcare and education costs kept
+    rising. By 2011, the accumulated weight of thirty years
+    of divergence reached the tipping point.</p>
+
+    <p class="fade-up">Low interest rates between 2012 and
+    2020 created a temporary window — falling mortgage
+    payments made housing affordable despite rising prices.
+    Americans who bought in that window got the last
+    affordable entry point. In 2022, rates doubled. The
+    window closed permanently.</p>
+
+    <div class="pull-quote fade-up">
+      "The rate floor was a reprieve, not a recovery.
+      The Dream Index has not returned below 1.0."
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="analysis-section fade-up">
+  <div class="header">
+    <span class="eyebrow">Figure 2 — The Crossing</span>
+    <h3 class="anchored">Three moments: 2011, the rate floor, 2022</h3>
+    <p class="desc">The Dream Index annotated at its three
+    critical inflection points. Hover to explore each year.</p>
+  </div>
+  <div class="figure-box">
+    <iframe class="figure-iframe" src="outputs/figures/fig02_diverging_lines.html" height="640" loading="lazy" title="Figure 2 — The Crossing"></iframe>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 7: HUMAN COST                            -->
+<!-- ════════════════════════════════════════════════ -->
+<section class="video-section">
+  <div class="yt-cover">
+    <iframe src="https://www.youtube.com/embed/Oz6GgNnLtAE?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=Oz6GgNnLtAE&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1&amp;start=90" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+  </div>
+  <div class="video-gradient"></div>
+
+  <div class="video-section__content fade-up">
+    <span class="section-eyebrow">2000 — 2024</span>
+    <h2 class="section-title anchored">What It Cost</h2>
+    <p class="section-body">
+      The economic pressure did not stay in balance sheets.
+      It showed up in bedrooms, birth certificates,
+      and obituaries.
+    </p>
+  </div>
+  <p class="video-source">
+    "A Thunder-Being Nation: The Oglala Lakota of Pine Ridge" — YouTube
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<section class="narrative-section">
+  <div class="inner">
+    <div class="fade-up">
+      <h2 class="anchored">Economic statistics are human statistics</h2>
+    </div>
+
+    <p class="fade-up">Median age at first marriage rose by
+    six years since 1960. Americans say in surveys they want
+    more children than they have — they cite cost as the
+    reason. The U.S. is the only wealthy country where life
+    expectancy declined after 2014.</p>
+
+    <div class="pull-quote fade-up">
+      "The country is paying its bills in lifespans
+      and childlessness."
+    </div>
+
+    <p class="fade-up">Working-age Americans without college
+    degrees started dying earlier in the 2000s from suicide,
+    overdose, and alcohol. These deaths map almost precisely
+    onto the geography of economic abandonment shown in the
+    Five Americas data.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="analysis-section fade-up">
+  <div class="header">
+    <span class="eyebrow">Figure 9 — Way of Life</span>
+    <h3 class="anchored">What Americans gave up to keep paying</h3>
+    <p class="desc">Marriage age, birth rate, multigenerational
+    households, and life expectancy since 1960. Each one tracks
+    the pressure of the rising Dream Index.</p>
+  </div>
+  <div class="figure-box">
+    <div class="placeholder">
+      <span class="fig-id">Figure 9</span>
+      <span class="fig-name">Way of Life — Four Panels</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 8: FIND YOURSELF                         -->
+<!-- ════════════════════════════════════════════════ -->
+<section class="narrative-section" style="min-height:60vh; display:flex;
+                align-items:center;">
+  <div class="inner">
+    <div class="fade-up">
+      <h2 class="anchored">Find Yourself in the Data</h2>
+    </div>
+    <p class="fade-up">The national story describes a system.
+    This section asks where you sit within it. Select your
+    profile — the Dream Index recalculates for your cohort
+    and your community.</p>
+  </div>
+</section>
+
+<section class="analysis-section fade-up">
+  <div class="header">
+    <span class="eyebrow">Figure 8 — Interactive</span>
+    <h3 class="anchored">Find yourself in the Dream Index</h3>
+    <p class="desc">Select your race, education, generation,
+    immigrant status, veteran status, and zip code to see
+    your cohort's trajectory.</p>
+  </div>
+  <div class="figure-box">
+    <div class="placeholder">
+      <span class="fig-id">Figure 8</span>
+      <span class="fig-name">
+        Find Yourself / Find Your Community
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 9: RECKONING                             -->
+<!-- ════════════════════════════════════════════════ -->
+<section class="video-section">
+  <div class="yt-cover">
+    <iframe src="https://www.youtube.com/embed/3kch_eJrPo8?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=3kch_eJrPo8&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+  </div>
+  <div class="video-gradient"></div>
+
+  <div class="video-section__content fade-up">
+    <span class="section-eyebrow">What This Means</span>
+    <h2 class="section-title anchored">The Reckoning</h2>
+    <p class="section-body">
+      The asset contract was not destiny. It was decided.
+      The specific decisions that created it are documented.
+      They can be decided differently.
+    </p>
+  </div>
+  <p class="video-source">
+    "The City of Sensitive Frauds" — YouTube (2025)
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<section class="narrative-section">
+  <div class="inner">
+    <div class="fade-up">
+      <h2 class="anchored">What the evidence demands</h2>
+    </div>
+
+    <p class="fade-up"><strong>Federal policymakers</strong>
+    should fund universal asset-building accounts at birth
+    because our analysis found the racial wealth gap has
+    barely closed in six decades despite narrowing income
+    gaps — wealth cannot be addressed through wage policy alone.
+    </p>
+
+    <p class="fade-up"><strong>State legislators</strong>
+    should preempt restrictive zoning because our analysis
+    found housing costs have outpaced wages in every metro
+    area since 1990, with supply constraint as the primary
+    structural driver.</p>
+
+    <p class="fade-up"><strong>Congress</strong> should restore
+    the GI Bill as an asset-transfer program because our
+    analysis found contemporary veterans' wealth outcomes
+    diverge from WWII-era veterans specifically where the
+    original GI Bill provided asset access.</p>
+
+    <div class="pull-quote fade-up">
+      "The architecture of the Dream was built through
+      specific decisions. Rebuilding it requires specific
+      decisions — not generic growth, but targeted
+      structural repair."
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="analysis-section fade-up">
+  <div class="header">
+    <span class="eyebrow">Figure 11 — Summary</span>
+    <h3 class="anchored">Seven findings. One story.</h3>
+    <p class="desc">The seven anchoring numbers of this project,
+    consolidated into a portable summary.</p>
+  </div>
+  <div class="figure-box">
+    <div class="placeholder">
+      <span class="fig-id">Figure 11</span>
+      <span class="fig-name">
+        The Asset Contract — Seven Key Findings
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- SECTION 10: METHODOLOGY                          -->
+<!-- ════════════════════════════════════════════════ -->
+<section id="methodology" class="narrative-section" style="border-top: 1px solid #111;">
+  <div class="inner">
+    <div class="fade-up">
+      <span class="section-eyebrow">Technical Documentation</span>
+      <h2 class="anchored">Methodology &amp; Data</h2>
+    </div>
+
+    <p class="fade-up"><strong>The Dream Index</strong> measures
+    the cost of housing, healthcare, education, childcare,
+    transportation, and food as a multiple of median household
+    income. All values in real 2024 dollars using CPI-U as
+    the deflator. Primary healthcare measure uses the full
+    KFF family premium (crosses 1.0 in 2011). Conservative
+    lower bound uses household exposure only (crosses 2022).</p>
+
+    <p class="fade-up"><strong>Data sources:</strong>
+    FRED (38 series), KFF Employer Health Benefits Survey
+    (1999–2024), NCES Digest Table 330.10 (1963+), NHGIS
+    county-level census data (1960–2020), CDC NCHS life
+    expectancy and birth rates, BLS Consumer Price Indices.</p>
+
+    <p class="fade-up"><strong>Five places:</strong>
+    Counties aggregated to place level using population-weighted
+    averages. Pine Ridge merges FIPS 46-102 and 46-113 as one
+    continuous series. All income comparisons use nominal
+    values divided by national nominal median — the ratio
+    cancels inflation, no deflation required.</p>
+
+    <p class="fade-up" style="color:#444; font-size:0.85rem;">
+      Full methodology, sensitivity analyses, and data files:
+      <a href="data/final/dream_index_metadata.json" style="color:#555;">dream_index_metadata.json</a>
+    </p>
+  </div>
+</section>
+
+
+
+</main> <!-- /main -->
+<script src="assets/js/scroll.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Data: FRED · BLS · U.S. Census · NHGIS Video: Prelinger Archives (Public Domain) · YouTube</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
