@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Find Yourself in the Dream Index</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0a; --card: #111111; --border: #2a2a2a;
+    --text: #e0ddd8; --muted: #888888; --dim: #555555;
+    --amber: #c9a96e; --green: #2D6A4F; --rust: #B5451B;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 1.4rem 1.4rem 1rem; }
+  h1 { font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.55rem; font-weight: 400; color: #f0ede8; margin: 0 0 0.4rem; }
+  .subtitle { color: var(--muted); font-size: 0.88rem; margin: 0 0 1.2rem; line-height: 1.5; }
+  .control-row { display: flex; flex-wrap: wrap; align-items: center;
+    gap: 0.4rem; margin: 0.35rem 0; }
+  .control-label {
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--amber); width: 100px; flex-shrink: 0;
+  }
+  .pill {
+    background: var(--card); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 0.32rem 0.78rem;
+    font-family: 'Inter', sans-serif; font-size: 0.74rem;
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .pill:hover { color: var(--amber); border-color: var(--amber); }
+  .pill.active { background: var(--amber); color: #000; border-color: var(--amber);
+    font-weight: 600; }
+  .results { display: grid; grid-template-columns: 1fr 1.6fr 1fr;
+    gap: 1rem; margin-top: 1.4rem; }
+  .panel { background: var(--card); border: 1px solid var(--border);
+    border-radius: 3px; padding: 1.2rem 1.1rem; }
+  .panel-label { font-size: 0.6rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--amber); margin: 0 0 0.5rem; }
+  .di-number { font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3.2rem; font-weight: 400; line-height: 1;
+    margin: 0.2rem 0 0.4rem; }
+  .di-detail { color: var(--muted); font-size: 0.78rem; line-height: 1.5; margin: 0; }
+  .class-badge {
+    display: inline-block; margin-top: 0.7rem;
+    padding: 0.32rem 0.7rem; border-radius: 999px;
+    font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 600; border: 1px solid;
+  }
+  .stat { margin-bottom: 0.85rem; }
+  .stat:last-child { margin-bottom: 0; }
+  .stat-label { font-size: 0.58rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 0.15rem; }
+  .stat-value { font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.4rem; color: #f0ede8; margin: 0; line-height: 1.1; }
+  .stat-extra { color: var(--dim); font-size: 0.7rem; margin: 0.15rem 0 0; }
+  #chart-wrap { position: relative; height: 250px; }
+  .footer-note { color: var(--dim); font-size: 0.66rem; line-height: 1.6;
+    margin-top: 1.3rem; padding-top: 0.9rem; border-top: 1px solid var(--border); }
+  @media (max-width: 880px) {
+    .results { grid-template-columns: 1fr; }
+    .control-label { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Find Yourself in the Dream Index</h1>
+  <p class="subtitle">Pick the inputs that describe your household. Income comes from
+  Census CPS 2024 medians (generation × education), scaled by household type and
+  community. Basket scales with kids (childcare).</p>
+
+  <div class="control-row" data-group="generation">
+    <span class="control-label">Generation</span>
+    <button class="pill" data-group="generation" data-value="boomer">Boomer (1946–64)</button>
+          <button class="pill" data-group="generation" data-value="genx">Gen X (1965–80)</button>
+          <button class="pill active" data-group="generation" data-value="millennial">Millennial (1981–96)</button>
+          <button class="pill" data-group="generation" data-value="genz">Gen Z (1997+)</button>
+  </div>
+  <div class="control-row" data-group="education">
+    <span class="control-label">Education</span>
+    <button class="pill" data-group="education" data-value="no_college">No college</button>
+          <button class="pill" data-group="education" data-value="some_college">Some college</button>
+          <button class="pill active" data-group="education" data-value="bachelors">Bachelor's</button>
+          <button class="pill" data-group="education" data-value="graduate">Graduate</button>
+  </div>
+  <div class="control-row" data-group="household">
+    <span class="control-label">Household</span>
+    <button class="pill active" data-group="household" data-value="single">Single</button>
+          <button class="pill" data-group="household" data-value="married_single">Married, one earner</button>
+          <button class="pill" data-group="household" data-value="married_dual">Married, two earners</button>
+  </div>
+  <div class="control-row" data-group="children">
+    <span class="control-label">Children</span>
+    <button class="pill active" data-group="children" data-value="0">No kids</button>
+          <button class="pill" data-group="children" data-value="1">1 child</button>
+          <button class="pill" data-group="children" data-value="2">2 kids</button>
+          <button class="pill" data-group="children" data-value="3">3+ kids</button>
+  </div>
+  <div class="control-row" data-group="community">
+    <span class="control-label">Community</span>
+    <button class="pill active" data-group="community" data-value="national">National median</button>
+          <button class="pill" data-group="community" data-value="tech_hub">Tech hub</button>
+          <button class="pill" data-group="community" data-value="major_coastal">Coastal metro</button>
+          <button class="pill" data-group="community" data-value="midwest_metro">Midwest metro</button>
+          <button class="pill" data-group="community" data-value="sunbelt_metro">Sun Belt metro</button>
+          <button class="pill" data-group="community" data-value="suburban">Suburban</button>
+          <button class="pill" data-group="community" data-value="small_city">Small city</button>
+          <button class="pill" data-group="community" data-value="rural">Rural</button>
+          <button class="pill" data-group="community" data-value="bay_area">Bay Area / NYC</button>
+          <button class="pill" data-group="community" data-value="rustbelt">Rust Belt</button>
+          <button class="pill" data-group="community" data-value="mississippi">Mississippi Delta</button>
+          <button class="pill" data-group="community" data-value="coal">Coal Country</button>
+          <button class="pill" data-group="community" data-value="pine_ridge">Pine Ridge</button>
+  </div>
+
+  <div class="results">
+    <div class="panel" id="panel-di">
+      <p class="panel-label">Your Dream Index</p>
+      <p class="di-number" id="di-number">—</p>
+      <p class="di-detail" id="di-detail">—</p>
+      <span class="class-badge" id="class-badge">—</span>
+    </div>
+
+    <div class="panel">
+      <p class="panel-label">Your basket vs. your income</p>
+      <div id="chart-wrap"><canvas id="basketChart"></canvas></div>
+    </div>
+
+    <div class="panel" id="panel-stats">
+      <p class="panel-label">Bottom line</p>
+      <div class="stat">
+        <p class="stat-label">Annual income</p>
+        <p class="stat-value" id="stat-income">—</p>
+      </div>
+      <div class="stat">
+        <p class="stat-label">Annual shortfall</p>
+        <p class="stat-value" id="stat-shortfall">—</p>
+        <p class="stat-extra" id="stat-shortfall-extra"></p>
+      </div>
+      <div class="stat">
+        <p class="stat-label">Weeks of work for the basket</p>
+        <p class="stat-value" id="stat-weeks">—</p>
+      </div>
+      <div class="stat">
+        <p class="stat-label">Components fully covered</p>
+        <p class="stat-value" id="stat-covered">—</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer-note">
+    Income: Census CPS median household income by generation × education, 2024,
+    scaled by household-type multiplier (single 1.0, married single-earner 1.10,
+    married dual-earner 1.70) and community multiplier (NHGIS / ACS 2020 vs.
+    national median). Basket: $100,083 in real 2024 dollars; childcare scales
+    with children. Class tiers benchmarked to 2024 national median household
+    income of $83,730 (FRED MEHOINUSA646N).
+  </p>
+</div>
+
+<script>
+const INCOME = {"boomer_no_college": 45000, "boomer_some_college": 55000, "boomer_bachelors": 80000, "boomer_graduate": 108000, "genx_no_college": 48000, "genx_some_college": 60000, "genx_bachelors": 92000, "genx_graduate": 124000, "millennial_no_college": 42000, "millennial_some_college": 54000, "millennial_bachelors": 76000, "millennial_graduate": 102000, "genz_no_college": 34000, "genz_some_college": 44000, "genz_bachelors": 60000, "genz_graduate": 74000};
+const HOUSEHOLD_MULT = {"single": 1.0, "married_single": 1.1, "married_dual": 1.7};
+const COMM_MULT = {"national": 1.0, "tech_hub": 1.55, "major_coastal": 1.35, "midwest_metro": 0.95, "sunbelt_metro": 1.0, "suburban": 1.05, "small_city": 0.85, "rural": 0.7, "bay_area": 1.43, "rustbelt": 0.8, "mississippi": 0.55, "coal": 0.5, "pine_ridge": 0.37};
+const BASE_BASKET = {"Housing": 18600, "Healthcare": 25272, "Education": 11600, "Transportation": 9800, "Food": 18811};
+const CHILDCARE = {"0": 0, "1": 16000, "2": 30000, "3": 42000};
+const NATIONAL_MEDIAN = 83730;
+
+const COLORS = {
+  green: '#2D6A4F',
+  amber: '#c9a96e',
+  rust:  '#B5451B',
+  grey:  '#2a2a2a',
+  text:  '#888888',
+};
+
+const state = {
+  generation: 'millennial',
+  education:  'bachelors',
+  household:  'single',
+  children:   '0',
+  community:  'national',
+};
+
+function fmtMoney(n) {
+  const sign = n < 0 ? '-' : '';
+  return sign + '$' + Math.abs(Math.round(n)).toLocaleString('en-US');
+}
+
+function classTier(income) {
+  const r = income / NATIONAL_MEDIAN;
+  if (r < 0.50) return { label: 'Working poor',        color: COLORS.rust };
+  if (r < 0.80) return { label: 'Working class',       color: COLORS.rust };
+  if (r < 1.20) return { label: 'Lower-middle class',  color: COLORS.amber };
+  if (r < 1.80) return { label: 'Middle class',        color: COLORS.amber };
+  if (r < 3.00) return { label: 'Upper-middle class',  color: COLORS.green };
+  return         { label: 'Top 5% / affluent',         color: COLORS.green };
+}
+
+function compute() {
+  const baseInc = INCOME[state.generation + '_' + state.education];
+  const income = baseInc * HOUSEHOLD_MULT[state.household] * COMM_MULT[state.community];
+
+  // Build basket (childcare varies by # of kids)
+  const basket = Object.assign({}, BASE_BASKET);
+  const kidsKey = parseInt(state.children, 10);
+  const childcare = CHILDCARE[kidsKey] || 0;
+  if (childcare > 0) basket.Childcare = childcare;
+  const total = Object.values(basket).reduce(function(a,b){ return a+b; }, 0);
+
+  const di = total / income;
+  const components = Object.entries(basket).map(function (kv) {
+    const name = kv[0], cost = kv[1];
+    const months = Math.min(12, (income / cost) * 12);
+    let color;
+    if (months >= 11.99) color = COLORS.green;
+    else if (months >= 6) color = COLORS.amber;
+    else color = COLORS.rust;
+    return { name: name, cost: cost, months: months,
+             covered: (months/12) * cost, color: color };
+  });
+  const shortfall = Math.max(0, total - income);
+  const weeks = total / (income / 52);
+  const coveredCount = components.filter(function(c){ return c.months >= 11.99; }).length;
+  const tier = classTier(income);
+  return { income, di, components, shortfall, weeks, coveredCount, tier,
+           total, basket };
+}
+
+let chart = null;
+function makeChart() {
+  const ctx = document.getElementById('basketChart').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(BASE_BASKET).concat(['Childcare']),
+      datasets: [
+        { label: 'Income covers', data: [], backgroundColor: [], stack: 's',
+          borderRadius: 2, borderSkipped: false, barPercentage: 0.78 },
+        { label: 'Shortfall',     data: [], backgroundColor: COLORS.grey, stack: 's',
+          borderRadius: 2, borderSkipped: false, barPercentage: 0.78 },
+      ],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 350 },
+      scales: {
+        x: { stacked: true,
+             ticks: { color: COLORS.text, font: { size: 10 },
+                      callback: function(v){ return '$' + (v/1000) + 'k'; } },
+             grid: { color: '#1a1a1a' } },
+        y: { stacked: true,
+             ticks: { color: '#cccccc', font: { size: 11 } },
+             grid: { display: false } },
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0d0d0d', borderColor: '#333', borderWidth: 1,
+          titleColor: '#e0ddd8', bodyColor: '#cccccc',
+          callbacks: {
+            label: function(ctx){
+              const c = lastResult.components[ctx.dataIndex];
+              if (!c) return '';
+              if (ctx.datasetIndex === 0) {
+                return 'Income covers: $' + Math.round(c.covered).toLocaleString()
+                  + '  (' + c.months.toFixed(1) + ' months)';
+              }
+              return 'Shortfall: $' + Math.round(c.cost - c.covered).toLocaleString();
+            }
+          }
+        },
+      },
+    },
+  });
+}
+
+let lastResult = null;
+function render() {
+  const r = compute();
+  lastResult = r;
+
+  // Dream Index
+  document.getElementById('di-number').textContent = r.di.toFixed(2);
+  document.getElementById('di-number').style.color =
+    r.di > 1.0 ? COLORS.rust : COLORS.green;
+  const pct = Math.round(r.di * 100);
+  document.getElementById('di-detail').textContent =
+    r.di > 1.0
+      ? 'The basket costs ' + pct + '% of your annual income.'
+      : 'The basket costs ' + pct + '% of your annual income — affordable.';
+
+  // Class tier badge
+  const badge = document.getElementById('class-badge');
+  badge.textContent = r.tier.label;
+  badge.style.color = r.tier.color;
+  badge.style.borderColor = r.tier.color;
+
+  // Stats
+  document.getElementById('stat-income').textContent = fmtMoney(r.income);
+  document.getElementById('stat-shortfall').textContent = fmtMoney(r.shortfall);
+  document.getElementById('stat-shortfall-extra').textContent =
+    r.shortfall > 0
+      ? 'How much short you are after one year of work.'
+      : r.income > r.total
+        ? 'You cover the basket and have $' + Math.round(r.income - r.total).toLocaleString() + ' left.'
+        : '';
+  document.getElementById('stat-weeks').textContent = r.weeks.toFixed(0) + ' wks';
+  document.getElementById('stat-covered').textContent =
+    r.coveredCount + ' of ' + r.components.length;
+
+  // Chart — relabel since basket may add or remove Childcare row
+  chart.data.labels = r.components.map(function(c){ return c.name; });
+  chart.data.datasets[0].data = r.components.map(function(c){ return c.covered; });
+  chart.data.datasets[0].backgroundColor = r.components.map(function(c){ return c.color; });
+  chart.data.datasets[1].data = r.components.map(function(c){ return c.cost - c.covered; });
+  chart.update();
+}
+
+document.querySelectorAll('.pill').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    const group = btn.getAttribute('data-group');
+    const value = btn.getAttribute('data-value');
+    state[group] = value;
+    document.querySelectorAll('.pill[data-group="' + group + '"]')
+      .forEach(function (b) { b.classList.toggle('active', b === btn); });
+    render();
+  });
+});
+
+makeChart();
+render();
+</script>
+</body>
+</html>

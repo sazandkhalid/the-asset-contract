@@ -2,3 +2,227 @@
 .quarto-title-block { display: none !important; }
 h1.title, .title { display: none !important; }
 .page-layout-full .content { padding: 0 !important; }
+
+/* ─────────────────────────────────────────────────
+   FIGURE EMBED CONTAINERS (full-bleed)
+   ───────────────────────────────────────────────── */
+
+/* Break out of Quarto's column constraints. */
+.figure-embed-container {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background: #050505;
+  padding: 1rem 0 2rem;
+}
+
+/* The iframe fills its container. */
+.figure-iframe {
+  display: block;
+  width: 100%;
+  height: 580px;
+  border: none;
+  background: #0a0a0a;
+}
+
+.figure-iframe--tall {
+  height: 720px;
+}
+
+.figure-iframe--xl {
+  height: 920px;
+}
+
+/* Quarto overrides — force full width. */
+.page-layout-full .content,
+#quarto-document-content,
+.column-body {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+.analysis-section {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  /* No overflow:hidden — the figure-embed-container needs to escape
+     this section's bounds via 100vw / negative margins. The body's
+     overflow-x:hidden still prevents horizontal scroll. */
+}
+
+.analysis-section .header {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  padding: 0 2rem;
+}
+
+body, html {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
+
+/* Keep legacy class working for the still-empty Find Yourself
+   placeholder (no figure built for it yet). */
+.figure-box {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 2px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.figure-box .js-plotly-plot {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.figure-frame {
+  overflow: hidden;
+}
+
+/* ─────────────────────────────────────────────────
+   PLACE CARD WITH PHOTO (alternating sides)
+   ───────────────────────────────────────────────── */
+.place-card-visual {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin: 1.8rem 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+.place-card-visual .card-photo {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 2px;
+  filter: grayscale(25%) brightness(0.75);
+  display: block;
+  flex-shrink: 0;
+}
+.place-card-visual .card-body {
+  border-left: 2px solid var(--card-accent, #c9a96e);
+  background: #080808;
+  padding: 0.8rem 1.2rem;
+}
+.place-card-visual .card-body .name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #e0ddd8;
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.02em;
+}
+.place-card-visual .card-body .mechanism {
+  font-size: 0.75rem;
+  color: var(--card-accent, #c9a96e);
+  font-style: italic;
+  margin-bottom: 0.7rem;
+}
+.place-card-visual .card-body p {
+  font-size: 0.88rem;
+  color: #666;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* Photo on the right (alternating layout) */
+.place-card-visual.photo-right {
+  grid-template-columns: 1fr 140px;
+}
+.place-card-visual.photo-right .card-photo { order: 2; }
+.place-card-visual.photo-right .card-body  { order: 1; }
+
+@media (max-width: 700px) {
+  .place-card-visual,
+  .place-card-visual.photo-right {
+    grid-template-columns: 1fr;
+  }
+  .place-card-visual .card-photo {
+    width: 100%;
+    height: 200px;
+  }
+  .place-card-visual.photo-right .card-photo { order: 0; }
+  .place-card-visual.photo-right .card-body  { order: 1; }
+}
+
+/* ─────────────────────────────────────────────────
+   OPENING-VIDEO 3-CLIP SEQUENCER
+   ───────────────────────────────────────────────── */
+.opening-clip-wrap {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.8s ease;
+}
+
+#clip-fade-overlay {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+
+#clip-fade-overlay.hard-cut {
+  transition: none !important;
+}
+
+.opening-caption {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+  text-align: center;
+  text-shadow: 0 1px 18px rgba(0,0,0,0.7);
+  animation: caption-life 5s ease 0.4s both;
+}
+
+.opening-caption .caption-name {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.95rem, 1.5vw, 1.25rem);
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.opening-caption em {
+  display: block;
+  margin: 1.2rem 0;
+  font-style: italic;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.6rem, 6.2vw, 5.6rem);
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.05;
+  color: rgba(255, 255, 255, 0.97);
+}
+
+.opening-caption .caption-year {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+  font-weight: 300;
+  letter-spacing: 0.45em;
+  color: rgba(255, 255, 255, 0.62);
+  padding-left: 0.45em;
+}
+
+@keyframes caption-life {
+  0%   { opacity: 0; transform: translate(-50%, calc(-50% + 8px)); }
+  18%  { opacity: 1; transform: translate(-50%, -50%);             }
+  78%  { opacity: 1; transform: translate(-50%, -50%);             }
+  100% { opacity: 0; transform: translate(-50%, calc(-50% - 6px)); }
+}
