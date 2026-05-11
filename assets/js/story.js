@@ -356,6 +356,65 @@ window.addEventListener('resize', function () {
     }, { passive: true });
   }
 
+  /* ── 8. SECTION THEME TRACKING ────────────────────────────
+     Sets body.reading-dark / body.reading-light based on
+     which top-level section currently dominates the viewport.
+     Used by CSS to switch story-nav contrast against the
+     theme of the page under the reader. */
+  function initThemeTracker() {
+    var DARK_SELECTORS = [
+      '#opening-video',
+      '#orientation',
+      '.video-section',
+      'section.narrative-section[data-chapter="The Mechanism"]',
+      'section.narrative-section[data-chapter="The Inflection"]',
+      'section.narrative-section[data-chapter="Consequences"]',
+      'section.narrative-section[data-chapter="Recommendations"]',
+      '#methodology'
+    ];
+    var LIGHT_SELECTORS = [
+      'section.narrative-section[data-chapter="The Architecture"]',
+      'section.narrative-section[data-chapter="What Worked"]',
+      'section.narrative-section[data-chapter="What Averages Conceal"]',
+      'section.narrative-section[data-chapter="The Mechanisms"]',
+      'section.narrative-section[data-chapter="The Asset Gap"]',
+      'section.narrative-section[data-chapter="Find Yourself"]',
+      'section.narrative-section:not([data-chapter])',
+      'section.analysis-section',
+      '#dream-index-scrolly'
+    ];
+    var darkNodes  = document.querySelectorAll(DARK_SELECTORS.join(','));
+    var lightNodes = document.querySelectorAll(LIGHT_SELECTORS.join(','));
+    var sections = [];
+    darkNodes.forEach(function (n)  { sections.push({el: n, theme: 'dark'}); });
+    lightNodes.forEach(function (n) { sections.push({el: n, theme: 'light'}); });
+
+    if (!sections.length) {
+      document.body.classList.add('reading-dark');
+      return;
+    }
+
+    function pickActive() {
+      var mid = window.innerHeight * 0.5;
+      var best = null;
+      var bestDist = Infinity;
+      sections.forEach(function (s) {
+        var r = s.el.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > window.innerHeight) return;
+        var center = (r.top + r.bottom) / 2;
+        var d = Math.abs(center - mid);
+        if (d < bestDist) { bestDist = d; best = s; }
+      });
+      if (!best) return;
+      document.body.classList.toggle('reading-dark',  best.theme === 'dark');
+      document.body.classList.toggle('reading-light', best.theme === 'light');
+    }
+
+    pickActive();
+    window.addEventListener('scroll', pickActive, { passive: true });
+    window.addEventListener('resize', pickActive);
+  }
+
   /* ── INIT ─────────────────────────────────────────────────── */
   function init() {
     loadYouTubeAPI();
@@ -365,6 +424,7 @@ window.addEventListener('resize', function () {
     initVideoViewport();
     initAudioToggle();
     initNavbar();
+    initThemeTracker();
     window.addEventListener('scroll', updateStoryNav, { passive: true });
   }
 

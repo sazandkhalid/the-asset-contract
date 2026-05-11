@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Figure 12, Your Path Through the Asset Contract</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+ :root {
+ --bg: #0a0807;
+ --card: #141210;
+ --card-2: #1a1814;
+ --border: #2a2520;
+ --text: #d4cfc4;
+ --heading: #e8e3d8;
+ --muted: #8a847a;
+ --dim: #5a544a;
+ --amber: #c9a96e;
+ --rust: #B5451B;
+ --green: #2d6a4f;
+ --blue: #4a7ba7;
+ }
+ * { box-sizing: border-box; }
+ html, body {
+ margin: 0; padding: 0;
+ background: var(--bg); color: var(--text);
+ font-family: 'Inter', system-ui, sans-serif;
+ -webkit-font-smoothing: antialiased;
+ line-height: 1.55;
+ }
+ .container {
+ max-width: 1080px;
+ margin: 0 auto;
+ padding: 1.6rem 1.4rem 3rem;
+ }
+
+ /* ========== HEADER ========== */
+ .header-block { padding: 0 0 1.4rem; border-bottom: 1px solid var(--border); margin-bottom: 1.6rem; }
+ .eyebrow {
+ font-size: 0.62rem; letter-spacing: 0.24em;
+ text-transform: uppercase; color: var(--amber);
+ display: block; margin-bottom: 0.6rem;
+ }
+ h1 {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.95rem; font-weight: 500;
+ color: var(--heading);
+ margin: 0 0 0.6rem;
+ line-height: 1.15;
+ }
+ .subtitle {
+ color: var(--muted); font-size: 0.92rem;
+ margin: 0; max-width: 760px; line-height: 1.6;
+ }
+
+ /* ========== INPUT PANELS ========== */
+ .panel {
+ background: var(--card);
+ border: 1px solid var(--border);
+ border-radius: 4px;
+ margin-bottom: 0.6rem;
+ overflow: hidden;
+ transition: border-color 0.18s ease;
+ }
+ .panel:hover { border-color: #3a342d; }
+ .panel-head {
+ display: flex; align-items: center; justify-content: space-between;
+ padding: 0.95rem 1.2rem;
+ cursor: pointer; user-select: none;
+ }
+ .panel-head:hover { background: #18150f; }
+ .panel-head-left { display: flex; align-items: center; gap: 0.85rem; }
+ .panel-letter {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 0.85rem; color: var(--amber);
+ width: 1.6rem; height: 1.6rem;
+ border: 1px solid var(--amber);
+ border-radius: 50%;
+ display: flex; align-items: center; justify-content: center;
+ }
+ .panel-title {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.05rem; color: var(--heading);
+ font-weight: 500;
+ }
+ .panel-arrow {
+ color: var(--dim); font-size: 0.85rem;
+ transition: transform 0.2s ease;
+ }
+ .panel.open .panel-arrow { transform: rotate(90deg); }
+ .panel-body {
+ max-height: 0; overflow: hidden;
+ transition: max-height 0.3s ease;
+ }
+ .panel.open .panel-body { max-height: 2400px; }
+ .panel-body-inner { padding: 0.4rem 1.2rem 1.2rem; }
+
+ /* ========== FORM INPUTS ========== */
+ .field-row {
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 0.85rem;
+ margin-bottom: 0.85rem;
+ }
+ .field-row.three { grid-template-columns: repeat(3, 1fr); }
+ .field-row.full { grid-template-columns: 1fr; }
+ .field { display: flex; flex-direction: column; gap: 0.3rem; }
+ .field-label {
+ font-size: 0.62rem; letter-spacing: 0.18em;
+ text-transform: uppercase; color: var(--muted);
+ }
+ .field input, .field select {
+ background: var(--bg);
+ border: 1px solid var(--border);
+ color: var(--text);
+ padding: 0.55rem 0.7rem;
+ font-family: 'Inter', sans-serif;
+ font-size: 0.88rem;
+ border-radius: 3px;
+ outline: none;
+ transition: border-color 0.18s ease;
+ }
+ .field input:focus, .field select:focus { border-color: var(--amber); }
+ .field input[type=number] { -moz-appearance: textfield; }
+ .field input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+ .pill-row { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+ .pill {
+ background: var(--bg); color: var(--muted);
+ border: 1px solid var(--border); border-radius: 999px;
+ padding: 0.36rem 0.85rem;
+ font-family: 'Inter', sans-serif; font-size: 0.74rem;
+ cursor: pointer; transition: all 0.15s ease;
+ user-select: none;
+ }
+ .pill:hover { color: var(--amber); border-color: #4a423a; }
+ .pill.active {
+ background: var(--amber); color: #1a1410;
+ border-color: var(--amber); font-weight: 600;
+ }
+
+ /* ========== CHILDREN AGES ========== */
+ #child-ages-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
+ .child-age-input {
+ background: var(--bg);
+ border: 1px solid var(--border);
+ color: var(--text);
+ padding: 0.4rem 0.55rem;
+ font-size: 0.82rem;
+ border-radius: 3px;
+ width: 100px;
+ }
+ .child-age-input::placeholder { color: var(--dim); }
+
+ /* ========== GENERATE BUTTON ========== */
+ .generate-row { display: flex; justify-content: center; margin: 1.4rem 0 0.4rem; }
+ .btn-generate {
+ background: var(--amber); color: #1a1410;
+ border: none;
+ padding: 0.85rem 2rem;
+ font-family: 'Inter', sans-serif;
+ font-size: 0.78rem; letter-spacing: 0.18em;
+ text-transform: uppercase; font-weight: 700;
+ cursor: pointer; border-radius: 3px;
+ transition: all 0.18s ease;
+ }
+ .btn-generate:hover { background: #d6b87a; transform: translateY(-1px); }
+ .btn-generate:active { transform: translateY(0); }
+
+ /* ========== DIAGNOSIS PANEL ========== */
+ .results-block { margin-top: 2.4rem; display: none; }
+ .results-block.visible { display: block; animation: fadeIn 0.5s ease; }
+ @keyframes fadeIn {
+ from { opacity: 0; transform: translateY(10px); }
+ to { opacity: 1; transform: translateY(0); }
+ }
+ .section-eyebrow {
+ font-size: 0.6rem; letter-spacing: 0.24em;
+ text-transform: uppercase; color: var(--amber);
+ margin-bottom: 0.5rem; display: block;
+ }
+ .section-title {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.5rem; font-weight: 500;
+ color: var(--heading); margin: 0 0 0.3rem;
+ }
+ .section-desc {
+ color: var(--muted); font-size: 0.86rem; margin: 0 0 1.4rem;
+ }
+ .diagnosis {
+ display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+ margin-bottom: 2rem;
+ }
+ .stat-card {
+ background: var(--card);
+ border: 1px solid var(--border);
+ padding: 1.3rem 1.2rem;
+ border-radius: 4px;
+ }
+ .stat-card-label {
+ font-size: 0.6rem; letter-spacing: 0.2em;
+ text-transform: uppercase; color: var(--amber);
+ margin: 0 0 0.7rem;
+ }
+ .stat-card-value {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 2.1rem; color: var(--heading);
+ line-height: 1.1; margin: 0;
+ font-weight: 500;
+ }
+ .stat-card-detail {
+ color: var(--muted); font-size: 0.78rem;
+ margin: 0.5rem 0 0; line-height: 1.5;
+ }
+ .stat-card.green { border-left: 2px solid var(--green); }
+ .stat-card.amber { border-left: 2px solid var(--amber); }
+ .stat-card.rust { border-left: 2px solid var(--rust); }
+ .stat-card.blue { border-left: 2px solid var(--blue); }
+
+ /* ========== ACTION CARDS ========== */
+ .cards-block { margin-top: 1.6rem; }
+ .action-card {
+ background: var(--card);
+ border: 1px solid var(--border);
+ border-left: 3px solid var(--dim);
+ border-radius: 4px;
+ margin-bottom: 1.1rem;
+ padding: 1.3rem 1.4rem;
+ }
+ .action-card.green { border-left-color: var(--green); }
+ .action-card.amber { border-left-color: var(--amber); }
+ .action-card.rust { border-left-color: var(--rust); }
+ .card-head { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.55rem; }
+ .card-num {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.6rem; color: var(--amber);
+ line-height: 1;
+ }
+ .card-icon { font-size: 1.05rem; opacity: 0.8; }
+ .card-domain {
+ font-size: 0.6rem; letter-spacing: 0.22em;
+ text-transform: uppercase; color: var(--muted);
+ }
+ .card-headline {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.25rem; color: var(--heading);
+ margin: 0 0 0.6rem; font-weight: 500;
+ line-height: 1.3;
+ }
+ .card-rationale {
+ font-size: 0.9rem; color: var(--text);
+ line-height: 1.6; margin: 0 0 1rem;
+ }
+ .card-stats {
+ display: grid; grid-template-columns: 1fr auto 1fr;
+ gap: 0.7rem; align-items: stretch;
+ margin-bottom: 0.95rem;
+ }
+ .card-stat {
+ background: var(--bg);
+ padding: 0.75rem 0.9rem;
+ border-radius: 3px;
+ border: 1px solid var(--border);
+ }
+ .card-stat-label {
+ font-size: 0.55rem; letter-spacing: 0.2em;
+ text-transform: uppercase; color: var(--muted);
+ margin-bottom: 0.3rem;
+ }
+ .card-stat-value {
+ font-family: 'Inter', sans-serif;
+ font-size: 0.88rem; color: var(--heading);
+ font-weight: 500;
+ }
+ .card-stat.recommended .card-stat-value { color: var(--amber); }
+ .card-stats-arrow {
+ color: var(--dim); font-size: 1.1rem;
+ align-self: center; padding: 0 0.3rem;
+ }
+ .card-chart { margin-bottom: 0.95rem; }
+ .card-chart svg { display: block; width: 100%; height: 36px; }
+ .card-action {
+ background: rgba(201, 169, 110, 0.08);
+ border-left: 2px solid var(--amber);
+ padding: 0.7rem 0.95rem;
+ font-size: 0.86rem;
+ color: var(--text);
+ margin-bottom: 0.7rem;
+ }
+ .card-action::before {
+ content: '→ ';
+ color: var(--amber); font-weight: 600;
+ }
+ .card-action-label {
+ font-size: 0.55rem; letter-spacing: 0.22em;
+ text-transform: uppercase; color: var(--amber);
+ display: block; margin-bottom: 0.3rem;
+ }
+ .card-why-toggle {
+ font-size: 0.7rem; letter-spacing: 0.14em;
+ text-transform: uppercase; color: var(--muted);
+ cursor: pointer; user-select: none;
+ padding-top: 0.6rem; border-top: 1px solid var(--border);
+ transition: color 0.15s ease;
+ }
+ .card-why-toggle:hover { color: var(--amber); }
+ .card-why-toggle::before { content: '+ '; color: var(--amber); }
+ .card-why-body {
+ max-height: 0; overflow: hidden;
+ transition: max-height 0.3s ease;
+ }
+ .action-card.expanded .card-why-toggle::before { content: '− '; }
+ .action-card.expanded .card-why-body { max-height: 800px; }
+ .why-content {
+ padding-top: 0.7rem;
+ font-size: 0.78rem; color: var(--muted);
+ line-height: 1.6;
+ }
+ .why-content ul { margin: 0.4rem 0 0; padding-left: 1.1rem; }
+ .why-content li { margin-bottom: 0.25rem; }
+ .why-content code {
+ background: var(--bg); padding: 0.05rem 0.3rem;
+ color: var(--amber); font-size: 0.75rem;
+ border-radius: 2px;
+ }
+
+ /* ========== SCENARIO CHART ========== */
+ .scenario-block {
+ margin-top: 2.2rem;
+ background: var(--card);
+ border: 1px solid var(--border);
+ padding: 1.4rem 1.5rem;
+ border-radius: 4px;
+ }
+ .scenario-title {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.2rem; color: var(--heading);
+ margin: 0 0 0.4rem; font-weight: 500;
+ }
+ .scenario-desc {
+ color: var(--muted); font-size: 0.82rem;
+ margin: 0 0 1.1rem;
+ }
+ #scenario-chart { width: 100%; height: 320px; }
+ .scenario-summary {
+ margin-top: 1rem;
+ display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem;
+ }
+ .scenario-stat {
+ padding: 0.7rem 0.9rem;
+ background: var(--bg);
+ border-radius: 3px;
+ border: 1px solid var(--border);
+ }
+ .scenario-stat-label {
+ font-size: 0.55rem; letter-spacing: 0.2em;
+ text-transform: uppercase; color: var(--muted);
+ margin-bottom: 0.3rem;
+ }
+ .scenario-stat-value {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.15rem; color: var(--heading);
+ }
+ .scenario-stat-value.cost { color: var(--rust); }
+ .scenario-stat-value.gain { color: var(--green); }
+
+ /* ========== METHODOLOGY ========== */
+ .method-block {
+ margin-top: 2rem;
+ border: 1px solid var(--border);
+ border-radius: 4px;
+ background: var(--card);
+ }
+ .method-head {
+ padding: 0.85rem 1.2rem;
+ cursor: pointer; user-select: none;
+ display: flex; justify-content: space-between; align-items: center;
+ font-size: 0.7rem; letter-spacing: 0.2em;
+ text-transform: uppercase; color: var(--amber);
+ }
+ .method-arrow { color: var(--dim); transition: transform 0.2s; }
+ .method-block.open .method-arrow { transform: rotate(90deg); }
+ .method-body {
+ max-height: 0; overflow: hidden;
+ transition: max-height 0.3s ease;
+ }
+ .method-block.open .method-body { max-height: 1200px; }
+ .method-content {
+ padding: 0 1.2rem 1.2rem;
+ font-size: 0.78rem; color: var(--muted);
+ line-height: 1.7;
+ }
+ .method-content ul { padding-left: 1.1rem; margin: 0.3rem 0 0.8rem; }
+ .method-content li { margin-bottom: 0.25rem; }
+ .method-content code {
+ background: var(--bg); color: var(--amber);
+ padding: 0.05rem 0.3rem;
+ font-size: 0.75rem; border-radius: 2px;
+ }
+ .privacy-note {
+ margin-top: 0.9rem;
+ padding: 0.7rem 0.85rem;
+ background: rgba(45, 106, 79, 0.08);
+ border-left: 2px solid var(--green);
+ font-size: 0.78rem; color: var(--text);
+ }
+
+ /* ========== RESPONSIVE ========== */
+ @media (max-width: 760px) {
+ .field-row, .field-row.three { grid-template-columns: 1fr; }
+ .diagnosis { grid-template-columns: 1fr; }
+ .card-stats { grid-template-columns: 1fr; }
+ .card-stats-arrow { display: none; }
+ .scenario-summary { grid-template-columns: 1fr; }
+ h1 { font-size: 1.5rem; }
+ }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+ <!-- HEADER -->
+ <div class="header-block">
+ <span class="eyebrow">Figure 12, Action Plan</span>
+ <h1>Your Path Through the Asset Contract</h1>
+ <p class="subtitle">The data this project documents, applied to your situation.
+ Every recommendation is grounded in the project's findings. Fill in what you know 
+ the engine works with whatever you provide. All calculations happen in your browser.</p>
+ </div>
+
+ <!-- INPUT PANELS -->
+ <div id="input-form">
+
+ <!-- PANEL A -->
+ <div class="panel open" data-panel="A">
+ <div class="panel-head">
+ <div class="panel-head-left">
+ <div class="panel-letter">A</div>
+ <div class="panel-title">About you</div>
+ </div>
+ <div class="panel-arrow">›</div>
+ </div>
+ <div class="panel-body">
+ <div class="panel-body-inner">
+ <div class="field-row three">
+ <div class="field">
+ <label class="field-label">Age</label>
+ <input type="number" id="in-age" min="18" max="80" value="34">
+ </div>
+ <div class="field">
+ <label class="field-label">Household size</label>
+ <input type="number" id="in-household" min="1" max="8" value="2">
+ </div>
+ <div class="field">
+ <label class="field-label">Marital status</label>
+ <select id="in-marital">
+ <option value="single">Single</option>
+ <option value="married" selected>Married</option>
+ <option value="partnered">Partnered</option>
+ </select>
+ </div>
+ </div>
+ <div class="field-row three">
+ <div class="field">
+ <label class="field-label">Metro area</label>
+ <select id="in-metro"></select>
+ </div>
+ <div class="field">
+ <label class="field-label">State</label>
+ <select id="in-state"></select>
+ </div>
+ <div class="field">
+ <label class="field-label">Household income ($K)</label>
+ <input type="number" id="in-income" min="0" max="2000" value="120">
+ </div>
+ </div>
+ <div class="field-row full">
+ <div class="field">
+ <label class="field-label">Highest education in household</label>
+ <div class="pill-row" data-group="education">
+ <div class="pill" data-value="hs">High school</div>
+ <div class="pill" data-value="some_college">Some college</div>
+ <div class="pill active" data-value="bachelors">Bachelor's</div>
+ <div class="pill" data-value="graduate">Graduate</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- PANEL B -->
+ <div class="panel" data-panel="B">
+ <div class="panel-head">
+ <div class="panel-head-left">
+ <div class="panel-letter">B</div>
+ <div class="panel-title">Your family</div>
+ </div>
+ <div class="panel-arrow">›</div>
+ </div>
+ <div class="panel-body">
+ <div class="panel-body-inner">
+ <div class="field-row">
+ <div class="field">
+ <label class="field-label">Number of children</label>
+ <input type="number" id="in-children" min="0" max="6" value="0">
+ </div>
+ <div class="field">
+ <label class="field-label">Children's ages (comma-separated)</label>
+ <input type="text" id="in-child-ages" placeholder="e.g. 4, 7" value="">
+ </div>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label class="field-label">Planning more children</label>
+ <div class="pill-row" data-group="planningKids">
+ <div class="pill" data-value="yes">Yes</div>
+ <div class="pill active" data-value="no">No</div>
+ <div class="pill" data-value="unsure">Unsure</div>
+ </div>
+ </div>
+ <div class="field">
+ <label class="field-label">Aging parent care expected</label>
+ <div class="pill-row" data-group="parentCare">
+ <div class="pill" data-value="yes">Yes</div>
+ <div class="pill active" data-value="no">No</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- PANEL C -->
+ <div class="panel" data-panel="C">
+ <div class="panel-head">
+ <div class="panel-head-left">
+ <div class="panel-letter">C</div>
+ <div class="panel-title">Your money</div>
+ </div>
+ <div class="panel-arrow">›</div>
+ </div>
+ <div class="panel-body">
+ <div class="panel-body-inner">
+ <div class="field-row full">
+ <div class="field">
+ <label class="field-label">Current housing</label>
+ <div class="pill-row" data-group="housing">
+ <div class="pill active" data-value="rent">Rent</div>
+ <div class="pill" data-value="own">Own</div>
+ <div class="pill" data-value="family">With family</div>
+ </div>
+ </div>
+ </div>
+ <div class="field-row three">
+ <div class="field">
+ <label class="field-label">Home value if owning ($K)</label>
+ <input type="number" id="in-home-value" min="0" max="5000" value="0">
+ </div>
+ <div class="field">
+ <label class="field-label">Mortgage balance ($K)</label>
+ <input type="number" id="in-mortgage-bal" min="0" max="5000" value="0">
+ </div>
+ <div class="field">
+ <label class="field-label">Mortgage rate (%)</label>
+ <input type="number" id="in-mortgage-rate" min="0" max="15" step="0.01" value="0">
+ </div>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label class="field-label">Current monthly rent ($)</label>
+ <input type="number" id="in-rent" min="0" max="20000" value="2400">
+ </div>
+ <div class="field">
+ <label class="field-label">Retirement savings ($K)</label>
+ <input type="number" id="in-retirement" min="0" max="10000" value="40">
+ </div>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label class="field-label">Non-retirement savings ($K)</label>
+ <input type="number" id="in-savings" min="0" max="10000" value="25">
+ </div>
+ <div class="field">
+ <label class="field-label">Student debt ($K)</label>
+ <input type="number" id="in-student-debt" min="0" max="500" value="0">
+ </div>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label class="field-label">Student debt type</label>
+ <div class="pill-row" data-group="debtType">
+ <div class="pill active" data-value="federal">Federal</div>
+ <div class="pill" data-value="private">Private</div>
+ <div class="pill" data-value="mixed">Mixed</div>
+ <div class="pill" data-value="none">None</div>
+ </div>
+ </div>
+ <div class="field">
+ <label class="field-label">Employer 401k match (%)</label>
+ <input type="number" id="in-match" min="0" max="20" step="0.5" value="0">
+ </div>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label class="field-label">HSA-eligible plan available</label>
+ <div class="pill-row" data-group="hsaEligible">
+ <div class="pill" data-value="yes">Yes</div>
+ <div class="pill" data-value="no">No</div>
+ <div class="pill active" data-value="unknown">Don't know</div>
+ </div>
+ </div>
+ <div class="field">
+ <label class="field-label">Dependent care FSA available</label>
+ <div class="pill-row" data-group="fsaAvailable">
+ <div class="pill" data-value="yes">Yes</div>
+ <div class="pill" data-value="no">No</div>
+ <div class="pill active" data-value="unknown">Don't know</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- PANEL D -->
+ <div class="panel" data-panel="D">
+ <div class="panel-head">
+ <div class="panel-head-left">
+ <div class="panel-letter">D</div>
+ <div class="panel-title">Your goals</div>
+ </div>
+ <div class="panel-arrow">›</div>
+ </div>
+ <div class="panel-body">
+ <div class="panel-body-inner">
+ <div class="field-row">
+ <div class="field">
+ <label class="field-label">Target retirement age</label>
+ <input type="number" id="in-retire-age" min="50" max="75" value="65">
+ </div>
+ <div class="field">
+ <label class="field-label">Want to own a home</label>
+ <div class="pill-row" data-group="wantHome">
+ <div class="pill active" data-value="yes">Yes</div>
+ <div class="pill" data-value="already">Already do</div>
+ <div class="pill" data-value="no">No</div>
+ </div>
+ </div>
+ </div>
+ <div class="field-row">
+ <div class="field">
+ <label class="field-label">Risk tolerance</label>
+ <div class="pill-row" data-group="risk">
+ <div class="pill" data-value="conservative">Conservative</div>
+ <div class="pill active" data-value="moderate">Moderate</div>
+ <div class="pill" data-value="aggressive">Aggressive</div>
+ </div>
+ </div>
+ <div class="field">
+ <label class="field-label">Expect inheritance ($K, 0 if none)</label>
+ <input type="number" id="in-inheritance" min="0" max="10000" value="0">
+ </div>
+ </div>
+ <div class="field-row full">
+ <div class="field">
+ <label class="field-label">Family support obligations expected</label>
+ <div class="pill-row" data-group="familySupport">
+ <div class="pill" data-value="yes">Yes</div>
+ <div class="pill active" data-value="no">No</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="generate-row">
+ <button class="btn-generate" id="btn-generate">Generate my plan</button>
+ </div>
+
+ </div>
+
+ <!-- RESULTS -->
+ <div class="results-block" id="results">
+
+ <!-- DIAGNOSIS -->
+ <div>
+ <span class="section-eyebrow">Diagnosis</span>
+ <h2 class="section-title">Where you stand</h2>
+ <p class="section-desc">Three measures that locate your household within the asset contract this project documents.</p>
+ <div class="diagnosis" id="diagnosis"></div>
+ </div>
+
+ <!-- ACTION CARDS -->
+ <div class="cards-block">
+ <span class="section-eyebrow">Action plan</span>
+ <h2 class="section-title">Five recommendations, in priority order</h2>
+ <p class="section-desc">Each card shows what to do, why, and the single concrete step you can take this week.</p>
+ <div id="action-cards"></div>
+ </div>
+
+ <!-- SCENARIO CHART -->
+ <div class="scenario-block">
+ <h3 class="scenario-title">The cost of inaction</h3>
+ <p class="scenario-desc">Projected net worth at retirement under two scenarios: following the plan, or not.</p>
+ <div id="scenario-chart"></div>
+ <div class="scenario-summary" id="scenario-summary"></div>
+ </div>
+
+ <!-- METHODOLOGY -->
+ <div class="method-block" id="method-block">
+ <div class="method-head" id="method-head">
+ <span>Methodology &amp; assumptions</span>
+ <span class="method-arrow">›</span>
+ </div>
+ <div class="method-body">
+ <div class="method-content">
+ <p>Every number on this page is computed deterministically from your inputs and the
+ following assumptions. No machine learning, no API calls, no data leaves your browser.</p>
+ <ul>
+ <li>Equity return assumption: <code>6.5%</code> real (long-run S&amp;P 500 net of inflation)</li>
+ <li>Bond return assumption: <code>2.0%</code> real</li>
+ <li>Inflation: <code>2.5%</code> (CPI long-run trend)</li>
+ <li>Mortgage rate: <code>7.0%</code> (current 30-year fixed; updated quarterly)</li>
+ <li>Tuition growth: <code>4.5%</code>/year (College Board historical)</li>
+ <li>Property tax: <code>1.2%</code>/year of home value (US average)</li>
+ <li>Home maintenance: <code>1.5%</code>/year of home value</li>
+ <li>HSA contribution limits: 2024 IRS, <code>$4,300</code> single / <code>$8,550</code> family</li>
+ <li>Dependent care FSA limit: <code>$5,000</code> (IRS, 2024)</li>
+ <li>IRA contribution limit: <code>$7,000</code> (IRS, 2024)</li>
+ <li>Roth IRA phase-out: <code>$161K</code> single / <code>$240K</code> married (2024)</li>
+ <li>Social Security replacement: <code>~40%</code> of pre-retirement income</li>
+ <li>Safe withdrawal rate: <code>4%</code> (Trinity / Bengen)</li>
+ <li>Childcare cost source: Child Care Aware of America, 2024 state averages</li>
+ <li>Pre-K eligibility ages: NIEER State of Preschool Yearbook 2024</li>
+ <li>State 529 deductions: state revenue department websites, 2024</li>
+ <li>Metro home prices: Zillow ZHVI, August 2024</li>
+ <li>Metro rents: Zillow ZORI 2-bedroom, August 2024</li>
+ </ul>
+ <div class="privacy-note">
+ All calculations happen in your browser. No data is sent to any server.
+ Refresh the page to clear your inputs.
+ </div>
+ </div>
+ </div>
+ </div>
+
+ </div>
+
+</div>
+
+<script>
+/* ============================================================
+ DATA TABLES
+ ============================================================ */
+
+const STATE_PREK = {
+ 'AL':4, 'AK':null, 'AZ':null, 'AR':4, 'CA':4, 'CO':4,
+ 'CT':3, 'DE':null, 'FL':4, 'GA':4, 'HI':4, 'ID':null,
+ 'IL':3, 'IN':null, 'IA':4, 'KS':4, 'KY':4, 'LA':4,
+ 'ME':4, 'MD':4, 'MA':4, 'MI':4, 'MN':4, 'MS':4, 'MO':4,
+ 'MT':null, 'NE':4, 'NV':4, 'NH':null, 'NJ':3, 'NM':4,
+ 'NY':4, 'NC':4, 'ND':null, 'OH':4, 'OK':4, 'OR':3,
+ 'PA':3, 'RI':4, 'SC':4, 'SD':null, 'TN':4, 'TX':4,
+ 'UT':null, 'VT':3, 'VA':4, 'WA':3, 'WV':4, 'WI':4,
+ 'WY':4, 'DC':3,
+};
+
+const STATE_NAMES = {
+ 'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
+ 'CO':'Colorado','CT':'Connecticut','DE':'Delaware','FL':'Florida','GA':'Georgia',
+ 'HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas',
+ 'KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland','MA':'Massachusetts',
+ 'MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana',
+ 'NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico',
+ 'NY':'New York','NC':'North Carolina','ND':'North Dakota','OH':'Ohio','OK':'Oklahoma',
+ 'OR':'Oregon','PA':'Pennsylvania','RI':'Rhode Island','SC':'South Carolina',
+ 'SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont',
+ 'VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming','DC':'D.C.'
+};
+
+const STATE_529 = {
+ 'NY':10000, 'IL':20000, 'PA':18000, 'GA':8000,
+ 'IN':5000, 'IA':3785, 'MD':2500, 'CO':24000,
+ 'MI':5000, 'OH':4000, 'OK':10000, 'OR':4865,
+ 'SC':99999, 'UT':2410, 'VA':4000, 'WV':99999,
+ 'WI':3860, 'MS':10000, 'NM':99999, 'KS':3000,
+};
+
+const CHILDCARE_COST = {
+ 'CA':22000, 'MA':24000, 'NY':21000, 'WA':18500,
+ 'CT':23000, 'NJ':19500, 'MD':17500, 'IL':16000,
+ 'VA':16500, 'CO':17000, 'MN':18000, 'OR':16000,
+ 'AZ':12000, 'TX':12500, 'FL':12000, 'GA':11500,
+ 'OH':11000, 'PA':14500, 'MI':12000, 'NC':12500,
+ 'IN':10500, 'MO':11000, 'TN':11500, 'WI':13000,
+ 'NV':12500, 'UT':11500, 'KY':10000, 'AL':9500,
+ 'LA':9500, 'MS':9000, 'AR':9000, 'OK':10000,
+ 'KS':11000, 'NE':11000, 'IA':11500, 'ND':11000,
+ 'SD':11000, 'WV':9500, 'NH':16500, 'ME':14000,
+ 'VT':16000, 'RI':17000, 'DE':16500, 'AK':16000,
+ 'HI':18000, 'NM':10500, 'WY':12000, 'MT':12000,
+ 'ID':11000, 'SC':11000, 'DC':24000,
+};
+
+const METRO_HOME_PRICE = {
+ 'National': 412000,
+ 'San Francisco': 1351000,
+ 'New York': 847000,
+ 'Seattle': 812000,
+ 'Los Angeles': 1007000,
+ 'Boston': 698000,
+ 'Washington DC': 504000,
+ 'Austin': 538000,
+ 'Chicago': 338000,
+ 'Atlanta': 389000,
+ 'Phoenix': 458000,
+ 'Detroit': 246000,
+ 'Cleveland': 281000,
+ 'Pittsburgh': 286000,
+ 'Memphis': 286000,
+ 'Buffalo': 332000,
+};
+
+const METRO_RENT = {
+ 'National': 1600,
+ 'San Francisco': 3800,
+ 'New York': 3500,
+ 'Seattle': 2400,
+ 'Los Angeles': 2800,
+ 'Boston': 3000,
+ 'Washington DC': 2400,
+ 'Austin': 2000,
+ 'Chicago': 1900,
+ 'Atlanta': 1750,
+ 'Phoenix': 1700,
+ 'Detroit': 1200,
+ 'Cleveland': 1100,
+ 'Pittsburgh': 1250,
+ 'Memphis': 1300,
+ 'Buffalo': 1300,
+};
+
+/* Constants */
+const MORTGAGE_RATE = 0.070;
+const PROPERTY_TAX = 0.012;
+const HOME_MAINT = 0.015;
+const INFLATION = 0.025;
+const EQUITY_RETURN = 0.065;
+const BOND_RETURN = 0.020;
+const HSA_LIMIT_FAMILY = 8550;
+const HSA_LIMIT_SINGLE = 4300;
+const FSA_DCAP_LIMIT = 5000;
+const IRA_LIMIT = 7000;
+const ROTH_PHASEOUT_SINGLE = 161000;
+const ROTH_PHASEOUT_MARRIED = 240000;
+const FEDERAL_TUITION_2024 = 11260;
+const TUITION_GROWTH = 0.045;
+const SS_REPLACE = 0.40;
+
+/* ============================================================
+ FORM STATE / UI
+ ============================================================ */
+
+const formState = {
+ education: 'bachelors',
+ planningKids: 'no',
+ parentCare: 'no',
+ housing: 'rent',
+ debtType: 'federal',
+ hsaEligible: 'unknown',
+ fsaAvailable: 'unknown',
+ wantHome: 'yes',
+ risk: 'moderate',
+ familySupport: 'no',
+};
+
+/* Populate dropdowns */
+const metroSelect = document.getElementById('in-metro');
+Object.keys(METRO_HOME_PRICE).forEach(m => {
+ const opt = document.createElement('option');
+ opt.value = m; opt.textContent = m;
+ if (m === 'National') opt.selected = true;
+ metroSelect.appendChild(opt);
+});
+
+const stateSelect = document.getElementById('in-state');
+Object.keys(STATE_NAMES).sort().forEach(s => {
+ const opt = document.createElement('option');
+ opt.value = s; opt.textContent = `${s}, ${STATE_NAMES[s]}`;
+ if (s === 'CA') opt.selected = true;
+ stateSelect.appendChild(opt);
+});
+
+/* Panel toggle */
+document.querySelectorAll('.panel-head').forEach(head => {
+ head.addEventListener('click', () => {
+ head.parentElement.classList.toggle('open');
+ });
+});
+
+/* Pill groups */
+document.querySelectorAll('.pill-row').forEach(row => {
+ const group = row.dataset.group;
+ row.addEventListener('click', e => {
+ if (!e.target.classList.contains('pill')) return;
+ row.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+ e.target.classList.add('active');
+ formState[group] = e.target.dataset.value;
+ });
+});
+
+/* ============================================================
+ COLLECT INPUTS
+ ============================================================ */
+
+function collectInputs() {
+ const childAgesRaw = document.getElementById('in-child-ages').value;
+ const childrenAges = childAgesRaw
+ .split(',')
+ .map(s => parseInt(s.trim(), 10))
+ .filter(n => !isNaN(n));
+
+ return {
+ age: parseInt(document.getElementById('in-age').value, 10) || 35,
+ householdSize: parseInt(document.getElementById('in-household').value, 10) || 1,
+ marital: document.getElementById('in-marital').value,
+ metro: metroSelect.value,
+ state: stateSelect.value,
+ income: parseFloat(document.getElementById('in-income').value) || 0,
+ education: formState.education,
+
+ children: parseInt(document.getElementById('in-children').value, 10) || 0,
+ childrenAges: childrenAges,
+ planningKids: formState.planningKids,
+ parentCare: formState.parentCare,
+
+ housing: formState.housing,
+ homeValue: parseFloat(document.getElementById('in-home-value').value) * 1000 || 0,
+ mortgageBalance: parseFloat(document.getElementById('in-mortgage-bal').value) * 1000 || 0,
+ mortgageRate: parseFloat(document.getElementById('in-mortgage-rate').value) / 100 || 0,
+ rent: parseFloat(document.getElementById('in-rent').value) || 0,
+ retirementSavings: parseFloat(document.getElementById('in-retirement').value) || 0,
+ savings: parseFloat(document.getElementById('in-savings').value) || 0,
+ studentDebt: parseFloat(document.getElementById('in-student-debt').value) || 0,
+ debtType: formState.debtType,
+ employerMatch: parseFloat(document.getElementById('in-match').value) || 0,
+ hsaEligible: formState.hsaEligible,
+ fsaAvailable: formState.fsaAvailable,
+
+ targetRetireAge: parseInt(document.getElementById('in-retire-age').value, 10) || 65,
+ wantHome: formState.wantHome,
+ riskTolerance: formState.risk,
+ inheritance: parseFloat(document.getElementById('in-inheritance').value) || 0,
+ familySupport: formState.familySupport,
+ };
+}
+
+/* ============================================================
+ ENGINE, DREAM INDEX & PERCENTILE
+ ============================================================ */
+
+function computePersonalDreamIndex(inputs) {
+ const baseBasket = 100083;
+ const metroMultiplier =
+ METRO_HOME_PRICE[inputs.metro] / METRO_HOME_PRICE['National'];
+ const familyAdjustment = 1 + (Math.max(0, inputs.householdSize - 2) * 0.12);
+ const adjustedBasket = baseBasket * (0.5 + 0.5 * metroMultiplier) * familyAdjustment;
+ const income = inputs.income * 1000;
+ if (income <= 0) return Infinity;
+ return adjustedBasket / income;
+}
+
+function incomePercentile(income) {
+ const thresholds = [
+ [25000, 10], [40000, 25], [60000, 40], [80000, 55],
+ [100000, 65], [125000, 75], [165000, 85], [225000, 92],
+ [300000, 97], [500000, 99],
+ ];
+ for (let [threshold, pct] of thresholds) {
+ if (income < threshold) return pct;
+ }
+ return 99;
+}
+
+function positionInContract(di, percentile) {
+ if (percentile >= 95) return { label: 'Above the contract', verdict: 'blue' };
+ if (di < 0.8) return { label: 'Inside the working contract', verdict: 'green' };
+ if (di <= 1.0) return { label: 'On the threshold', verdict: 'amber' };
+ return { label: 'After the crossing', verdict: 'rust' };
+}
+
+/* ============================================================
+ ENGINE, HOUSING
+ ============================================================ */
+
+function housingRec(inputs) {
+ const metro = inputs.metro;
+ const homePrice = METRO_HOME_PRICE[metro];
+ const monthlyRent = METRO_RENT[metro];
+ const income = inputs.income * 1000;
+ const age = inputs.age;
+ const owns = inputs.housing === 'own';
+
+ const maxMonthlyHousing = income / 12 * 0.28;
+
+ const downPayment = homePrice * 0.20;
+ const loanAmt = homePrice - downPayment;
+ const r = MORTGAGE_RATE / 12;
+ const n = 360;
+ const piti = loanAmt * (r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1)
+ + (homePrice * PROPERTY_TAX / 12)
+ + (homePrice * HOME_MAINT / 12);
+
+ const closing = homePrice * 0.03;
+ const annualOwnCost = piti * 12;
+ const annualRentCost = monthlyRent * 12;
+ const expectedAppreciation = homePrice * 0.03;
+ const opportunityCost = downPayment * EQUITY_RETURN;
+ const netAnnualOwnAdvantage =
+ annualRentCost - annualOwnCost
+ + expectedAppreciation - opportunityCost;
+ const breakeven = netAnnualOwnAdvantage > 0
+ ? (downPayment + closing) / netAnnualOwnAdvantage
+ : 99;
+
+ const why = [
+ `Metro: <code>${metro}</code>, median home price <code>$${homePrice.toLocaleString()}</code>`,
+ `Median 2-bedroom rent: <code>$${monthlyRent.toLocaleString()}/mo</code>`,
+ `28% rule maximum monthly housing: <code>$${Math.round(maxMonthlyHousing).toLocaleString()}</code>`,
+ `Full ownership cost (P+I+T+I) at 7.0%: <code>$${Math.round(piti).toLocaleString()}/mo</code>`,
+ `Buy/rent breakeven: <code>${breakeven.toFixed(1)} years</code>`,
+ ];
+
+ if (owns) {
+ if (inputs.mortgageRate && inputs.mortgageRate > 0.075) {
+ return {
+ headline: 'Refinance your mortgage when rates drop',
+ rationale: `Your rate of ${(inputs.mortgageRate*100).toFixed(2)}% is above the current market.
+ When rates drop 0.75% below your current rate, refinancing typically pays for
+ itself within 2 years.`,
+ currentState: `${(inputs.mortgageRate*100).toFixed(2)}% rate`,
+ recommendedState: 'Refinance trigger: < ' + ((inputs.mortgageRate - 0.0075)*100).toFixed(2) + '%',
+ action: 'Set a rate alert on Bankrate or NerdWallet for your trigger rate.',
+ category: 'housing',
+ verdict: 'amber',
+ currentNum: inputs.mortgageRate * 100,
+ recommendedNum: (inputs.mortgageRate - 0.0075) * 100,
+ unitLabel: 'rate %',
+ why,
+ };
+ }
+ if (age > 55 && inputs.children === 0) {
+ const targetValue = Math.round((inputs.homeValue || homePrice) * 0.6);
+ return {
+ headline: 'Consider downsizing in the next 5 years',
+ rationale: `You have built home equity that could be redeployed.
+ Downsizing to a home worth 60% of your current value frees up
+ equity for retirement savings.`,
+ currentState: `Home value: $${(inputs.homeValue || homePrice).toLocaleString()}`,
+ recommendedState: `Target downsize value: $${targetValue.toLocaleString()}`,
+ action: 'Talk to a fee-only fiduciary about your specific situation before listing.',
+ category: 'housing',
+ verdict: 'amber',
+ currentNum: inputs.homeValue || homePrice,
+ recommendedNum: targetValue,
+ unitLabel: 'home value',
+ why,
+ };
+ }
+ return {
+ headline: 'Keep your home; accelerate the mortgage',
+ rationale: `You have an asset that compounds. Paying an extra
+ $${Math.round(piti*0.15).toLocaleString()}/month on principal shaves roughly 7 years off
+ a 30-year mortgage.`,
+ currentState: `Current monthly P+I+T+I: $${Math.round(piti).toLocaleString()}`,
+ recommendedState: `Add $${Math.round(piti*0.15).toLocaleString()}/mo extra principal`,
+ action: 'Set up an automatic transfer for the extra principal payment.',
+ category: 'housing',
+ verdict: 'green',
+ currentNum: Math.round(piti),
+ recommendedNum: Math.round(piti * 1.15),
+ unitLabel: 'monthly payment',
+ why,
+ };
+ }
+
+ /* renting */
+ const canAffordMonthly = piti < maxMonthlyHousing * 1.1;
+ const downPaymentReachable = (inputs.savings * 1000) > downPayment * 0.5;
+
+ if (!canAffordMonthly) {
+ return {
+ headline: 'Keep renting and invest the difference',
+ rationale: `In ${metro}, the cost to own a median home is
+ $${Math.round(piti).toLocaleString()}/month, beyond what your income safely supports.
+ Renting at $${monthlyRent}/mo and investing the difference outperforms forced ownership.`,
+ currentState: `Rent: $${monthlyRent}/month`,
+ recommendedState: `Invest $${Math.round((piti - monthlyRent)).toLocaleString()}/mo in index funds`,
+ action: 'Open a brokerage account if you do not have one. Schwab, Fidelity, and Vanguard charge no commissions.',
+ category: 'housing',
+ verdict: 'rust',
+ currentNum: monthlyRent,
+ recommendedNum: Math.round(piti),
+ unitLabel: 'monthly housing cost',
+ why,
+ };
+ }
+ if (canAffordMonthly && downPaymentReachable) {
+ const targetYears = Math.max(1, Math.round(breakeven * 0.7));
+ return {
+ headline: `Buy a home in the next ${targetYears} year${targetYears>1?'s':''}`,
+ rationale: `Your income supports a $${Math.round(piti).toLocaleString()}/month
+ housing payment. The buy-vs-rent breakeven in ${metro} is
+ ${breakeven.toFixed(1)} years, well within a normal tenure.`,
+ currentState: `Current savings: $${inputs.savings.toLocaleString()}K`,
+ recommendedState: `Down payment needed: $${Math.round(downPayment).toLocaleString()}`,
+ action: `Open a high-yield savings account labeled "home fund" and automate monthly transfers.`,
+ category: 'housing',
+ verdict: 'green',
+ currentNum: inputs.savings * 1000,
+ recommendedNum: downPayment,
+ unitLabel: 'savings vs target',
+ why,
+ };
+ }
+ return {
+ headline: 'Save aggressively toward a down payment',
+ rationale: `You can afford the monthly cost in ${metro}, but the down payment
+ gap is $${Math.round(downPayment - inputs.savings*1000).toLocaleString()}.
+ Closing it in 5 years requires consistent automated saving.`,
+ currentState: `Savings: $${inputs.savings.toLocaleString()}K`,
+ recommendedState: `Down payment goal: $${Math.round(downPayment).toLocaleString()}`,
+ action: 'Automate the savings transfer. Manual saving fails roughly 90% of the time.',
+ category: 'housing',
+ verdict: 'amber',
+ currentNum: inputs.savings * 1000,
+ recommendedNum: downPayment,
+ unitLabel: 'savings vs target',
+ why,
+ };
+}
+
+/* ============================================================
+ ENGINE, HEALTHCARE
+ ============================================================ */
+
+function healthcareRec(inputs) {
+ const familySize = inputs.householdSize;
+ const isFamily = familySize > 1;
+ const hsaLimit = isFamily ? HSA_LIMIT_FAMILY : HSA_LIMIT_SINGLE;
+ const age = inputs.age;
+ const planningKids = inputs.planningKids === 'yes';
+ const hsaEligible = inputs.hsaEligible === 'yes';
+
+ const why = [
+ `Household size: <code>${familySize}</code>, HSA limit applied: <code>$${hsaLimit.toLocaleString()}</code>`,
+ `Age: <code>${age}</code>, ${age > 55 ? 'over 55, healthcare use ramps up' : 'under 55, lower predictable use'}`,
+ `Planning more children: <code>${inputs.planningKids}</code>`,
+ `HSA-eligible plan: <code>${inputs.hsaEligible}</code>`,
+ ];
+
+ if (planningKids || age > 55) {
+ return {
+ headline: 'Stay on a low-deductible plan',
+ rationale: `Households planning pregnancies or with members over 55
+ rarely come out ahead on high-deductible plans. The math favors
+ predictable copays over HSA tax advantages in your situation.`,
+ currentState: 'High predictable healthcare use ahead',
+ recommendedState: 'Low-deductible plan with predictable copays',
+ action: 'During open enrollment, choose the plan with the lowest annual deductible you can afford.',
+ category: 'healthcare',
+ verdict: 'amber',
+ currentNum: 6000,
+ recommendedNum: 1500,
+ unitLabel: 'typical deductible',
+ why,
+ };
+ }
+
+ if (hsaEligible) {
+ return {
+ headline: `Max your HSA at $${hsaLimit.toLocaleString()}/year`,
+ rationale: `An HSA is the only triple-tax-advantaged account in the US tax code.
+ Contributions are pre-tax, growth is tax-free, withdrawals for medical
+ expenses are tax-free. Treat it as a stealth retirement account.`,
+ currentState: 'HSA contribution: $0',
+ recommendedState: `HSA contribution: $${Math.round(hsaLimit/12).toLocaleString()}/month`,
+ action: `Increase your HSA payroll deduction to $${Math.round(hsaLimit/26).toLocaleString()} per paycheck.`,
+ category: 'healthcare',
+ verdict: 'green',
+ currentNum: 0,
+ recommendedNum: hsaLimit,
+ unitLabel: 'annual HSA',
+ why,
+ };
+ }
+
+ return {
+ headline: 'Verify whether you can switch to an HSA-eligible plan',
+ rationale: `You may have access to an HSA-eligible plan and not know it.
+ During open enrollment, the high-deductible plan with HSA is often
+ cheaper after-tax for healthy households under 50.`,
+ currentState: 'Plan type: unknown',
+ recommendedState: 'Confirm HSA eligibility with HR',
+ action: 'Email HR this week: "Does our plan offer an HSA-eligible high-deductible option?"',
+ category: 'healthcare',
+ verdict: 'amber',
+ currentNum: 0,
+ recommendedNum: hsaLimit,
+ unitLabel: 'potential HSA',
+ why,
+ };
+}
+
+/* ============================================================
+ ENGINE, CHILDCARE
+ ============================================================ */
+
+function childcareRec(inputs) {
+ const numChildren = inputs.children || 0;
+ const state = inputs.state;
+ const childcareCost = CHILDCARE_COST[state] || 12000;
+ const prekAge = STATE_PREK[state];
+ const fsaAvailable = inputs.fsaAvailable === 'yes';
+ const familyTaxRate = 0.22;
+
+ const why = [
+ `State: <code>${state}</code>, childcare cost <code>$${childcareCost.toLocaleString()}/child/yr</code>`,
+ `Universal pre-K starts: <code>${prekAge ? `age ${prekAge}` : 'not offered'}</code>`,
+ `Children: <code>${numChildren}</code>`,
+ `Dependent care FSA available: <code>${inputs.fsaAvailable}</code>`,
+ ];
+
+ if (numChildren === 0 && inputs.planningKids !== 'yes') {
+ return {
+ headline: 'No action needed in this domain',
+ rationale: 'You have no current childcare exposure. This card will activate if your situation changes.',
+ currentState: '',
+ recommendedState: '',
+ action: 'Revisit if you have children or take on caregiving for relatives.',
+ category: 'childcare',
+ verdict: 'green',
+ currentNum: 0,
+ recommendedNum: 0,
+ unitLabel: '',
+ why,
+ };
+ }
+
+ const yearsUntilPrek = prekAge || 5;
+ const annualExposure = childcareCost * Math.min(Math.max(numChildren, 1), 2);
+ const lifetimeExposure = annualExposure * yearsUntilPrek;
+ const fsaSavings = fsaAvailable ? FSA_DCAP_LIMIT * familyTaxRate : 0;
+
+ if (fsaAvailable) {
+ return {
+ headline: `Max your Dependent Care FSA at $${FSA_DCAP_LIMIT.toLocaleString()}/year`,
+ rationale: `In ${state}, childcare costs about $${childcareCost.toLocaleString()}/child/year.
+ ${prekAge ? `Public pre-K starts at age ${prekAge}.` : 'Your state does not offer universal pre-K.'}
+ The FSA saves you roughly $${Math.round(fsaSavings).toLocaleString()}/year in taxes.`,
+ currentState: `Annual childcare cost: $${annualExposure.toLocaleString()}`,
+ recommendedState: `FSA contribution: $${FSA_DCAP_LIMIT.toLocaleString()} (saves $${Math.round(fsaSavings).toLocaleString()})`,
+ action: 'During open enrollment, elect the full $5,000 dependent care FSA.',
+ category: 'childcare',
+ verdict: 'green',
+ currentNum: 0,
+ recommendedNum: FSA_DCAP_LIMIT,
+ unitLabel: 'FSA contribution',
+ why,
+ };
+ }
+
+ return {
+ headline: prekAge
+ ? `Plan for ${yearsUntilPrek} years of childcare before pre-K`
+ : `Your state lacks universal pre-K, plan for 5 years of paid care`,
+ rationale: `In ${state}, your cumulative childcare exposure is
+ $${Math.round(lifetimeExposure).toLocaleString()} across the pre-school years.
+ ${!fsaAvailable ? 'Without an employer FSA, this is fully out-of-pocket.' : ''}`,
+ currentState: `Annual cost: $${annualExposure.toLocaleString()}`,
+ recommendedState: `Build buffer: $${Math.round(annualExposure*0.25).toLocaleString()}/yr`,
+ action: 'Talk to HR about whether the company will add a dependent care FSA next plan year.',
+ category: 'childcare',
+ verdict: 'rust',
+ currentNum: annualExposure,
+ recommendedNum: annualExposure * 0.25,
+ unitLabel: 'annual childcare',
+ why,
+ };
+}
+
+/* ============================================================
+ ENGINE, EDUCATION
+ ============================================================ */
+
+function educationRec(inputs) {
+ const studentDebt = (inputs.studentDebt || 0) * 1000;
+ const debtType = inputs.debtType;
+ const income = inputs.income * 1000;
+ const numChildren = inputs.children || 0;
+ const childrenAges = inputs.childrenAges || [];
+ const state = inputs.state;
+ const has529Deduction = STATE_529[state];
+
+ const recs = [];
+ const why = [
+ `Student debt: <code>$${(studentDebt).toLocaleString()}</code> (${debtType})`,
+ `Income: <code>$${income.toLocaleString()}</code>`,
+ `Children: <code>${numChildren}</code>`,
+ `State 529 deduction: <code>${has529Deduction ? '$'+has529Deduction.toLocaleString()+'/yr' : 'none'}</code>`,
+ ];
+
+ if (studentDebt > 0 && income > 0) {
+ const dti = studentDebt / income;
+ if (dti > 1.0 && debtType === 'federal') {
+ recs.push({
+ headline: 'Enroll in SAVE or income-driven repayment',
+ detail: `Your student-debt-to-income ratio is ${dti.toFixed(1)}x. Aggressive payoff is mathematically wrong here.
+ Income-driven repayment caps payments at 5–10% of discretionary income and forgives the
+ balance after 20–25 years. Federal loans only, switch immediately.`,
+ verdict: 'amber',
+ currentNum: studentDebt,
+ recommendedNum: studentDebt * 0.5,
+ unitLabel: 'effective debt after IDR',
+ });
+ } else if (dti < 0.5 && studentDebt > 0) {
+ const monthlyAggressive = studentDebt / 60 * 1.05;
+ recs.push({
+ headline: `Pay off aggressively: $${Math.round(monthlyAggressive).toLocaleString()}/month for 5 years`,
+ detail: `Your student-debt-to-income ratio is ${dti.toFixed(1)}x, manageable. Aggressive payoff
+ frees you from interest cost in 5 years, then redirects payments to retirement.`,
+ verdict: 'green',
+ currentNum: studentDebt,
+ recommendedNum: 0,
+ unitLabel: 'debt remaining in 5 years',
+ });
+ } else if (studentDebt > 0) {
+ const monthly = studentDebt / 120 * 1.04;
+ recs.push({
+ headline: `Standard 10-year payoff: $${Math.round(monthly).toLocaleString()}/month`,
+ detail: `Your student-debt-to-income ratio is ${dti.toFixed(1)}x. A 10-year standard payoff
+ is appropriate at this leverage, neither aggressive nor IDR-bound.`,
+ verdict: 'amber',
+ currentNum: studentDebt,
+ recommendedNum: 0,
+ unitLabel: 'debt remaining in 10 years',
+ });
+ }
+ }
+
+ if (numChildren > 0 && childrenAges.length > 0) {
+ const oldestAge = Math.max(...childrenAges, 0);
+ const yearsToCollege = Math.max(0, 18 - oldestAge);
+ if (yearsToCollege > 0) {
+ const futureTuition = FEDERAL_TUITION_2024 *
+ Math.pow(1 + TUITION_GROWTH, yearsToCollege) * 4;
+ const monthlyContrib =
+ futureTuition * (EQUITY_RETURN/12) /
+ (Math.pow(1 + EQUITY_RETURN/12, yearsToCollege*12) - 1);
+
+ const deductionNote = has529Deduction
+ ? ` Your state (${state}) offers a $${has529Deduction.toLocaleString()} annual 529 tax deduction.`
+ : '';
+
+ recs.push({
+ headline: `Open a 529 plan and contribute $${Math.round(monthlyContrib).toLocaleString()}/month`,
+ detail: `By the time your oldest child is 18, in-state public university tuition will cost
+ approximately $${Math.round(futureTuition).toLocaleString()} for 4 years.${deductionNote}`,
+ verdict: 'green',
+ currentNum: 0,
+ recommendedNum: monthlyContrib,
+ unitLabel: 'monthly 529',
+ });
+ }
+ }
+
+ if (recs.length === 0) {
+ return {
+ headline: 'No active education debt or 529 needs',
+ rationale: 'You have no student debt and no children of pre-college age requiring 529 contributions.',
+ currentState: '',
+ recommendedState: '',
+ action: 'Revisit if your situation changes.',
+ category: 'education',
+ verdict: 'green',
+ currentNum: 0,
+ recommendedNum: 0,
+ unitLabel: '',
+ why,
+ };
+ }
+
+ /* most urgent first: amber/rust before green */
+ const order = { rust: 0, amber: 1, green: 2 };
+ recs.sort((a, b) => order[a.verdict] - order[b.verdict]);
+ const primary = recs[0];
+
+ return {
+ headline: primary.headline,
+ rationale: primary.detail,
+ currentState: studentDebt > 0
+ ? `Student debt: $${(studentDebt/1000).toFixed(0)}K`
+ : 'No student debt',
+ recommendedState: numChildren > 0
+ ? `${numChildren} child${numChildren>1?'ren':''} to fund`
+ : '529 not yet needed',
+ action: studentDebt > 0
+ ? (debtType === 'federal' && primary.verdict === 'amber'
+ ? 'Visit studentaid.gov this week and apply for the SAVE plan.'
+ : 'Set up an automatic extra payment to your loan servicer.')
+ : 'Open a 529 with your state plan or Vanguard\'s national plan.',
+ category: 'education',
+ verdict: primary.verdict,
+ currentNum: primary.currentNum,
+ recommendedNum: primary.recommendedNum,
+ unitLabel: primary.unitLabel,
+ why,
+ };
+}
+
+/* ============================================================
+ ENGINE, ASSET ALLOCATION
+ ============================================================ */
+
+function assetAllocationRec(inputs) {
+ const age = inputs.age;
+ const retireAge = inputs.targetRetireAge || 65;
+ const yearsToRetire = Math.max(1, retireAge - age);
+ const income = inputs.income * 1000;
+ const currentSavings = (inputs.retirementSavings || 0) * 1000;
+ const match = inputs.employerMatch || 0;
+ const risk = inputs.riskTolerance || 'moderate';
+
+ let equityPct;
+ if (risk === 'aggressive') equityPct = Math.min(0.95, 1.1 - age/100);
+ else if (risk === 'conservative') equityPct = Math.max(0.4, 0.9 - age/100);
+ else equityPct = Math.max(0.5, 1.0 - age/100);
+
+ const targetReplacement = 0.80;
+ const targetIncome = income * targetReplacement;
+ const ssIncome = income * SS_REPLACE;
+ const portfolioIncomeNeeded = Math.max(0, targetIncome - ssIncome);
+ const targetPortfolio = portfolioIncomeNeeded / 0.04;
+
+ const r = EQUITY_RETURN / 12;
+ const n = yearsToRetire * 12;
+ const futureCurrent = currentSavings * Math.pow(1+r, n);
+ const gap = Math.max(0, targetPortfolio - futureCurrent);
+ const monthlyNeeded = gap > 0
+ ? gap * r / (Math.pow(1+r, n) - 1)
+ : 0;
+
+ const matchAmount = income * (match/100);
+
+ const why = [
+ `Age <code>${age}</code> → ${yearsToRetire} years to retirement at ${retireAge}`,
+ `Current retirement savings: <code>$${currentSavings.toLocaleString()}</code> grows to <code>$${Math.round(futureCurrent).toLocaleString()}</code>`,
+ `Target portfolio (4% rule, 80% income replacement): <code>$${Math.round(targetPortfolio).toLocaleString()}</code>`,
+ `Gap: <code>$${Math.round(gap).toLocaleString()}</code> → required monthly contribution <code>$${Math.round(monthlyNeeded).toLocaleString()}</code>`,
+ `Risk tolerance <code>${risk}</code> → <code>${Math.round(equityPct*100)}/${Math.round((1-equityPct)*100)}</code> stocks/bonds`,
+ ];
+
+ if (matchAmount > 0 && currentSavings < matchAmount * 3) {
+ return {
+ headline: `Capture your full ${match}% 401k match first`,
+ rationale: `Your employer offers a ${match}% match, this is an immediate
+ 100% return on your contribution. Skipping it leaves free money on the table.
+ Capture this before any other allocation move.`,
+ currentState: `Retirement savings: $${(currentSavings/1000).toFixed(0)}K`,
+ recommendedState: `Contribute $${Math.round(matchAmount/12).toLocaleString()}/mo to capture full match`,
+ action: `Increase your 401k contribution rate to capture the full ${match}% match this paycheck.`,
+ category: 'allocation',
+ verdict: 'green',
+ currentNum: currentSavings,
+ recommendedNum: currentSavings + matchAmount * 12,
+ unitLabel: 'annual savings',
+ why,
+ };
+ }
+
+ if (monthlyNeeded > income * 0.30 / 12) {
+ return {
+ headline: 'Your retirement gap requires recalibration',
+ rationale: `To retire at ${retireAge} on 80% of current income, you would need to save
+ $${Math.round(monthlyNeeded).toLocaleString()}/month, more than 30% of your income.
+ Either work longer, save more aggressively, or accept a lower retirement income target.`,
+ currentState: `On track to: $${Math.round(futureCurrent/1000).toLocaleString()}K`,
+ recommendedState: `Target: $${Math.round(targetPortfolio/1000).toLocaleString()}K (gap $${Math.round(gap/1000).toLocaleString()}K)`,
+ action: 'Increase 401k contribution by 2% this year and another 2% every year until you hit the target.',
+ category: 'allocation',
+ verdict: 'rust',
+ currentNum: futureCurrent,
+ recommendedNum: targetPortfolio,
+ unitLabel: 'portfolio at retirement',
+ why,
+ };
+ }
+
+ return {
+ headline: `Contribute $${Math.round(monthlyNeeded).toLocaleString()}/month to retirement`,
+ rationale: `At ${age}, you have ${yearsToRetire} years to compound. Your asset allocation should be
+ ${Math.round(equityPct*100)}% equity / ${Math.round((1-equityPct)*100)}% bonds based on your risk
+ tolerance and time horizon. Hit this number and the math takes care of the rest.`,
+ currentState: `On track to: $${Math.round(futureCurrent/1000).toLocaleString()}K`,
+ recommendedState: `${Math.round(equityPct*100)}/${Math.round((1-equityPct)*100)} stocks/bonds`,
+ action: 'Open a Roth IRA if you do not have one. Automate monthly contributions tomorrow.',
+ category: 'allocation',
+ verdict: 'green',
+ currentNum: futureCurrent,
+ recommendedNum: targetPortfolio,
+ unitLabel: 'portfolio at retirement',
+ why,
+ };
+}
+
+/* ============================================================
+ RENDERING, DIAGNOSIS
+ ============================================================ */
+
+function renderDiagnosis(inputs) {
+ const di = computePersonalDreamIndex(inputs);
+ const income = inputs.income * 1000;
+ const pct = incomePercentile(income);
+ const pos = positionInContract(di, pct);
+
+ const wrap = document.getElementById('diagnosis');
+ wrap.innerHTML = '';
+
+ const cards = [
+ {
+ label: 'Your Dream Index',
+ value: di === Infinity ? '∞' : di.toFixed(2),
+ detail: di === Infinity
+ ? 'Income is zero or missing.'
+ : `Your household basket / your income.
+ ${di < 1 ? 'Income covers the basket.' : 'The basket exceeds income.'}`,
+ verdict: di < 0.8 ? 'green' : (di <= 1.0 ? 'amber' : 'rust'),
+ },
+ {
+ label: 'Income percentile',
+ value: pct + 'th',
+ detail: `You earn more than ${pct}% of US households.`,
+ verdict: pct >= 75 ? 'blue' : (pct >= 50 ? 'green' : (pct >= 25 ? 'amber' : 'rust')),
+ },
+ {
+ label: 'Position in the contract',
+ value: pos.label,
+ detail: pos.verdict === 'green'
+ ? 'Income covers the basket with margin to save.'
+ : pos.verdict === 'amber'
+ ? 'You can cover the basket; almost no margin to invest.'
+ : pos.verdict === 'rust'
+ ? 'Basket exceeds income, relying on debt or sacrifice.'
+ : 'Top of the income distribution; the contract is optional for you.',
+ verdict: pos.verdict,
+ },
+ ];
+
+ cards.forEach(c => {
+ const div = document.createElement('div');
+ div.className = `stat-card ${c.verdict}`;
+ div.innerHTML = `
+ <p class="stat-card-label">${c.label}</p>
+ <p class="stat-card-value">${c.value}</p>
+ <p class="stat-card-detail">${c.detail}</p>
+ `;
+ wrap.appendChild(div);
+ });
+}
+
+/* ============================================================
+ RENDERING, ACTION CARDS
+ ============================================================ */
+
+const DOMAIN_META = {
+ housing: { icon: '◧', label: 'Housing' },
+ healthcare: { icon: '✚', label: 'Healthcare' },
+ childcare: { icon: '◔', label: 'Childcare' },
+ education: { icon: '◇', label: 'Education' },
+ allocation: { icon: '◈', label: 'Asset allocation' },
+};
+
+function renderCard(rec, idx) {
+ const meta = DOMAIN_META[rec.category] || { icon: '•', label: rec.category };
+ const wrap = document.createElement('div');
+ wrap.className = `action-card ${rec.verdict}`;
+
+ const whyHTML = rec.why
+ ? `<ul>${rec.why.map(w => `<li>${w}</li>`).join('')}</ul>`
+ : '';
+
+ wrap.innerHTML = `
+ <div class="card-head">
+ <div class="card-num">${String(idx + 1).padStart(2, '0')}</div>
+ <div class="card-icon">${meta.icon}</div>
+ <div class="card-domain">${meta.label}</div>
+ </div>
+ <h3 class="card-headline">${rec.headline}</h3>
+ <p class="card-rationale">${rec.rationale}</p>
+ <div class="card-stats">
+ <div class="card-stat">
+ <div class="card-stat-label">Current</div>
+ <div class="card-stat-value">${rec.currentState}</div>
+ </div>
+ <div class="card-stats-arrow">→</div>
+ <div class="card-stat recommended">
+ <div class="card-stat-label">Recommended</div>
+ <div class="card-stat-value">${rec.recommendedState}</div>
+ </div>
+ </div>
+ <div class="card-chart" data-current="${rec.currentNum}" data-recommended="${rec.recommendedNum}" data-verdict="${rec.verdict}"></div>
+ <div class="card-action">
+ <span class="card-action-label">Your action this week</span>
+ ${rec.action}
+ </div>
+ <div class="card-why-toggle">Why this recommendation</div>
+ <div class="card-why-body">
+ <div class="why-content">${whyHTML}</div>
+ </div>
+ `;
+
+ /* expand toggle */
+ wrap.querySelector('.card-why-toggle').addEventListener('click', () => {
+ wrap.classList.toggle('expanded');
+ });
+
+ return wrap;
+}
+
+function renderMiniBarChart(container, current, recommended, verdict) {
+ const w = container.clientWidth || 600;
+ const h = 36;
+ const pad = 4;
+ if (current === 0 && recommended === 0) {
+ container.innerHTML = '<div style="font-size:0.72rem; color: var(--dim); padding-left: 0.4rem;">No comparison applicable</div>';
+ return;
+ }
+ const max = Math.max(current, recommended, 1) * 1.05;
+ const scale = (w - 120) / max;
+ const verdictColor = verdict === 'green' ? '#2d6a4f' :
+ verdict === 'amber' ? '#c9a96e' : '#B5451B';
+
+ const svg = d3.create('svg').attr('viewBox', `0 0 ${w} ${h}`);
+ /* current bar */
+ svg.append('rect')
+ .attr('x', 0).attr('y', 4)
+ .attr('width', Math.max(2, current * scale))
+ .attr('height', 12)
+ .attr('fill', '#3a342d');
+ svg.append('text')
+ .attr('x', current * scale + 6).attr('y', 14)
+ .attr('font-family', 'Inter')
+ .attr('font-size', 9)
+ .attr('fill', '#8a847a')
+ .text('current');
+ /* recommended bar */
+ svg.append('rect')
+ .attr('x', 0).attr('y', 20)
+ .attr('width', Math.max(2, recommended * scale))
+ .attr('height', 12)
+ .attr('fill', verdictColor);
+ svg.append('text')
+ .attr('x', recommended * scale + 6).attr('y', 30)
+ .attr('font-family', 'Inter')
+ .attr('font-size', 9)
+ .attr('fill', verdictColor)
+ .text('recommended');
+
+ container.innerHTML = '';
+ container.appendChild(svg.node());
+}
+
+function renderActionCards(recs) {
+ const wrap = document.getElementById('action-cards');
+ wrap.innerHTML = '';
+ recs.forEach((r, i) => {
+ const card = renderCard(r, i);
+ wrap.appendChild(card);
+ const chartEl = card.querySelector('.card-chart');
+ renderMiniBarChart(
+ chartEl,
+ Number(chartEl.dataset.current),
+ Number(chartEl.dataset.recommended),
+ chartEl.dataset.verdict
+ );
+ });
+}
+
+/* ============================================================
+ RENDERING, SCENARIO CHART
+ ============================================================ */
+
+function projectNetWorth(inputs, followPlan) {
+ const startAge = inputs.age;
+ const endAge = Math.max(inputs.targetRetireAge, startAge + 1);
+ const years = endAge - startAge;
+ const income = inputs.income * 1000;
+ const currentSavings = (inputs.retirementSavings || 0) * 1000;
+ const homeEquity = inputs.housing === 'own'
+ ? Math.max(0, inputs.homeValue - inputs.mortgageBalance)
+ : 0;
+
+ let nw = currentSavings + homeEquity + (inputs.savings * 1000);
+
+ /* yearly savings rate by scenario */
+ let savingsRate;
+ if (followPlan) {
+ /* maxed match + IRA + HSA + FSA savings */
+ const matchSave = income * (inputs.employerMatch / 100);
+ const hsaContrib = inputs.hsaEligible === 'yes'
+ ? (inputs.householdSize > 1 ? HSA_LIMIT_FAMILY : HSA_LIMIT_SINGLE)
+ : 0;
+ const fsaSave = inputs.fsaAvailable === 'yes' && inputs.children > 0
+ ? FSA_DCAP_LIMIT * 0.22
+ : 0;
+ const baseSave = income * 0.10;
+ savingsRate = matchSave + hsaContrib + fsaSave + baseSave;
+ } else {
+ /* status quo: low savings, no optimization */
+ savingsRate = income * 0.04;
+ }
+
+ const trajectory = [];
+ const ret = followPlan ? EQUITY_RETURN : EQUITY_RETURN * 0.7; /* worse alloc if no plan */
+
+ for (let y = 0; y <= years; y++) {
+ trajectory.push({ age: startAge + y, nw: nw });
+ nw = nw * (1 + ret) + savingsRate;
+ }
+ return trajectory;
+}
+
+function renderScenarioChart(inputs) {
+ const planned = projectNetWorth(inputs, true);
+ const status = projectNetWorth(inputs, false);
+
+ const container = document.getElementById('scenario-chart');
+ container.innerHTML = '';
+
+ const margin = { top: 20, right: 80, bottom: 40, left: 70 };
+ const w = container.clientWidth - margin.left - margin.right;
+ const h = 320 - margin.top - margin.bottom;
+
+ const svg = d3.select(container).append('svg')
+ .attr('viewBox', `0 0 ${container.clientWidth} 320`)
+ .style('width', '100%')
+ .style('height', '320px');
+
+ const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+ const xScale = d3.scaleLinear()
+ .domain([d3.min(planned, d => d.age), d3.max(planned, d => d.age)])
+ .range([0, w]);
+
+ const maxNw = d3.max([...planned, ...status], d => d.nw);
+ const yScale = d3.scaleLinear()
+ .domain([0, maxNw * 1.05])
+ .range([h, 0]);
+
+ const line = d3.line()
+ .x(d => xScale(d.age))
+ .y(d => yScale(d.nw))
+ .curve(d3.curveMonotoneX);
+
+ /* axis */
+ g.append('g')
+ .attr('transform', `translate(0,${h})`)
+ .call(d3.axisBottom(xScale).tickFormat(d => `${d}`).ticks(8))
+ .call(s => s.selectAll('line, path').attr('stroke', '#2a2520'))
+ .call(s => s.selectAll('text').attr('fill', '#8a847a').attr('font-size', 11));
+
+ g.append('g')
+ .call(d3.axisLeft(yScale).tickFormat(d => '$' + (d/1000000).toFixed(1) + 'M').ticks(6))
+ .call(s => s.selectAll('line, path').attr('stroke', '#2a2520'))
+ .call(s => s.selectAll('text').attr('fill', '#8a847a').attr('font-size', 11));
+
+ /* gridlines */
+ g.append('g')
+ .attr('class', 'grid')
+ .call(d3.axisLeft(yScale).ticks(6).tickSize(-w).tickFormat(''))
+ .call(s => s.selectAll('line').attr('stroke', '#1a1814').attr('stroke-dasharray', '1,3'))
+ .call(s => s.selectAll('path').attr('stroke', 'transparent'));
+
+ /* fill between */
+ const area = d3.area()
+ .x(d => xScale(d.plan.age))
+ .y0(d => yScale(d.status.nw))
+ .y1(d => yScale(d.plan.nw))
+ .curve(d3.curveMonotoneX);
+
+ const merged = planned.map((p, i) => ({ plan: p, status: status[i] }));
+ g.append('path')
+ .datum(merged)
+ .attr('d', area)
+ .attr('fill', '#2d6a4f')
+ .attr('fill-opacity', 0.10);
+
+ /* status quo line */
+ g.append('path')
+ .datum(status)
+ .attr('d', line)
+ .attr('fill', 'none')
+ .attr('stroke', '#B5451B')
+ .attr('stroke-width', 2)
+ .attr('stroke-dasharray', '4,3');
+
+ /* planned line */
+ g.append('path')
+ .datum(planned)
+ .attr('d', line)
+ .attr('fill', 'none')
+ .attr('stroke', '#2d6a4f')
+ .attr('stroke-width', 2.4);
+
+ /* labels at end of lines */
+ const lastPlan = planned[planned.length - 1];
+ const lastStatus = status[status.length - 1];
+
+ g.append('text')
+ .attr('x', xScale(lastPlan.age) + 6)
+ .attr('y', yScale(lastPlan.nw) + 4)
+ .attr('fill', '#2d6a4f')
+ .attr('font-size', 11)
+ .attr('font-family', 'Inter')
+ .attr('font-weight', 600)
+ .text('Plan');
+
+ g.append('text')
+ .attr('x', xScale(lastStatus.age) + 6)
+ .attr('y', yScale(lastStatus.nw) + 4)
+ .attr('fill', '#B5451B')
+ .attr('font-size', 11)
+ .attr('font-family', 'Inter')
+ .attr('font-weight', 600)
+ .text('No plan');
+
+ /* axis labels */
+ g.append('text')
+ .attr('x', w / 2).attr('y', h + 32)
+ .attr('text-anchor', 'middle')
+ .attr('fill', '#8a847a')
+ .attr('font-size', 10).attr('font-family', 'Inter')
+ .text('age');
+
+ g.append('text')
+ .attr('transform', `rotate(-90)`)
+ .attr('x', -h/2).attr('y', -52)
+ .attr('text-anchor', 'middle')
+ .attr('fill', '#8a847a')
+ .attr('font-size', 10).attr('font-family', 'Inter')
+ .text('net worth');
+
+ /* summary */
+ const summary = document.getElementById('scenario-summary');
+ const gap = lastPlan.nw - lastStatus.nw;
+ summary.innerHTML = `
+ <div class="scenario-stat">
+ <div class="scenario-stat-label">Net worth at ${lastPlan.age}, no plan</div>
+ <div class="scenario-stat-value">$${(lastStatus.nw/1000000).toFixed(2)}M</div>
+ </div>
+ <div class="scenario-stat">
+ <div class="scenario-stat-label">Net worth at ${lastPlan.age}, following plan</div>
+ <div class="scenario-stat-value gain">$${(lastPlan.nw/1000000).toFixed(2)}M</div>
+ </div>
+ <div class="scenario-stat">
+ <div class="scenario-stat-label">Cost of inaction</div>
+ <div class="scenario-stat-value cost">$${(gap/1000).toFixed(0)}K</div>
+ </div>
+ `;
+}
+
+/* ============================================================
+ ORCHESTRATION
+ ============================================================ */
+
+function generatePlan() {
+ const inputs = collectInputs();
+
+ /* open all panels for review */
+ document.querySelectorAll('.panel').forEach(p => p.classList.add('open'));
+
+ renderDiagnosis(inputs);
+
+ const recs = [
+ housingRec(inputs),
+ healthcareRec(inputs),
+ childcareRec(inputs),
+ educationRec(inputs),
+ assetAllocationRec(inputs),
+ ];
+ renderActionCards(recs);
+
+ renderScenarioChart(inputs);
+
+ document.getElementById('results').classList.add('visible');
+
+ setTimeout(() => {
+ document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+ }, 100);
+
+ /* return for self-test harness */
+ return { inputs, recs, di: computePersonalDreamIndex(inputs), pct: incomePercentile(inputs.income * 1000) };
+}
+
+document.getElementById('btn-generate').addEventListener('click', generatePlan);
+
+/* methodology toggle */
+document.getElementById('method-head').addEventListener('click', () => {
+ document.getElementById('method-block').classList.toggle('open');
+});
+
+/* expose for embedded test */
+window.__fig12 = { generatePlan, collectInputs, computePersonalDreamIndex, incomePercentile,
+ positionInContract, housingRec, healthcareRec, childcareRec, educationRec,
+ assetAllocationRec };
+
+/* re-render scenario chart on resize */
+let resizeTimer;
+window.addEventListener('resize', () => {
+ clearTimeout(resizeTimer);
+ resizeTimer = setTimeout(() => {
+ if (document.getElementById('results').classList.contains('visible')) {
+ const inputs = collectInputs();
+ renderScenarioChart(inputs);
+ /* re-render mini charts */
+ document.querySelectorAll('.card-chart').forEach(c => {
+ renderMiniBarChart(c,
+ Number(c.dataset.current),
+ Number(c.dataset.recommended),
+ c.dataset.verdict);
+ });
+ }
+ }, 200);
+});
+
+/* postMessage parent on resize */
+function notifyParent() {
+ try {
+ if (window.parent !== window) {
+ const h = document.documentElement.scrollHeight;
+ window.parent.postMessage({ type: 'fig12-height', height: h }, '*');
+ }
+ } catch(e) {}
+}
+const obs = new MutationObserver(notifyParent);
+obs.observe(document.body, { childList: true, subtree: true, attributes: true });
+window.addEventListener('load', notifyParent);
+</script>
+
+</body>
+</html>

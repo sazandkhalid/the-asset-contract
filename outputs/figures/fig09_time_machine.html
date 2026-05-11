@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Time Machine, Your Life on the Dream Index</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+ :root {
+ --bg: #f5f1ea;
+ --surface: #faf7f1;
+ --border: #d4cfc4;
+ --grid: #e3dccf;
+ --text: #2a2520;
+ --muted: #6a6258;
+ --dim: #8a8378;
+ --amber: #8b6914;
+ --rust: #a04020;
+ --green: #2d6a4f;
+ }
+ * { box-sizing: border-box; }
+ html, body {
+ margin: 0; padding: 0;
+ background: var(--bg);
+ color: var(--text);
+ font-family: 'Inter', system-ui, -apple-system, sans-serif;
+ -webkit-font-smoothing: antialiased;
+ -moz-osx-font-smoothing: grayscale;
+ }
+ .container {
+ max-width: 1100px;
+ margin: 0 auto;
+ padding: 1.5rem 1.6rem 2rem;
+ }
+
+ /* ── PART 1, INPUT ────────────────────────────── */
+ .input-section {
+ border-bottom: 1px solid var(--border);
+ padding-bottom: 1.2rem;
+ margin-bottom: 1.4rem;
+ }
+ .input-eyebrow {
+ font-size: 0.66rem;
+ letter-spacing: 0.22em;
+ text-transform: uppercase;
+ color: var(--amber);
+ font-weight: 600;
+ margin: 0 0 0.35rem;
+ }
+ .input-heading {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.7rem;
+ font-weight: 500;
+ color: var(--text);
+ margin: 0 0 1rem;
+ letter-spacing: -0.01em;
+ }
+ .input-row {
+ display: flex;
+ align-items: center;
+ gap: 1rem;
+ flex-wrap: wrap;
+ }
+ .year-input-wrap {
+ display: flex;
+ align-items: baseline;
+ gap: 0.6rem;
+ }
+ .year-input-label {
+ font-size: 0.78rem;
+ color: var(--muted);
+ }
+ #year-input {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 2.2rem;
+ font-weight: 500;
+ color: var(--text);
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-bottom: 2px solid var(--amber);
+ border-radius: 3px;
+ padding: 0.2rem 0.6rem;
+ width: 140px;
+ text-align: center;
+ outline: none;
+ transition: border-color 0.15s ease;
+ }
+ #year-input:focus {
+ border-color: var(--amber);
+ }
+ /* hide spinners */
+ #year-input::-webkit-outer-spin-button,
+ #year-input::-webkit-inner-spin-button {
+ -webkit-appearance: none; margin: 0;
+ }
+ #year-input { -moz-appearance: textfield; }
+
+ .preset-row {
+ display: flex;
+ gap: 0.5rem;
+ flex-wrap: wrap;
+ margin-left: auto;
+ }
+ .preset {
+ background: var(--surface);
+ color: var(--muted);
+ border: 1px solid var(--border);
+ border-radius: 999px;
+ padding: 0.4rem 0.95rem;
+ font-family: 'Inter', sans-serif;
+ font-size: 0.74rem;
+ font-weight: 500;
+ cursor: pointer;
+ transition: all 0.15s ease;
+ letter-spacing: 0.02em;
+ }
+ .preset:hover {
+ color: var(--amber);
+ border-color: var(--amber);
+ }
+ .preset.active {
+ background: var(--amber);
+ color: var(--surface);
+ border-color: var(--amber);
+ font-weight: 600;
+ }
+
+ /* ── PART 2, CHART ────────────────────────────── */
+ .chart-section {
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-radius: 4px;
+ padding: 1rem 1.1rem 0.7rem;
+ margin-bottom: 1.4rem;
+ }
+ .chart-title {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.05rem;
+ font-weight: 500;
+ color: var(--text);
+ margin: 0 0 0.15rem;
+ }
+ .chart-sub {
+ color: var(--muted);
+ font-size: 0.78rem;
+ line-height: 1.5;
+ margin: 0 0 0.4rem;
+ }
+ #chart-svg {
+ display: block;
+ width: 100%;
+ height: 440px;
+ overflow: visible;
+ }
+ .axis path, .axis line {
+ stroke: var(--border);
+ shape-rendering: crispEdges;
+ }
+ .axis text {
+ fill: var(--muted);
+ font-family: 'Inter', sans-serif;
+ font-size: 11px;
+ }
+ .grid line {
+ stroke: var(--grid);
+ stroke-dasharray: 2,3;
+ }
+ .grid path { stroke: none; }
+
+ .di-line {
+ fill: none;
+ stroke: var(--amber);
+ stroke-width: 2.6;
+ }
+ .threshold-line {
+ stroke: var(--rust);
+ stroke-width: 1.2;
+ stroke-dasharray: 5,4;
+ opacity: 0.55;
+ }
+ .ref-line {
+ stroke: var(--rust);
+ stroke-width: 1;
+ stroke-dasharray: 3,3;
+ opacity: 0.55;
+ }
+ .ref-label {
+ fill: var(--rust);
+ font-family: 'Inter', sans-serif;
+ font-size: 10px;
+ font-weight: 600;
+ letter-spacing: 0.06em;
+ text-transform: uppercase;
+ }
+ .threshold-label {
+ fill: var(--rust);
+ font-family: 'Inter', sans-serif;
+ font-size: 10px;
+ letter-spacing: 0.04em;
+ }
+ .event-circle {
+ fill: var(--surface);
+ stroke: var(--amber);
+ stroke-width: 2;
+ cursor: pointer;
+ transition: r 0.15s ease, stroke-width 0.15s ease;
+ }
+ .event-circle:hover {
+ stroke-width: 3;
+ }
+ .event-circle.future {
+ stroke: var(--dim);
+ stroke-dasharray: 2,2;
+ }
+
+ .tooltip {
+ position: absolute;
+ pointer-events: none;
+ background: var(--surface);
+ border: 1px solid var(--amber);
+ border-radius: 3px;
+ padding: 0.55rem 0.75rem;
+ font-size: 0.74rem;
+ line-height: 1.45;
+ color: var(--text);
+ box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+ opacity: 0;
+ transition: opacity 0.15s ease;
+ z-index: 50;
+ max-width: 220px;
+ }
+ .tooltip-age {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-weight: 600;
+ color: var(--amber);
+ margin-bottom: 0.18rem;
+ }
+ .tooltip-event {
+ color: var(--text);
+ margin-bottom: 0.3rem;
+ }
+ .tooltip-metric {
+ color: var(--muted);
+ font-size: 0.7rem;
+ }
+ .tooltip-metric strong {
+ color: var(--text);
+ font-weight: 600;
+ }
+
+ /* ── PART 3, CARDS ────────────────────────────── */
+ .cards-section {
+ margin-bottom: 1.4rem;
+ }
+ .cards-heading {
+ font-size: 0.66rem;
+ letter-spacing: 0.22em;
+ text-transform: uppercase;
+ color: var(--amber);
+ font-weight: 600;
+ margin: 0 0 0.55rem;
+ }
+ .cards-row {
+ display: flex;
+ gap: 0.7rem;
+ overflow-x: auto;
+ overflow-y: hidden;
+ padding-bottom: 0.5rem;
+ scroll-behavior: smooth;
+ scrollbar-color: var(--border) transparent;
+ scrollbar-width: thin;
+ }
+ .cards-row::-webkit-scrollbar { height: 6px; }
+ .cards-row::-webkit-scrollbar-track { background: transparent; }
+ .cards-row::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+ .card {
+ flex: 0 0 200px;
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-radius: 4px;
+ padding: 0.9rem 0.95rem;
+ display: flex;
+ flex-direction: column;
+ gap: 0.25rem;
+ transition: background 0.3s ease, border-color 0.3s ease;
+ min-height: 200px;
+ }
+ .card.tint-green { background: rgba(45,106,79,0.10); border-color: rgba(45,106,79,0.25); }
+ .card.tint-amber { background: rgba(139,105,20,0.10); border-color: rgba(139,105,20,0.28); }
+ .card.tint-rust { background: rgba(160,64,32,0.10); border-color: rgba(160,64,32,0.28); }
+
+ .card-age {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 2rem;
+ font-weight: 500;
+ color: var(--text);
+ line-height: 1;
+ letter-spacing: -0.01em;
+ }
+ .card-age small {
+ font-family: 'Inter', sans-serif;
+ font-size: 0.7rem;
+ color: var(--muted);
+ font-weight: 500;
+ letter-spacing: 0.04em;
+ margin-left: 0.3rem;
+ }
+ .card-year {
+ font-size: 0.74rem;
+ color: var(--muted);
+ margin-top: -0.15rem;
+ }
+ .card-event {
+ font-size: 0.84rem;
+ color: var(--text);
+ margin-top: 0.3rem;
+ line-height: 1.35;
+ }
+ .card-metric {
+ margin-top: auto;
+ padding-top: 0.5rem;
+ border-top: 1px dotted var(--border);
+ font-size: 0.72rem;
+ color: var(--muted);
+ line-height: 1.4;
+ }
+ .card-metric strong {
+ display: block;
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.05rem;
+ font-weight: 600;
+ color: var(--text);
+ margin-top: 0.15rem;
+ }
+ .card-future {
+ margin-top: auto;
+ padding-top: 0.5rem;
+ border-top: 1px dotted var(--border);
+ font-style: italic;
+ font-size: 0.78rem;
+ color: var(--dim);
+ }
+
+ /* ── PART 4, VERDICT ──────────────────────────── */
+ .verdict-section {
+ padding: 1rem 1.2rem 1.05rem;
+ border-radius: 4px;
+ border-left: 4px solid var(--amber);
+ background: rgba(139,105,20,0.08);
+ transition: background 0.3s ease, border-color 0.3s ease;
+ }
+ .verdict-section.tint-green {
+ background: rgba(45,106,79,0.10);
+ border-left-color: var(--green);
+ }
+ .verdict-section.tint-amber {
+ background: rgba(139,105,20,0.10);
+ border-left-color: var(--amber);
+ }
+ .verdict-section.tint-rust {
+ background: rgba(160,64,32,0.10);
+ border-left-color: var(--rust);
+ }
+ .verdict-eyebrow {
+ font-size: 0.66rem;
+ letter-spacing: 0.22em;
+ text-transform: uppercase;
+ color: var(--muted);
+ font-weight: 600;
+ margin: 0 0 0.35rem;
+ }
+ .verdict-text {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.15rem;
+ line-height: 1.5;
+ color: var(--text);
+ margin: 0;
+ font-weight: 400;
+ }
+
+ /* ── responsive tweaks ─────────────────────────── */
+ @media (max-width: 760px) {
+ .input-row { flex-direction: column; align-items: flex-start; }
+ .preset-row { margin-left: 0; }
+ .input-heading { font-size: 1.35rem; }
+ .card { flex: 0 0 175px; }
+ #chart-svg { height: 380px; }
+ }
+</style>
+</head>
+<body>
+<div class="container">
+
+ <!-- ─── PART 1, INPUT ─── -->
+ <div class="input-section">
+ <p class="input-eyebrow">The Time Machine</p>
+ <h1 class="input-heading">Enter the year you were born</h1>
+ <div class="input-row">
+ <div class="year-input-wrap">
+ <input id="year-input" type="number" min="1940" max="2007" step="1" value="1988">
+ <span class="year-input-label">(1940–2007)</span>
+ </div>
+ <div class="preset-row" id="preset-row">
+ <button class="preset" data-year="1955">Boomer (1955)</button>
+ <button class="preset" data-year="1972">Gen X (1972)</button>
+ <button class="preset active" data-year="1988">Millennial (1988)</button>
+ <button class="preset" data-year="2002">Gen Z (2002)</button>
+ </div>
+ </div>
+ </div>
+
+ <!-- ─── PART 2, CHART ─── -->
+ <div class="chart-section">
+ <h2 class="chart-title" id="chart-title">Your life on the Dream Index</h2>
+ <p class="chart-sub" id="chart-sub">The Dream Index measures the cost of a canonical middle-class basket as a multiple of median household income. Above 1.0 means the basket exceeds typical income.</p>
+ <svg id="chart-svg" viewBox="0 0 1000 440" preserveAspectRatio="xMidYMid meet"></svg>
+ </div>
+
+ <!-- ─── PART 3, CARDS ─── -->
+ <div class="cards-section">
+ <p class="cards-heading">Life Events · Prices in the year you reached each milestone</p>
+ <div class="cards-row" id="cards-row"></div>
+ </div>
+
+ <!-- ─── PART 4, VERDICT ─── -->
+ <div class="verdict-section" id="verdict-section">
+ <p class="verdict-eyebrow">The Verdict</p>
+ <p class="verdict-text" id="verdict-text"></p>
+ </div>
+
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+/* ═════════ DATA TABLES (nominal dollars) ═════════ */
+const HOME_PRICE = {
+ 1950:7400, 1960:12700, 1970:23400, 1975:39300,
+ 1980:64600, 1985:84300, 1990:122900, 1995:133900,
+ 2000:165300, 2005:240900, 2010:221800, 2015:296400,
+ 2020:336900, 2024:412300,
+};
+const COLLEGE = {
+ 1950:130, 1960:200, 1970:400, 1975:540, 1980:720,
+ 1985:1300, 1990:1900, 1995:2800, 2000:3500, 2005:5500,
+ 2010:7600, 2015:9100, 2020:10500, 2024:11200,
+};
+const CAR = {
+ 1950:1500, 1960:2600, 1970:3500, 1980:7200, 1990:16000,
+ 2000:21000, 2010:29200, 2020:39000, 2024:48000,
+};
+const HOSPITAL_BIRTH = {
+ 1950:100, 1960:174, 1970:600, 1980:1500, 1990:4000,
+ 2000:6500, 2010:9500, 2020:14000, 2024:18000,
+};
+const INCOME = {
+ 1950:3300, 1960:5600, 1970:8700, 1980:17700, 1990:29900,
+ 2000:41900, 2010:49400, 2020:67500, 2024:80600,
+};
+const DREAM_INDEX = {
+ 1960:0.441, 1970:0.471, 1980:0.592, 1990:0.687,
+ 2000:0.764, 2010:1.016, 2011:1.008, 2015:1.063,
+ 2020:1.104, 2024:1.195,
+};
+const TABLES = { HOME_PRICE, COLLEGE, CAR, HOSPITAL_BIRTH, INCOME };
+
+function interp(table, year) {
+ const years = Object.keys(table).map(Number).sort((a,b)=>a-b);
+ if (year <= years[0]) return table[years[0]];
+ if (year >= years[years.length-1]) return table[years[years.length-1]];
+ for (let i = 0; i < years.length-1; i++) {
+ if (year >= years[i] && year <= years[i+1]) {
+ const t = (year - years[i]) / (years[i+1] - years[i]);
+ return table[years[i]] * (1-t) + table[years[i+1]] * t;
+ }
+ }
+}
+
+/* ═════════ LIFE EVENTS ═════════ */
+const LIFE_EVENTS = [
+ {age:0, label:"You were born", metric:null, prefix:null},
+ {age:6, label:"You started school", metric:null, prefix:null},
+ {age:18, label:"You graduated high school", metric:'COLLEGE', prefix:"College tuition that year:"},
+ {age:22, label:"You graduated college", metric:'INCOME', prefix:"Median household income:"},
+ {age:25, label:"Your first home was within reach",metric:'HOME_PRICE', prefix:"Median home price:"},
+ {age:30, label:"You started a family", metric:'HOSPITAL_BIRTH', prefix:"Hospital birth cost:"},
+ {age:35, label:"Peak earning years begin", metric:'CAR', prefix:"New car average:"},
+ {age:50, label:"Your kids left home", metric:'COLLEGE', prefix:"Their college cost:"},
+];
+
+/* ═════════ CHART SETUP ═════════ */
+const svg = d3.select('#chart-svg');
+const VB_W = 1000, VB_H = 440;
+const M = { top: 30, right: 40, bottom: 44, left: 56 };
+const W = VB_W - M.left - M.right;
+const H = VB_H - M.top - M.bottom;
+const g = svg.append('g').attr('transform', `translate(${M.left},${M.top})`);
+
+const yScale = d3.scaleLinear().domain([0, 1.3]).range([H, 0]);
+
+/* Grid */
+const grid = g.append('g').attr('class', 'grid');
+grid.selectAll('line')
+ .data(yScale.ticks(7))
+ .enter().append('line')
+ .attr('x1', 0).attr('x2', W)
+ .attr('y1', d => yScale(d)).attr('y2', d => yScale(d));
+
+/* DI = 1.0 horizontal threshold line */
+g.append('line')
+ .attr('class', 'threshold-line')
+ .attr('x1', 0).attr('x2', W)
+ .attr('y1', yScale(1.0)).attr('y2', yScale(1.0));
+g.append('text')
+ .attr('class', 'threshold-label')
+ .attr('x', W - 4).attr('y', yScale(1.0) - 5)
+ .attr('text-anchor', 'end')
+ .text('DI = 1.0 · basket equals income');
+
+/* Y axis */
+const yAxisG = g.append('g').attr('class', 'axis y-axis');
+yAxisG.call(d3.axisLeft(yScale).ticks(7).tickFormat(d3.format('.2f')).tickSize(0).tickPadding(8));
+yAxisG.select('.domain').remove();
+
+g.append('text')
+ .attr('class', 'axis')
+ .attr('transform', `translate(-44, ${H/2}) rotate(-90)`)
+ .attr('text-anchor', 'middle')
+ .attr('fill', 'var(--muted)')
+ .style('font-size', '11px')
+ .style('letter-spacing', '0.08em')
+ .style('text-transform', 'uppercase')
+ .text('Dream Index');
+
+/* Placeholder groups */
+const xAxisG = g.append('g').attr('class', 'axis x-axis').attr('transform', `translate(0,${H})`);
+const lineG = g.append('g').attr('class', 'line-layer');
+const refG = g.append('g').attr('class', 'ref-layer');
+const circleG = g.append('g').attr('class', 'circle-layer');
+
+const tooltip = d3.select('#tooltip');
+
+/* ═════════ RENDER ═════════ */
+function render(birthYear, animate=true) {
+ const endYear = Math.min(birthYear + 80, 2024);
+ const xScale = d3.scaleLinear().domain([birthYear, endYear]).range([0, W]);
+
+ // X axis with ~7 ticks (every 10 years)
+ const tickStep = (endYear - birthYear) > 30 ? 10 : 5;
+ const xTicks = [];
+ for (let y = Math.ceil(birthYear/tickStep)*tickStep; y <= endYear; y += tickStep) xTicks.push(y);
+ if (xTicks[0] !== birthYear) xTicks.unshift(birthYear);
+ if (xTicks[xTicks.length-1] !== endYear) xTicks.push(endYear);
+
+ xAxisG.transition().duration(animate ? 400 : 0)
+ .call(d3.axisBottom(xScale).tickValues(xTicks).tickFormat(d3.format('d')).tickSize(0).tickPadding(8));
+ xAxisG.select('.domain').attr('stroke', 'var(--border)');
+
+ // DI trajectory line
+ const linePts = [];
+ for (let y = birthYear; y <= endYear; y++) {
+ linePts.push({ year: y, di: interp(DREAM_INDEX, y) });
+ }
+ const lineGen = d3.line()
+ .x(d => xScale(d.year))
+ .y(d => yScale(d.di))
+ .curve(d3.curveMonotoneX);
+
+ let path = lineG.selectAll('path.di-line').data([linePts]);
+ path.enter().append('path').attr('class', 'di-line').merge(path)
+ .transition().duration(animate ? 400 : 0)
+ .attr('d', lineGen);
+
+ // Reference line at 2011 (if inside the lifespan)
+ refG.selectAll('*').remove();
+ if (2011 >= birthYear && 2011 <= endYear) {
+ refG.append('line')
+ .attr('class', 'ref-line')
+ .attr('x1', xScale(2011)).attr('x2', xScale(2011))
+ .attr('y1', 0).attr('y2', H);
+ refG.append('text')
+ .attr('class', 'ref-label')
+ .attr('x', xScale(2011) + 6)
+ .attr('y', 14)
+ .text('2011 · DI crosses 1.0');
+ }
+
+ // Event circles
+ const eventPts = LIFE_EVENTS.map(ev => {
+ const eventYear = birthYear + ev.age;
+ const inRange = eventYear <= 2024;
+ const di = interp(DREAM_INDEX, Math.min(Math.max(eventYear, 1960), 2024));
+ return { ...ev, eventYear, inRange, di };
+ }).filter(p => p.eventYear >= birthYear && p.eventYear <= endYear);
+
+ const circles = circleG.selectAll('circle.event-circle').data(eventPts, d => d.age);
+ circles.exit().remove();
+ const newCircles = circles.enter().append('circle')
+ .attr('class', d => 'event-circle' + (d.inRange ? '' : ' future'))
+ .attr('r', 6)
+ .attr('cx', d => xScale(d.eventYear))
+ .attr('cy', d => yScale(d.di))
+ .on('mouseenter', function(evt, d) {
+ d3.select(this).attr('r', 8);
+ showTooltip(evt, d);
+ })
+ .on('mousemove', function(evt, d) { showTooltip(evt, d); })
+ .on('mouseleave', function() {
+ d3.select(this).attr('r', 6);
+ tooltip.style('opacity', 0);
+ });
+
+ circles.merge(newCircles)
+ .attr('class', d => 'event-circle' + (d.inRange ? '' : ' future'))
+ .transition().duration(animate ? 400 : 0)
+ .attr('cx', d => xScale(d.eventYear))
+ .attr('cy', d => yScale(d.di));
+
+ // Cards
+ renderCards(birthYear);
+
+ // Verdict
+ renderVerdict(birthYear);
+}
+
+function showTooltip(evt, d) {
+ const rect = document.querySelector('.container').getBoundingClientRect();
+ const x = evt.clientX - rect.left + window.scrollX;
+ const y = evt.clientY - rect.top + window.scrollY;
+ let metricLine = '';
+ if (d.inRange && d.metric && TABLES[d.metric]) {
+ const v = interp(TABLES[d.metric], d.eventYear);
+ metricLine = `<div class="tooltip-metric">${d.prefix} <strong>$${Math.round(v).toLocaleString()}</strong></div>`;
+ } else if (!d.inRange) {
+ metricLine = `<div class="tooltip-metric">Still ahead</div>`;
+ }
+ tooltip.html(`
+ <div class="tooltip-age">Age ${d.age} · ${d.eventYear}</div>
+ <div class="tooltip-event">${d.label}</div>
+ ${metricLine}
+ <div class="tooltip-metric">Dream Index: <strong>${d.di.toFixed(3)}</strong></div>
+ `)
+ .style('left', (x + 14) + 'px')
+ .style('top', (y - 10) + 'px')
+ .style('opacity', 1);
+}
+
+/* ═════════ CARDS ═════════ */
+function tintFor(di) {
+ if (di < 0.8) return 'tint-green';
+ if (di <= 1.0) return 'tint-amber';
+ return 'tint-rust';
+}
+
+function renderCards(birthYear) {
+ const row = d3.select('#cards-row');
+ const data = LIFE_EVENTS.map(ev => {
+ const eventYear = birthYear + ev.age;
+ const future = eventYear > 2024;
+ const clamped = Math.min(Math.max(eventYear, 1960), 2024);
+ const di = interp(DREAM_INDEX, clamped);
+ let metricVal = null;
+ if (ev.metric && !future) {
+ metricVal = interp(TABLES[ev.metric], eventYear);
+ }
+ return { ...ev, eventYear, future, di, metricVal };
+ });
+
+ // Fade out then in
+ row.style('opacity', 1)
+ .transition().duration(150).style('opacity', 0)
+ .on('end', function() {
+ row.selectAll('.card').remove();
+ const cards = row.selectAll('.card').data(data).enter()
+ .append('div')
+ .attr('class', d => 'card ' + (d.future ? '' : tintFor(d.di)));
+
+ cards.append('div').attr('class', 'card-age')
+ .html(d => `Age ${d.age}`);
+
+ cards.append('div').attr('class', 'card-year')
+ .text(d => `(${d.eventYear})`);
+
+ cards.append('div').attr('class', 'card-event')
+ .text(d => d.label);
+
+ cards.each(function(d) {
+ const sel = d3.select(this);
+ if (d.future) {
+ sel.append('div').attr('class', 'card-future').text('Still ahead');
+ } else if (d.metric && d.metricVal != null) {
+ const m = sel.append('div').attr('class', 'card-metric');
+ m.append('span').text(d.prefix);
+ m.append('strong').text('$' + Math.round(d.metricVal).toLocaleString());
+ } else {
+ sel.append('div').attr('class', 'card-metric')
+ .append('span')
+ .style('font-style', 'italic')
+ .style('color', 'var(--dim)')
+ .text(`Dream Index that year: ${d.di.toFixed(2)}`);
+ }
+ });
+
+ row.transition().duration(150).style('opacity', 1);
+ });
+}
+
+/* ═════════ VERDICT ═════════ */
+function buildVerdict(birthYear) {
+ const y25 = birthYear + 25;
+ const y35 = birthYear + 35;
+ const di25 = interp(DREAM_INDEX, Math.min(Math.max(y25, 1960), 2024));
+ const di35 = interp(DREAM_INDEX, Math.min(Math.max(y35, 1960), 2024));
+ const pct25 = Math.round(di25 * 100);
+
+ if (di25 < 0.8 && di35 < 0.8) {
+ return {
+ tint: 'tint-green',
+ text: `You came of age in the asset contract's working years. At age 25, the basket cost only ${pct25}% of median income.`
+ };
+ }
+ if (di25 > 1.0 && di35 > 1.0) {
+ return {
+ tint: 'tint-rust',
+ text: `You came of age after the crossing. The basket has cost more than median income for your entire adult life.`
+ };
+ }
+ if (di25 < 1.0 && di35 > 1.0) {
+ return {
+ tint: 'tint-rust',
+ text: `You crossed the threshold mid-career. Whether you built wealth depends on whether you bought assets before the crossing.`
+ };
+ }
+ // transitional (e.g., Gen X): both between 0.8 and 1.0, or one side near the line
+ return {
+ tint: 'tint-amber',
+ text: `You came of age as the asset contract was eroding. At age 25 the basket cost ${pct25}% of median income, close enough to feel the squeeze, far enough that wealth was still attainable for those who bought early.`
+ };
+}
+
+function renderVerdict(birthYear) {
+ const v = buildVerdict(birthYear);
+ const sec = d3.select('#verdict-section');
+ sec.classed('tint-green', false).classed('tint-amber', false).classed('tint-rust', false);
+ sec.classed(v.tint, true);
+ d3.select('#verdict-text').text(v.text);
+}
+
+/* ═════════ EVENTS ═════════ */
+function setActivePreset(year) {
+ d3.selectAll('.preset').classed('active', function() {
+ return +this.getAttribute('data-year') === year;
+ });
+}
+
+d3.selectAll('.preset').on('click', function() {
+ const y = +this.getAttribute('data-year');
+ document.getElementById('year-input').value = y;
+ setActivePreset(y);
+ render(y, true);
+});
+
+document.getElementById('year-input').addEventListener('input', function(e) {
+ let y = parseInt(e.target.value, 10);
+ if (isNaN(y)) return;
+ if (y < 1940) y = 1940;
+ if (y > 2007) y = 2007;
+ setActivePreset(y);
+ render(y, true);
+});
+
+document.getElementById('year-input').addEventListener('blur', function(e) {
+ let y = parseInt(e.target.value, 10);
+ if (isNaN(y) || y < 1940) y = 1940;
+ if (y > 2007) y = 2007;
+ e.target.value = y;
+});
+
+/* initial render */
+render(1988, false);
+</script>
+</body>
+</html>

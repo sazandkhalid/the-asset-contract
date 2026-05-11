@@ -5,9 +5,10 @@
  *   - Held back behind a black title card for TITLE_DELAY ms,
  *     then fades in and plays.
  *   - At second CUT_AT (37) of playback, hard-cuts the
- *     #clip-fade-overlay to black, removes the <video> from
- *     the DOM (so audio actually stops), and smooth-scrolls
- *     to #opening-statement.
+ *     #clip-fade-overlay to black and removes the <video>
+ *     from the DOM (so audio actually stops). No auto-scroll;
+ *     the reader paces their own descent into the rest of
+ *     the page.
  *   - Listens for the `asset-contract-audio` event so the
  *     bottom-left Sound toggle drives video.muted directly.
  * ────────────────────────────────────────────────────────── */
@@ -70,12 +71,8 @@
     try { videoEl.removeAttribute('src'); videoEl.load(); } catch (e) {}
     if (videoEl.parentNode) videoEl.parentNode.removeChild(videoEl);
 
-    setTimeout(function () {
-      var target = document.getElementById('opening-statement');
-      if (target && target.scrollIntoView) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 600);
+    // Intentionally no auto-scroll. The reader controls pacing
+    // and decides when to move past the opening section.
   }
 
   // Watch playback time; fire the cut at CUT_AT. timeupdate fires

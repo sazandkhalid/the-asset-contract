@@ -61,8 +61,39 @@ h1.title, .title { display: none !important; }
 }
 
 body, html {
-  overflow-x: hidden !important;
+  /* overflow-x: hidden silently breaks `position: sticky` on
+     every descendant by turning html/body into their own
+     scroll container. overflow-x: clip prevents horizontal
+     overflow the same way without changing scroll context. */
+  overflow-x: clip !important;
   max-width: 100vw !important;
+}
+
+/* Figure 1 (and any inline SVG figure) needs to break out of
+   Quarto's column constraints and span the full viewport.
+   The calc(-50vw + 50%) negative margin pulls the element
+   back to the viewport edges regardless of parent width. */
+.figure-fullwidth {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding: 3rem 4vw 5rem;
+}
+
+.figure-fullwidth svg {
+  width: 100%;
+  max-width: none;
+  height: auto;
+  display: block;
+}
+
+/* Same treatment when nested inside .analysis-section. */
+.analysis-section .figure-fullwidth {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
 }
 
 /* Keep legacy class working for the still-empty Find Yourself
@@ -225,4 +256,903 @@ body, html {
   18%  { opacity: 1; transform: translate(-50%, -50%);             }
   78%  { opacity: 1; transform: translate(-50%, -50%);             }
   100% { opacity: 0; transform: translate(-50%, calc(-50% - 6px)); }
+}
+
+/* ── OPENING STORY OVERLAY ──
+   Three text blocks that fade in over the Bob Dylan video so
+   the reader can read them in cadence with the footage. The
+   video starts at 5.4s (after the title card finishes), so
+   the first line at 8s lands ~2.5s into the song. The black
+   cut at 37s covers everything (z-index lower than the cut
+   overlay) so we don't carry text into the next section. */
+.opening-story {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  pointer-events: none;
+  width: min(900px, 84vw);
+  text-align: center;
+}
+
+.opening-story .story-line {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.93);
+  text-shadow: 0 1px 22px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.6);
+  margin: 1.8rem 0;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: opening-story-in 1.6s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+.opening-story .story-line--1 { animation-delay: 11s; }
+.opening-story .story-line--2 { animation-delay: 18s; }
+.opening-story .story-line--3 { animation-delay: 28s; }
+
+.opening-story .accent {
+  color: #c9a96e;
+  font-style: italic;
+}
+
+@keyframes opening-story-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── CHAPTER INDEX ── */
+
+#chapter-index {
+  background: #0a0807;
+  padding: 8rem 0 10rem;
+  border-top: 1px solid #1a1612;
+  border-bottom: 1px solid #1a1612;
+}
+
+.chapter-index-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+.chapter-index-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 5rem;
+}
+
+.chapter-index-header h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 400;
+  color: #e8e3d8;
+  margin: 1rem 0 1.5rem;
+  line-height: 1.2;
+}
+
+.chapter-index-lede {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #a8a39a;
+}
+
+.chapter-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.chapter-card {
+  margin: 0;
+}
+
+.chapter-card a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1.8rem 1.6rem 2rem;
+  background: #141210;
+  border: 1px solid #2a2520;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+  height: 100%;
+}
+
+.chapter-card a:hover {
+  border-color: #c9a96e;
+  transform: translateY(-2px);
+}
+
+.chapter-card.highlight a {
+  background: linear-gradient(180deg, #1a1612 0%, #141210 100%);
+  border-color: rgba(201,169,110,0.4);
+}
+
+.chapter-card .chapter-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  color: #c9a96e;
+  line-height: 1;
+}
+
+.chapter-card .chapter-years {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #8a847a;
+  margin-top: 0.4rem;
+}
+
+.chapter-card .chapter-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.35rem;
+  color: #e8e3d8;
+  font-weight: 400;
+  margin-top: 0.2rem;
+  line-height: 1.25;
+}
+
+.chapter-card .chapter-prev {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #8a847a;
+  margin-top: 0.5rem;
+}
+
+.chapter-index-footer {
+  text-align: center;
+  margin-top: 4rem;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #6a6258;
+}
+
+@media (max-width: 720px) {
+  #chapter-index { padding: 4rem 0 5rem; }
+  .chapter-index-header h2 { font-size: 1.8rem; }
+  .chapter-grid { gap: 1rem; }
+  .chapter-card a { padding: 1.3rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NARRATIVE TYPOGRAPHY — Source Serif 4 body, scoped selectors
+   placed at end of file so they win the specificity battle
+   against Bootstrap's global body-font rules.
+   ═══════════════════════════════════════════════════════════ */
+
+section.narrative-section .photo-text-grid .grid-text p,
+section.narrative-section .inner p,
+section.narrative-section[data-chapter] p:not(.section-eyebrow):not(.eyebrow):not(.name):not(.mechanism) {
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif !important;
+  font-size: 1.06rem !important;
+  font-weight: 400 !important;
+  line-height: 1.85 !important;
+  color: #d4cfc4 !important;
+  letter-spacing: 0.005em;
+  margin-bottom: 1.4rem;
+}
+
+section.narrative-section h2,
+section.narrative-section .grid-text h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: 2.2rem;
+  line-height: 1.2;
+  color: #e8e3d8;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(201,169,110,0.25);
+}
+
+section.narrative-section .section-eyebrow,
+section.narrative-section .eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  display: block;
+  margin-bottom: 1.2rem;
+}
+
+section.narrative-section .pull-quote {
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: #e8e3d8;
+  border-left: 2px solid #c9a96e;
+  padding: 0.8rem 0 0.8rem 1.6rem;
+  margin: 2rem 0;
+  background: rgba(20,18,16,0.5);
+}
+
+section.narrative-section figcaption {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: #8a847a;
+  margin-top: 0.8rem;
+  letter-spacing: 0.01em;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THE ARCHITECTURE — hierarchical 3-column layout.
+   Left = dominant text. Center = museum-framed photo.
+   Right = recessed footnotes / place cards.
+   ═══════════════════════════════════════════════════════════ */
+
+section.narrative-section[data-chapter="The Architecture"]
+  .photo-text-grid {
+  display: grid !important;
+  grid-template-columns: 1.4fr 0.8fr 1fr !important;
+  gap: 3.5rem !important;
+  align-items: start;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .photo-text-grid > .grid-text:first-child {
+  padding-top: 0;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .photo-text-grid > .grid-text:first-child p {
+  font-size: 1.1rem !important;
+  line-height: 1.85 !important;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .photo-text-grid > .grid-photo {
+  margin-top: 4.5rem;
+  padding: 0;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .photo-text-grid > .grid-photo img {
+  border: 1px solid rgba(201,169,110,0.18);
+  box-shadow:
+    0 1px 0 rgba(201,169,110,0.12) inset,
+    0 12px 40px rgba(0,0,0,0.7);
+  border-radius: 1px;
+  filter: brightness(0.92) contrast(1.05);
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .photo-text-grid > .grid-photo figcaption {
+  max-width: 320px;
+  font-size: 0.74rem !important;
+  line-height: 1.55;
+  color: #8a847a;
+  letter-spacing: 0.015em;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(201,169,110,0.12);
+  margin-top: 0.8rem;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .photo-text-grid > .grid-text:last-child {
+  padding-top: 1.5rem;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .photo-text-grid > .grid-text:last-child > p {
+  font-size: 0.94rem !important;
+  line-height: 1.75 !important;
+  color: #a8a39a !important;
+  font-style: italic;
+  margin-bottom: 2rem;
+  max-width: 360px;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .place-card {
+  padding: 1.2rem 1.4rem;
+  background: rgba(15,12,9,0.6);
+  border-left: 2px solid;
+  margin-bottom: 1.4rem;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .place-card .name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.05rem;
+  color: #e8e3d8;
+  margin-bottom: 0.3rem;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .place-card .mechanism {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: #c9a96e;
+  margin-bottom: 0.6rem;
+}
+
+section.narrative-section[data-chapter="The Architecture"]
+  .place-card p:not(.name):not(.mechanism) {
+  font-size: 0.86rem !important;
+  line-height: 1.7 !important;
+  color: #a8a39a !important;
+  margin: 0 !important;
+  font-style: normal;
+}
+
+@media (max-width: 1100px) {
+  section.narrative-section[data-chapter="The Architecture"]
+    .photo-text-grid {
+    grid-template-columns: 1fr !important;
+  }
+  section.narrative-section[data-chapter="The Architecture"]
+    .photo-text-grid > .grid-photo {
+    margin-top: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────
+   ORIENTATION SECTION
+   ───────────────────────────────────────────────── */
+
+#orientation {
+  background: #0a0807;
+  color: #d4cfc4;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem 8rem;
+  position: relative;
+}
+
+.orientation-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── EYEBROW with side lines ── */
+.orientation-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-bottom: 4rem;
+}
+
+.orientation-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(201,169,110,0.3);
+  max-width: 80px;
+}
+
+.orientation-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  font-weight: 600;
+}
+
+/* ── THE CLAIM ── */
+.orientation-claim {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.2rem;
+  line-height: 1.3;
+  color: #e8e3d8;
+  font-weight: 400;
+  margin: 0 0 2.5rem;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.orientation-claim .amber {
+  color: #c9a96e;
+}
+
+/* ── CONTEXT PARAGRAPH ── */
+.orientation-context {
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #a8a39a;
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 3.5rem;
+}
+
+/* ── DIVIDERS ── */
+.orientation-divider {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(to bottom,
+    rgba(201,169,110,0.4) 0%,
+    transparent 100%);
+  margin: 0 auto 2rem;
+}
+
+/* ── CHAPTER MAP ── */
+.orientation-map {
+  margin-bottom: 3.5rem;
+}
+
+.orientation-map-label {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #8a847a;
+  text-align: center;
+  margin-bottom: 1.4rem;
+}
+
+.orientation-chapters {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem 2.4rem;
+}
+
+.orientation-chapters li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  grid-template-rows: auto auto;
+  gap: 0.15rem 0.8rem;
+  align-items: baseline;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(201,169,110,0.08);
+}
+
+.orientation-chapters .ch-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #c9a96e;
+  grid-row: 1 / 3;
+  align-self: start;
+  padding-top: 0.1rem;
+}
+
+.orientation-chapters .ch-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #d4cfc4;
+  display: block;
+  letter-spacing: 0.01em;
+}
+
+.orientation-chapters .ch-desc {
+  display: block;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: #8a847a;
+  line-height: 1.4;
+  margin-top: 0.15rem;
+}
+
+/* ── LINEAGE NOTE ── */
+.orientation-lineage {
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: #8a847a;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 4rem;
+  font-style: italic;
+}
+
+.orientation-lineage em {
+  color: #c9a96e;
+  font-style: italic;
+}
+
+/* ── SCROLL CUE ── */
+.orientation-scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  color: #6a6258;
+  animation: scroll-bob 2.5s ease-in-out infinite;
+}
+
+.orientation-scroll-cue span {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+@keyframes scroll-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+
+/* ── MOBILE ── */
+@media (max-width: 720px) {
+  .orientation-claim { font-size: 1.6rem; }
+  .orientation-chapters { grid-template-columns: 1fr; }
+  .orientation-inner { padding: 4rem 1rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FOUNDATIONAL THEME SYSTEM
+   Two palettes that share the same accent tokens. Sections
+   opt into one or the other; transitions blend them.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* DARK PALETTE — cinematic, narrative, video */
+  --dark-bg:          #15110d;
+  --dark-bg-deep:     #0d0a08;
+  --dark-surface:     #1f1a14;
+  --dark-text:        #e8e3d8;
+  --dark-text-muted:  #a8a39a;
+  --dark-text-dim:    #6a6258;
+  --dark-border:      rgba(201,169,110,0.15);
+
+  /* LIGHT PALETTE — analytical, figure-dense, reading */
+  --light-bg:         #ebe3d1;
+  --light-bg-deep:    #e0d6bf;
+  --light-surface:    #f3edde;
+  --light-text:       #1a1612;
+  --light-text-muted: #4a443c;
+  --light-text-dim:   #7a7268;
+  --light-border:     rgba(139,105,20,0.18);
+
+  /* ACCENTS — readable on both palettes */
+  --accent-amber:     #c9a96e;
+  --accent-amber-dk:  #8b6914;
+  --accent-rust:      #B5451B;
+  --accent-rust-dk:   #8a3018;
+  --accent-green:     #2D6A4F;
+  --accent-green-dk:  #1e5a3f;
+}
+
+/* ── DEFAULT BODY = DARK (cinematic baseline) ── */
+html, body {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DARK SECTIONS
+   ═══════════════════════════════════════════════════════════ */
+#opening-video,
+#orientation,
+.video-section,
+section.narrative-section[data-chapter="The Mechanism"],
+section.narrative-section[data-chapter="The Inflection"],
+section.narrative-section[data-chapter="Consequences"],
+section.narrative-section[data-chapter="Recommendations"],
+#methodology {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+#opening-video {
+  background: var(--dark-bg-deep);
+}
+
+#orientation h1,
+#orientation h2,
+#orientation h3,
+.video-section h1, .video-section h2, .video-section h3,
+section.narrative-section[data-chapter="The Mechanism"] h2,
+section.narrative-section[data-chapter="The Mechanism"] h3,
+section.narrative-section[data-chapter="The Inflection"] h2,
+section.narrative-section[data-chapter="The Inflection"] h3,
+section.narrative-section[data-chapter="Consequences"] h2,
+section.narrative-section[data-chapter="Consequences"] h3,
+section.narrative-section[data-chapter="Recommendations"] h2,
+section.narrative-section[data-chapter="Recommendations"] h3,
+#methodology h2,
+#methodology h3 {
+  color: var(--dark-text);
+}
+
+section.narrative-section[data-chapter="The Mechanism"] p,
+section.narrative-section[data-chapter="The Inflection"] p,
+section.narrative-section[data-chapter="Consequences"] p,
+section.narrative-section[data-chapter="Recommendations"] p,
+#methodology p {
+  color: var(--dark-text-muted);
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1.06rem;
+  line-height: 1.85;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT SECTIONS
+   Catches every analysis section, every fig-NN by id, the
+   sticky-scrolly Dream Index, and the named light narratives.
+   The :not([data-chapter]) catch-all picks up unclassified
+   narrative-sections (Dream-Index methodology paragraph,
+   "Years and Choices", "What This Project Found", and the
+   bridge narrative before the crossing video).
+   ═══════════════════════════════════════════════════════════ */
+section.narrative-section[data-chapter="The Architecture"],
+section.narrative-section[data-chapter="What Worked"],
+section.narrative-section[data-chapter="What Averages Conceal"],
+section.narrative-section[data-chapter="The Mechanisms"],
+section.narrative-section[data-chapter="The Asset Gap"],
+section.narrative-section[data-chapter="Find Yourself"],
+section.narrative-section:not([data-chapter]),
+section.analysis-section,
+#dream-index-scrolly {
+  background: var(--light-bg) !important;
+  color: var(--light-text);
+}
+
+section.narrative-section[data-chapter="The Architecture"] h2,
+section.narrative-section[data-chapter="The Architecture"] h3,
+section.narrative-section[data-chapter="What Worked"] h2,
+section.narrative-section[data-chapter="What Worked"] h3,
+section.narrative-section[data-chapter="What Averages Conceal"] h2,
+section.narrative-section[data-chapter="What Averages Conceal"] h3,
+section.narrative-section[data-chapter="The Mechanisms"] h2,
+section.narrative-section[data-chapter="The Mechanisms"] h3,
+section.narrative-section[data-chapter="The Asset Gap"] h2,
+section.narrative-section[data-chapter="The Asset Gap"] h3,
+section.narrative-section[data-chapter="Find Yourself"] h2,
+section.narrative-section[data-chapter="Find Yourself"] h3,
+section.narrative-section:not([data-chapter]) h2,
+section.narrative-section:not([data-chapter]) h3,
+section.analysis-section h2,
+section.analysis-section h3,
+#dream-index-scrolly h2,
+#dream-index-scrolly h3 {
+  color: var(--light-text) !important;
+}
+
+section.narrative-section[data-chapter="The Architecture"] p,
+section.narrative-section[data-chapter="What Worked"] p,
+section.narrative-section[data-chapter="What Averages Conceal"] p,
+section.narrative-section[data-chapter="The Mechanisms"] p,
+section.narrative-section[data-chapter="The Asset Gap"] p,
+section.narrative-section[data-chapter="Find Yourself"] p,
+section.narrative-section:not([data-chapter]) p,
+section.analysis-section p,
+#dream-index-scrolly p {
+  color: var(--light-text-muted) !important;
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1.06rem;
+  line-height: 1.85;
+}
+
+section.narrative-section[data-chapter="The Architecture"] .eyebrow,
+section.narrative-section[data-chapter="The Architecture"] .section-eyebrow,
+section.analysis-section .eyebrow,
+section.analysis-section .section-eyebrow,
+#dream-index-scrolly .eyebrow {
+  color: var(--accent-amber-dk) !important;
+}
+
+section.narrative-section[data-chapter="The Architecture"] .pull-quote {
+  background: var(--light-bg-deep);
+  border-left: 2px solid var(--accent-amber-dk);
+  color: var(--light-text);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TRANSITION BANDS
+   140 px gradients that smooth dark↔light section changes.
+   index.qmd should use these classes between adjacent
+   sections of different themes; same-theme boundaries keep
+   the existing 80 px .section-separator.
+   ═══════════════════════════════════════════════════════════ */
+.section-transition-to-light {
+  height: 140px;
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    var(--dark-bg)   0%,
+    #2a2520         30%,
+    #6a5a40         60%,
+    var(--light-bg) 100%
+  );
+  margin: 0;
+}
+
+.section-transition-to-dark {
+  height: 140px;
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    var(--light-bg) 0%,
+    #6a5a40        40%,
+    #2a2520        70%,
+    var(--dark-bg) 100%
+  );
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PHOTO TREATMENT PER THEME
+   ═══════════════════════════════════════════════════════════ */
+#opening-video figure img,
+#orientation figure img,
+.video-section figure img,
+section.narrative-section[data-chapter="The Mechanism"] figure img,
+section.narrative-section[data-chapter="The Inflection"] figure img,
+section.narrative-section[data-chapter="Consequences"] figure img,
+section.narrative-section[data-chapter="Recommendations"] figure img,
+#methodology figure img {
+  filter: brightness(0.92) contrast(1.05);
+  border: 1px solid rgba(201,169,110,0.25);
+  box-shadow:
+    0 0 0 1px rgba(201,169,110,0.08) inset,
+    0 12px 40px rgba(0,0,0,0.7);
+}
+
+section.narrative-section[data-chapter="The Architecture"] figure img,
+section.narrative-section[data-chapter="What Worked"] figure img,
+section.narrative-section[data-chapter="What Averages Conceal"] figure img,
+section.narrative-section[data-chapter="The Mechanisms"] figure img,
+section.narrative-section[data-chapter="The Asset Gap"] figure img,
+section.narrative-section[data-chapter="Find Yourself"] figure img,
+section.narrative-section:not([data-chapter]) figure img,
+section.analysis-section figure img,
+#dream-index-scrolly figure img {
+  filter: brightness(0.98) contrast(1.02);
+  border: 1px solid var(--light-border);
+  box-shadow:
+    0 2px 12px rgba(0,0,0,0.12),
+    0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STORY NAV — adapts to section theme via body class flipped
+   by the IntersectionObserver in assets/js/story.js.
+   ═══════════════════════════════════════════════════════════ */
+body.reading-dark #story-nav .story-nav__dot {
+  background: rgba(232,227,216,0.30);
+  border: 1px solid rgba(232,227,216,0.50);
+}
+body.reading-dark #story-nav .story-nav__dot.is-active,
+body.reading-dark #story-nav .story-nav__item.active .story-nav__dot {
+  background: var(--accent-amber);
+}
+body.reading-dark #story-nav .story-nav__label {
+  color: var(--dark-text-muted);
+}
+
+body.reading-light #story-nav .story-nav__dot {
+  background: rgba(26,22,18,0.30);
+  border: 1px solid rgba(26,22,18,0.50);
+}
+body.reading-light #story-nav .story-nav__dot.is-active,
+body.reading-light #story-nav .story-nav__item.active .story-nav__dot {
+  background: var(--accent-amber-dk);
+}
+body.reading-light #story-nav .story-nav__label {
+  color: var(--light-text-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THEME-LIGHT — HIGH-SPECIFICITY OVERRIDES
+   Class hook added to every light section in index.qmd.
+   These rules sit at the end of the file and use !important
+   to guarantee they win the cascade against Bootstrap and
+   earlier project rules.
+   ═══════════════════════════════════════════════════════════ */
+
+.theme-light p,
+.theme-light .desc,
+.theme-light .grid-text p,
+.theme-light .inner p,
+section[data-theme="light"] p,
+section[data-theme="light"] .desc,
+section.analysis-section p,
+section.analysis-section .desc {
+  color: #2a2520 !important;
+  opacity: 1 !important;
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif !important;
+  font-size: 1.06rem !important;
+  line-height: 1.85 !important;
+  font-weight: 400 !important;
+}
+
+.theme-light h1,
+.theme-light h2,
+.theme-light h3,
+section[data-theme="light"] h1,
+section[data-theme="light"] h2,
+section[data-theme="light"] h3,
+section.analysis-section h2,
+section.analysis-section h3 {
+  color: #15110d !important;
+}
+
+.theme-light .eyebrow,
+.theme-light .section-eyebrow,
+section[data-theme="light"] .eyebrow,
+section[data-theme="light"] .section-eyebrow,
+section.analysis-section .eyebrow {
+  color: #8b6914 !important;
+}
+
+.theme-light em,
+.theme-light i,
+section[data-theme="light"] em,
+section[data-theme="light"] i {
+  color: #4a443c !important;
+  font-style: italic !important;
+}
+
+/* ── Place cards on light sections ── */
+.theme-light .place-card {
+  background: #f3edde !important;
+  border-left: 3px solid #8b6914 !important;
+  padding: 1.4rem 1.6rem !important;
+  margin-bottom: 1.4rem !important;
+}
+
+.theme-light .place-card .name {
+  color: #15110d !important;
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 1.05rem !important;
+  margin-bottom: 0.3rem !important;
+}
+
+.theme-light .place-card .mechanism {
+  color: #8b6914 !important;
+  font-style: italic !important;
+  font-size: 0.85rem !important;
+}
+
+.theme-light .place-card p:not(.name):not(.mechanism) {
+  color: #2a2520 !important;
+  font-size: 0.92rem !important;
+  font-style: normal !important;
+  line-height: 1.7 !important;
+}
+
+/* ── Pull quotes on light sections ── */
+.theme-light .pull-quote {
+  background: #f3edde !important;
+  color: #15110d !important;
+  border-left: 3px solid #8b6914 !important;
+  padding: 1.2rem 1.6rem !important;
+  font-family: 'Source Serif 4', Georgia, serif !important;
+  font-style: italic !important;
+  font-size: 1.1rem !important;
+  line-height: 1.7 !important;
+}
+
+/* ── Section chips and accents on light sections ── */
+.theme-light .section-chip__text {
+  color: #8b6914 !important;
+}
+.theme-light .section-chip__line {
+  background: rgba(139,105,20,0.4) !important;
+}
+
+/* ── figcaption on light ── */
+.theme-light figcaption {
+  color: #7a7268 !important;
 }

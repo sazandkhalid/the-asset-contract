@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Figure 6B, Asset Compound Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+<style>
+ :root {
+ --bg: #f5f1ea;
+ --card: #faf7f1;
+ --border: #e3dccf;
+ --text: #2a2520;
+ --muted: #6b5d4a;
+ --dim: #8d7c66;
+ --amber: #8b6914;
+ --rust: #a04020;
+ --green: #2d6a4f;
+ }
+ * { box-sizing: border-box; }
+ html, body {
+ margin: 0;
+ padding: 0;
+ background: var(--bg);
+ color: var(--text);
+ font-family: 'Inter', system-ui, sans-serif;
+ -webkit-font-smoothing: antialiased;
+ }
+ .container {
+ max-width: 980px;
+ margin: 0 auto;
+ padding: 1.2rem 1.4rem 1rem;
+ }
+
+ /* ── PART 1: input row ─────────────────────────────── */
+ .input-row {
+ background: var(--card);
+ border: 1px solid var(--border);
+ border-radius: 4px;
+ padding: 1rem 1.2rem;
+ }
+ .input-row h2 {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 1.35rem;
+ font-weight: 400;
+ margin: 0 0 0.7rem;
+ color: var(--text);
+ letter-spacing: 0.005em;
+ }
+ .controls {
+ display: flex;
+ gap: 1.2rem;
+ flex-wrap: wrap;
+ align-items: flex-end;
+ }
+ .control {
+ display: flex;
+ flex-direction: column;
+ gap: 0.25rem;
+ min-width: 180px;
+ flex: 1;
+ }
+ .control-label {
+ font-size: 0.62rem;
+ letter-spacing: 0.22em;
+ text-transform: uppercase;
+ color: var(--amber);
+ font-weight: 600;
+ }
+ select {
+ background: #fff;
+ border: 1px solid var(--border);
+ border-radius: 3px;
+ padding: 0.55rem 0.7rem;
+ color: var(--text);
+ font-family: 'Inter', sans-serif;
+ font-size: 0.92rem;
+ cursor: pointer;
+ outline: none;
+ appearance: none;
+ -webkit-appearance: none;
+ background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2210%22%20height%3D%226%22%20viewBox%3D%220%200%2010%206%22%3E%3Cpath%20fill%3D%22%238b6914%22%20d%3D%22M0%200l5%206%205-6z%22%2F%3E%3C%2Fsvg%3E");
+ background-repeat: no-repeat;
+ background-position: right 0.8rem center;
+ padding-right: 2rem;
+ transition: border-color 0.15s ease;
+ }
+ select:hover, select:focus { border-color: var(--amber); }
+ .input-note {
+ margin: 0.75rem 0 0;
+ font-size: 0.74rem;
+ color: var(--dim);
+ font-style: italic;
+ }
+
+ /* ── PART 2: three stat blocks ──────────────────────── */
+ .stats {
+ display: grid;
+ grid-template-columns: 1fr 1.4fr 1fr;
+ gap: 0.9rem;
+ margin-top: 1rem;
+ }
+ .stat {
+ background: var(--card);
+ border: 1px solid var(--border);
+ border-radius: 4px;
+ padding: 0.95rem 1rem 1.1rem;
+ text-align: center;
+ }
+ .stat.middle { padding: 1.05rem 1rem 1.2rem; }
+ .stat-label {
+ font-size: 0.58rem;
+ letter-spacing: 0.22em;
+ text-transform: uppercase;
+ color: var(--muted);
+ margin: 0 0 0.5rem;
+ font-weight: 600;
+ }
+ .stat-number {
+ font-family: 'Playfair Display', Georgia, serif;
+ font-size: 2.4rem;
+ font-weight: 400;
+ line-height: 1;
+ color: var(--text);
+ margin: 0;
+ }
+ .stat.middle .stat-number {
+ font-size: 3.4rem;
+ color: var(--amber);
+ }
+ .stat-sub {
+ font-size: 0.72rem;
+ color: var(--dim);
+ margin: 0.45rem 0 0;
+ }
+ .stat.middle .stat-sub { color: var(--rust); font-weight: 500; }
+
+ /* ── PART 3: verdict ────────────────────────────────── */
+ .verdict {
+ margin-top: 0.95rem;
+ padding: 1.1rem 1.2rem;
+ background: var(--card);
+ border: 1px solid var(--border);
+ border-radius: 4px;
+ text-align: center;
+ font-family: Georgia, 'Playfair Display', serif;
+ font-size: 1.4rem;
+ font-style: italic;
+ line-height: 1.45;
+ min-height: 80px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ }
+
+ /* ── PART 4: chart ──────────────────────────────────── */
+ .chart-card {
+ background: var(--card);
+ border: 1px solid var(--border);
+ border-radius: 4px;
+ padding: 0.7rem 0.6rem 0.5rem;
+ margin-top: 0.95rem;
+ }
+ .chart-card h3 {
+ margin: 0.1rem 0.6rem 0.3rem;
+ font-family: 'Playfair Display', Georgia, serif;
+ font-weight: 400;
+ font-size: 1.05rem;
+ color: var(--text);
+ }
+ #chart { width: 100%; height: 340px; }
+ .grid line {
+ stroke: #e3dccf;
+ stroke-dasharray: 2 3;
+ shape-rendering: crispEdges;
+ }
+ .grid path, .axis path { display: none; }
+ .axis text { fill: var(--muted); font-size: 10.5px; font-family: 'Inter', sans-serif; }
+ .axis line { stroke: #d4ccba; }
+ .line-home { fill: none; stroke: var(--amber); stroke-width: 3; }
+ .line-income { fill: none; stroke: #555555; stroke-width: 2.2; }
+ .legend {
+ display: flex;
+ gap: 1.2rem;
+ margin: 0.1rem 0.7rem 0.4rem;
+ font-size: 0.72rem;
+ color: var(--muted);
+ }
+ .legend-swatch {
+ display: inline-block;
+ width: 18px;
+ height: 3px;
+ margin-right: 0.4rem;
+ vertical-align: middle;
+ }
+ .crossover-label {
+ font-family: 'Inter', sans-serif;
+ font-size: 11px;
+ fill: var(--rust);
+ font-weight: 600;
+ }
+ .crossover-dot { fill: var(--rust); stroke: var(--card); stroke-width: 2; }
+
+ @media (max-width: 720px) {
+ .stats { grid-template-columns: 1fr; }
+ .stat.middle .stat-number { font-size: 2.8rem; }
+ .stat-number { font-size: 2rem; }
+ .verdict { font-size: 1.15rem; }
+ }
+</style>
+</head>
+<body>
+<div class="container">
+
+ <!-- PART 1: inputs -->
+ <div class="input-row">
+ <h2>If your parents bought a home…</h2>
+ <div class="controls">
+ <div class="control">
+ <label class="control-label" for="year-select">Purchase year</label>
+ <select id="year-select"></select>
+ </div>
+ <div class="control">
+ <label class="control-label" for="metro-select">Metro area</label>
+ <select id="metro-select"></select>
+ </div>
+ </div>
+ <p class="input-note">
+ We'll use the median home price for that metro and year as the purchase price.
+ Comparison uses median household income at the BEA postwar average personal
+ savings rate of 10%.
+ </p>
+ </div>
+
+ <!-- PART 2: three stats -->
+ <div class="stats">
+ <div class="stat" id="stat-purchase">
+ <p class="stat-label" id="label-purchase"> Purchase price</p>
+ <p class="stat-number" id="num-purchase">$0</p>
+ </div>
+ <div class="stat middle" id="stat-current">
+ <p class="stat-label">Worth today</p>
+ <p class="stat-number" id="num-current">$0</p>
+ <p class="stat-sub" id="sub-current">+ 0% appreciation</p>
+ </div>
+ <div class="stat" id="stat-income">
+ <p class="stat-label">What your parents could have saved</p>
+ <p class="stat-number" id="num-income">$0</p>
+ <p class="stat-sub" id="sub-income">Median income, 1985–2024, at 10% savings rate</p>
+ </div>
+ </div>
+
+ <!-- PART 3: verdict -->
+ <div class="verdict" id="verdict">…</div>
+
+ <!-- PART 4: chart -->
+ <div class="chart-card">
+ <h3>House value vs. cumulative labor income, over time</h3>
+ <div class="legend">
+ <span><span class="legend-swatch" style="background:#8b6914"></span>Home value</span>
+ <span><span class="legend-swatch" style="background:#555555"></span>Cumulative labor income</span>
+ </div>
+ <svg id="chart"></svg>
+ </div>
+
+</div>
+
+<script>
+/* ────────────────────────────────────────────────
+ Data
+──────────────────────────────────────────────── */
+const HPI = {
+ 'National': {1960:18, 1970:27, 1980:50, 1990:90,
+ 2000:130, 2010:178, 2015:200, 2020:270, 2024:360},
+ 'San Francisco': {1960:14, 1970:30, 1980:80, 1990:175,
+ 2000:330, 2010:380, 2015:560, 2020:920, 2024:1180},
+ 'New York': {1960:18, 1970:32, 1980:75, 1990:170,
+ 2000:240, 2010:340, 2015:400, 2020:560, 2024:740},
+ 'Seattle': {1960:15, 1970:28, 1980:60, 1990:115,
+ 2000:175, 2010:235, 2015:310, 2020:500, 2024:710},
+ 'Los Angeles': {1960:16, 1970:32, 1980:90, 1990:180,
+ 2000:235, 2010:330, 2015:430, 2020:640, 2024:880},
+ 'Boston': {1960:16, 1970:28, 1980:65, 1990:135,
+ 2000:200, 2010:265, 2015:330, 2020:450, 2024:610},
+ 'Washington DC': {1960:15, 1970:26, 1980:55, 1990:105,
+ 2000:150, 2010:230, 2015:250, 2020:320, 2024:440},
+ 'Austin': {1960:13, 1970:22, 1980:46, 1990:75,
+ 2000:115, 2010:165, 2015:215, 2020:340, 2024:470},
+ 'Chicago': {1960:17, 1970:26, 1980:50, 1990:90,
+ 2000:130, 2010:165, 2015:175, 2020:230, 2024:295},
+ 'Atlanta': {1960:15, 1970:25, 1980:48, 1990:85,
+ 2000:125, 2010:150, 2015:175, 2020:250, 2024:340},
+ 'Phoenix': {1960:14, 1970:24, 1980:50, 1990:80,
+ 2000:125, 2010:155, 2015:195, 2020:295, 2024:400},
+ 'Detroit': {1960:17, 1970:27, 1980:48, 1990:80,
+ 2000:120, 2010:105, 2015:130, 2020:175, 2024:215},
+ 'Cleveland': {1960:18, 1970:28, 1980:50, 1990:85,
+ 2000:125, 2010:140, 2015:155, 2020:200, 2024:245},
+ 'Pittsburgh': {1960:17, 1970:27, 1980:50, 1990:80,
+ 2000:115, 2010:145, 2015:165, 2020:205, 2024:250},
+ 'Memphis': {1960:16, 1970:26, 1980:47, 1990:80,
+ 2000:115, 2010:140, 2015:155, 2020:200, 2024:250},
+ 'Buffalo': {1960:18, 1970:28, 1980:50, 1990:85,
+ 2000:120, 2010:140, 2015:160, 2020:215, 2024:290},
+};
+
+const INCOME = {
+ 1960:5600, 1965:6900, 1970:8700, 1975:11800, 1980:17700,
+ 1985:22400, 1990:29900, 1995:34000, 2000:41900, 2005:46300,
+ 2010:49400, 2015:56500, 2020:67500, 2024:80600,
+};
+
+function interp(table, year) {
+ const years = Object.keys(table).map(Number).sort((a,b)=>a-b);
+ if (year <= years[0]) return table[years[0]];
+ if (year >= years[years.length-1]) return table[years[years.length-1]];
+ for (let i = 0; i < years.length-1; i++) {
+ if (year >= years[i] && year <= years[i+1]) {
+ const t = (year - years[i]) / (years[i+1] - years[i]);
+ return table[years[i]] * (1-t) + table[years[i+1]] * t;
+ }
+ }
+}
+
+// Calibrated so National 2024 (HPI 360) ≈ $412,200 (FHFA Q4 2024).
+const PRICE_PER_HPI_POINT = 1145;
+
+function getHomePrice(metro, year) {
+ const hpiNow = interp(HPI[metro], year);
+ return hpiNow * PRICE_PER_HPI_POINT;
+}
+
+// BEA postwar average personal savings rate.
+const SAVINGS_RATE = 0.10;
+
+function getCumulativeSavings(startYear, endYear) {
+ let total = 0;
+ for (let y = startYear; y <= endYear; y++) {
+ total += interp(INCOME, y) * SAVINGS_RATE;
+ }
+ return total;
+}
+
+/* ────────────────────────────────────────────────
+ UI population
+──────────────────────────────────────────────── */
+const yearSel = document.getElementById('year-select');
+const metroSel = document.getElementById('metro-select');
+
+for (let y = 1960; y <= 2010; y += 5) {
+ const opt = document.createElement('option');
+ opt.value = y; opt.textContent = y;
+ if (y === 1985) opt.selected = true;
+ yearSel.appendChild(opt);
+}
+Object.keys(HPI).forEach(m => {
+ const opt = document.createElement('option');
+ opt.value = m; opt.textContent = m;
+ if (m === 'National') opt.selected = true;
+ metroSel.appendChild(opt);
+});
+
+/* ────────────────────────────────────────────────
+ Number animation
+──────────────────────────────────────────────── */
+function fmt(n) {
+ const r = Math.round(n);
+ return '$' + r.toLocaleString('en-US');
+}
+function animateNumber(el, from, to, duration, formatter) {
+ formatter = formatter || fmt;
+ const interp = d3.interpolateNumber(from, to);
+ d3.select(el)
+ .transition().duration(duration).ease(d3.easeCubicOut)
+ .tween('text', function() {
+ return function(t) { el.textContent = formatter(interp(t)); };
+ });
+}
+function getCurrentNumber(el) {
+ const m = el.textContent.replace(/[^\d.-]/g, '');
+ return parseFloat(m) || 0;
+}
+
+/* ────────────────────────────────────────────────
+ Chart
+──────────────────────────────────────────────── */
+const svg = d3.select('#chart');
+let chartInit = false;
+let xScale, yScale, gXAxis, gYAxis, gGrid, pathHome, pathIncome, gCross;
+
+function setupChart() {
+ const node = svg.node();
+ const w = node.clientWidth;
+ const h = node.clientHeight;
+ const margin = { top: 18, right: 26, bottom: 28, left: 70 };
+ const iw = w - margin.left - margin.right;
+ const ih = h - margin.top - margin.bottom;
+
+ svg.selectAll('*').remove();
+
+ const g = svg.append('g')
+ .attr('transform', `translate(${margin.left},${margin.top})`);
+
+ xScale = d3.scaleLinear().range([0, iw]);
+ yScale = d3.scaleLinear().range([ih, 0]);
+
+ gGrid = g.append('g').attr('class', 'grid');
+ gXAxis = g.append('g')
+ .attr('class', 'axis x-axis')
+ .attr('transform', `translate(0,${ih})`);
+ gYAxis = g.append('g')
+ .attr('class', 'axis y-axis');
+
+ pathIncome = g.append('path').attr('class', 'line-income');
+ pathHome = g.append('path').attr('class', 'line-home');
+ gCross = g.append('g').attr('class', 'crossover');
+
+ svg.attr('data-iw', iw).attr('data-ih', ih)
+ .attr('data-ml', margin.left).attr('data-mt', margin.top);
+
+ chartInit = true;
+}
+
+function buildSeries(metro, startYear) {
+ const home = [];
+ const income = [];
+ let cum = 0;
+ for (let y = startYear; y <= 2024; y++) {
+ home.push({ year: y, value: getHomePrice(metro, y) });
+ cum += interp(INCOME, y) * SAVINGS_RATE;
+ income.push({ year: y, value: cum });
+ }
+ return { home, income };
+}
+
+function findCrossover(home, income) {
+ for (let i = 1; i < home.length; i++) {
+ const h0 = home[i-1].value, h1 = home[i].value;
+ const c0 = income[i-1].value, c1 = income[i].value;
+ if (h0 <= c0 && h1 > c1) {
+ const num = c0 - h0;
+ const den = (h1 - h0) - (c1 - c0);
+ const t = den === 0 ? 0 : num / den;
+ const year = home[i-1].year + t * (home[i].year - home[i-1].year);
+ const value = h0 + t * (h1 - h0);
+ return { year, value };
+ }
+ }
+ return null;
+}
+
+function drawChart(metro, startYear, animate) {
+ if (!chartInit) setupChart();
+ const { home, income } = buildSeries(metro, startYear);
+
+ const maxY = d3.max([d3.max(home, d=>d.value), d3.max(income, d=>d.value)]);
+ xScale.domain([startYear, 2024]);
+ yScale.domain([0, maxY * 1.05]);
+
+ const iw = +svg.attr('data-iw');
+ const ih = +svg.attr('data-ih');
+
+ // grid
+ const yTicks = yScale.ticks(5);
+ const gridLines = gGrid.selectAll('line').data(yTicks);
+ gridLines.exit().remove();
+ gridLines.enter().append('line')
+ .merge(gridLines)
+ .transition().duration(animate ? 700 : 0)
+ .attr('x1', 0).attr('x2', iw)
+ .attr('y1', d => yScale(d)).attr('y2', d => yScale(d));
+
+ // x ticks every 5 yrs
+ const xTicks = [];
+ for (let y = Math.ceil(startYear/5)*5; y <= 2024; y += 5) xTicks.push(y);
+ if (xTicks[xTicks.length-1] !== 2024) xTicks.push(2024);
+ gXAxis.transition().duration(animate ? 700 : 0)
+ .call(d3.axisBottom(xScale).tickValues(xTicks).tickFormat(d3.format('d')).tickSizeOuter(0));
+
+ // y ticks formatted as $k / $M
+ gYAxis.transition().duration(animate ? 700 : 0)
+ .call(d3.axisLeft(yScale).ticks(5).tickFormat(d => {
+ if (d >= 1e6) return '$' + (d/1e6).toFixed(1).replace(/\.0$/,'') + 'M';
+ if (d >= 1e3) return '$' + Math.round(d/1e3) + 'k';
+ return '$' + d;
+ }).tickSizeOuter(0));
+
+ const lineGen = d3.line()
+ .x(d => xScale(d.year))
+ .y(d => yScale(d.value))
+ .curve(d3.curveMonotoneX);
+
+ pathHome
+ .datum(home)
+ .transition().duration(animate ? 800 : 0).ease(d3.easeCubicOut)
+ .attr('d', lineGen);
+ pathIncome
+ .datum(income)
+ .transition().duration(animate ? 800 : 0).ease(d3.easeCubicOut)
+ .attr('d', lineGen);
+
+ // crossover
+ gCross.selectAll('*').remove();
+ const cross = findCrossover(home, income);
+ if (cross) {
+ gCross.append('circle')
+ .attr('class', 'crossover-dot')
+ .attr('cx', xScale(cross.year))
+ .attr('cy', yScale(cross.value))
+ .attr('r', 0)
+ .transition().delay(animate ? 300 : 0).duration(animate ? 500 : 0)
+ .attr('r', 5);
+
+ const labelYear = Math.round(cross.year);
+ const labelX = xScale(cross.year);
+ const labelY = yScale(cross.value) - 12;
+ const anchor = (labelX > iw * 0.6) ? 'end' : 'start';
+ const dx = anchor === 'end' ? -8 : 8;
+
+ gCross.append('text')
+ .attr('class', 'crossover-label')
+ .attr('x', labelX + dx)
+ .attr('y', labelY)
+ .attr('text-anchor', anchor)
+ .style('opacity', 0)
+ .text(`The asset overtook the labor in ${labelYear}`)
+ .transition().delay(animate ? 400 : 0).duration(animate ? 500 : 0)
+ .style('opacity', 1);
+ }
+}
+
+/* ────────────────────────────────────────────────
+ Main update
+──────────────────────────────────────────────── */
+function update(animate) {
+ const startYear = +yearSel.value;
+ const metro = metroSel.value;
+
+ const purchase = getHomePrice(metro, startYear);
+ const current = getHomePrice(metro, 2024);
+ const cumSav = getCumulativeSavings(startYear, 2024);
+ const apprPct = ((current - purchase) / purchase) * 100;
+
+ // labels
+ document.getElementById('label-purchase').textContent =
+ `${startYear} purchase price`;
+ document.getElementById('sub-income').textContent =
+ `Median income, ${startYear}–2024, at 10% savings rate`;
+
+ // numbers
+ const numPurchase = document.getElementById('num-purchase');
+ const numCurrent = document.getElementById('num-current');
+ const numIncome = document.getElementById('num-income');
+ const subCurrent = document.getElementById('sub-current');
+
+ const dur = animate ? 800 : 0;
+ animateNumber(numPurchase, getCurrentNumber(numPurchase), purchase, dur);
+ animateNumber(numCurrent, getCurrentNumber(numCurrent), current, dur);
+ animateNumber(numIncome, getCurrentNumber(numIncome), cumSav, dur);
+
+ const apprFmt = n => '+ ' + Math.round(n).toLocaleString('en-US') + '% appreciation';
+ const prevApprMatch = subCurrent.textContent.match(/-?\d[\d,]*/);
+ const prevAppr = prevApprMatch ? parseFloat(prevApprMatch[0].replace(/,/g,'')) : 0;
+ d3.select(subCurrent).transition().duration(dur).ease(d3.easeCubicOut)
+ .tween('text', function() {
+ const i = d3.interpolateNumber(prevAppr, apprPct);
+ return function(t) { subCurrent.textContent = apprFmt(i(t)); };
+ });
+
+ // verdict
+ const verdict = document.getElementById('verdict');
+ const diff = current - cumSav;
+ const ratio = current / cumSav;
+ let color, text;
+ if (current > cumSav * 1.2) {
+ color = 'var(--rust)';
+ text = `The house outearned what your parents could have saved by $${Math.round(diff).toLocaleString('en-US')}.`;
+ } else if (ratio >= 0.8 && ratio <= 1.2) {
+ color = 'var(--amber)';
+ text = 'The house earned roughly what your parents could have saved from a lifetime of work.';
+ } else {
+ color = 'var(--green)';
+ text = 'Your parents’ savings could have outpaced the house. They were the exception, most American homes appreciated faster than people could save.';
+ }
+ verdict.style.color = color;
+ verdict.textContent = text;
+
+ drawChart(metro, startYear, animate);
+}
+
+/* ────────────────────────────────────────────────
+ Wire up
+──────────────────────────────────────────────── */
+yearSel.addEventListener('change', () => update(true));
+metroSel.addEventListener('change', () => update(true));
+
+window.addEventListener('resize', () => {
+ setupChart();
+ update(false);
+});
+
+setupChart();
+update(false);
+</script>
+
+</body>
+</html>
