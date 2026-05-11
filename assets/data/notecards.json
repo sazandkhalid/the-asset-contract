@@ -1,0 +1,135 @@
+{
+  "fig02_diverging_lines": {
+    "title": "Figure 2, The Dream Index",
+    "what_you_see": "Two lines tracking the cost of a canonical middle-class life and median household income in real 2024 dollars, 1960 to 2024.",
+    "how_to_use": "Scroll down beside the chart. Each scroll step adds one layer of the argument: first the income line, then the basket, then the era bands, then the crossing point.",
+    "what_to_look_for": "The moment in 2011 when the amber basket line crosses above the grey income line. Before 2011, the basket was cheaper. Since, it has been more expensive.",
+    "source": "FRED MEHOINUSA672N; project Dream Index methodology."
+  },
+  "fig02_crossing": {
+    "title": "Figure 2 (Detail), The Crossing",
+    "what_you_see": "A zoomed view of the same two lines, 2000 to 2024. The annotations mark three specific moments: the 2008 financial crisis, the 2011 crossing, and the 2022 rate floor end.",
+    "how_to_use": "Hover any year for the basket cost and median income at that moment. The shaded rust area is the gap.",
+    "what_to_look_for": "The brief period 2012 to 2021 when cheap mortgages disguised the structural problem, and the abrupt widening after 2022.",
+    "source": "FRED MEHOINUSA672N; KFF, NCES, BLS."
+  },
+  "fig03_bifurcation": {
+    "title": "Figure 3, The Bifurcation",
+    "what_you_see": "Real-dollar price changes for each component of American life, 1960 to 2024. Some categories fell, some rose.",
+    "how_to_use": "Each bar is a single product or service. Compare what got cheaper (clothing, electronics) to what got more expensive (housing, healthcare, education).",
+    "what_to_look_for": "The pattern of what cheapens: anything that can be imported or automated. The pattern of what rises: anything that requires human time and labor in a specific place.",
+    "source": "BLS CPI series by category, 1960 to 2024."
+  },
+  "fig07b_basket_composition": {
+    "title": "Figure 4, Composition of the basket",
+    "what_you_see": "A stacked area chart showing the six components of the Dream Basket as a share of total cost, 1960 to 2024. Click any legend item to toggle that component.",
+    "how_to_use": "Hover the stack at any year to read each component's share. Toggle items in the right-side legend to isolate a category.",
+    "what_to_look_for": "Healthcare's share grew from 5.5% to 25.3% of the basket. Housing's share shrank in percentage terms even as its real cost climbed, because the other categories grew faster.",
+    "source": "BLS CPI components; KFF, NCES; project basket methodology."
+  },
+  "fig04_five_places": {
+    "title": "Figure 11, Five Americas",
+    "what_you_see": "Median household income trajectories for five specific American communities, 1960 to 2024, each scaled to the national median (1.0).",
+    "how_to_use": "Each line is one community. Above 1.0 is above national median. Below is behind.",
+    "what_to_look_for": "How early each community's economic trajectory diverged from the national one. Pine Ridge has never been at 1.0. Coal Country fell after 1980. The Bay Area accelerated after 2000.",
+    "source": "U.S. Census Bureau, IPUMS NHGIS aggregated to county, 1960 to 2020."
+  },
+  "fig04b_community_abandonment": {
+    "title": "Figure 12, Mahoning County",
+    "what_you_see": "Population and median income trajectories for Mahoning County, Ohio, 1960 to 2020, the heart of the Rust Belt collapse.",
+    "how_to_use": "The vertical line marks Youngstown Black Monday, September 19, 1977.",
+    "what_to_look_for": "How the population and the income decline simultaneously after 1977. When the plants closed, the people followed.",
+    "source": "U.S. Census Bureau decennial census, 1960 to 2020."
+  },
+  "fig05_wages_productivity": {
+    "title": "Figure 5, Wages vs. Productivity",
+    "what_you_see": "Two lines, both indexed to 1960 = 100. One tracks American productivity. The other tracks median hourly wages.",
+    "how_to_use": "Compare the slopes. Until 1973 they moved together. After 1973 they diverged.",
+    "what_to_look_for": "Productivity is now 3.5x its 1960 level, while wages are only 1.2x. The gap is where the asset contract begins.",
+    "source": "BLS, FRED OPHNFB and CES0500000003."
+  },
+  "fig06_income_wealth_race": {
+    "title": "Figure 13, Income vs. Wealth by Race",
+    "what_you_see": "Two side-by-side comparisons. Black household income relative to white income (left), and Black household wealth relative to white wealth (right).",
+    "how_to_use": "Compare the rates of change between the two panels.",
+    "what_to_look_for": "Income gap narrowed by six points in 57 years. Wealth gap barely moved. The asset contract is the difference.",
+    "source": "Federal Reserve Survey of Consumer Finances; FRED."
+  },
+  "fig06b_asset_compound": {
+    "title": "Figure 14, Compound the Difference",
+    "what_you_see": "An interactive calculator that compounds an income gap into a wealth gap over decades, at user-chosen returns and time horizons.",
+    "how_to_use": "Adjust the inputs (income gap, annual return, years) to see how a small wage difference compounds into a structural wealth difference.",
+    "what_to_look_for": "How quickly even a modest, sustained income gap becomes a wealth gap many times larger when the income holder cannot also accumulate appreciating assets.",
+    "source": "Synthesis using historical S&P 500 returns; SCF wealth distributions."
+  },
+  "fig07_hours_of_work": {
+    "title": "Figure 6, Hours of work",
+    "what_you_see": "What forty hours of work could buy in 1960, versus forty hours in 2024. Same hours, different purchasing power.",
+    "how_to_use": "Each colored block within the bar represents one category of expense. Block width equals hours of work required.",
+    "what_to_look_for": "The blank space at the end of the 1960 week (purchasing power left over). The overflow in the 2024 week.",
+    "source": "BLS CPI; FRED median hourly wage."
+  },
+  "fig_wealth_share": {
+    "title": "Figure 7, Where the gains went",
+    "what_you_see": "For every $100 of new wealth generated in the American economy between 1980 and 2024, this shows where each dollar landed.",
+    "how_to_use": "Each currency stack represents the share captured by that group.",
+    "what_to_look_for": "The top 1% captured $34 of every $100. The bottom 50% lost $2 in real terms.",
+    "source": "World Inequality Database (WID.world); Federal Reserve SCF."
+  },
+  "fig_women_workforce": {
+    "title": "Figure 8, Women and the Dream",
+    "what_you_see": "Women's labor force participation 1960 to 2024, alongside the Dream Index trajectory.",
+    "how_to_use": "Compare the rise of women's workforce entry to the rise of the basket cost.",
+    "what_to_look_for": "The correlation between when the single-income household became unaffordable and when the dual-income household became the norm.",
+    "source": "BLS, FRED LNS11300002."
+  },
+  "fig_immigrant_trajectories": {
+    "title": "Figure 9, Immigrant Economic Trajectories",
+    "what_you_see": "Median household income and homeownership for immigrant households, organized by decade of arrival.",
+    "how_to_use": "Each bar represents one arrival cohort. Pre-2000 arrivals (green) succeeded. Post-2010 (rust) face the post-crossing basket.",
+    "what_to_look_for": "Not effort difference. Entry-price difference.",
+    "source": "U.S. Census ACS; Pew Research Center; NBER immigrant assimilation studies."
+  },
+  "fig01_five_mechanisms_map": {
+    "title": "Figure 10, Five Mechanisms map",
+    "what_you_see": "A map locating the five communities documented in this chapter and the mechanism that drove each one's relationship to the asset contract.",
+    "how_to_use": "Each marker is a place. Hover to read the mechanism summary.",
+    "what_to_look_for": "How geography and mechanism interact: extraction, exclusion, deindustrialization, never-included, and capture each maps to a distinct place.",
+    "source": "Synthesized from project case-study research."
+  },
+  "fig10_way_of_life": {
+    "title": "Figure 15, Way of Life",
+    "what_you_see": "Four life-course indicators: age at first marriage, fertility rate, multigenerational households, and deaths of despair.",
+    "how_to_use": "Click each tab to view a different indicator. Each tracks the same period, 1960 to 2024.",
+    "what_to_look_for": "The acceleration of all four trends after 2010, within years of the Dream Index crossing 1.0.",
+    "source": "U.S. Census; CDC; NCHS."
+  },
+  "fig09_time_machine": {
+    "title": "Figure 16, Your Life on the Dream Index",
+    "what_you_see": "An interactive calculator that places your circumstances onto the Dream Index timeline.",
+    "how_to_use": "Enter your inputs. The Dream Index recalculates for your cohort and your community.",
+    "what_to_look_for": "Where your trajectory sits in the larger picture, and which of the project's five mechanisms most directly shape your position.",
+    "source": "Synthesis using project basket methodology, ACS cohort data, BLS regional cost-of-living indices."
+  },
+  "fig09_find_yourself": {
+    "title": "Figure 17, Find Yourself",
+    "what_you_see": "A guided panel that asks you about your generation, education, household type, children, and community, then computes your position on the Dream Index.",
+    "how_to_use": "Adjust each input. The output card updates immediately.",
+    "what_to_look_for": "How small changes in your inputs (one more child, a different city) shift your basket cost and your class tier.",
+    "source": "Project basket methodology with community-specific cost-of-living multipliers."
+  },
+  "fig11_seven_findings": {
+    "title": "Figure 18, Seven findings, one story",
+    "what_you_see": "A composite summary of the seven structural findings the project documents.",
+    "how_to_use": "Read each finding in order. Each number is supported by the figures above.",
+    "what_to_look_for": "The pattern that connects them: every finding describes a different facet of the same shift from labor to asset.",
+    "source": "Synthesized from project methodology."
+  },
+  "fig12_action_plan": {
+    "title": "Figure 19, Your Action Plan",
+    "what_you_see": "A personalized action plan generator that turns your inputs into a concrete set of recommendations across housing, healthcare, childcare, education, and assets.",
+    "how_to_use": "Fill in your details and press Generate plan. Scroll inside the iframe to read the full plan.",
+    "what_to_look_for": "Which mechanism most needs your attention, and which interventions move your trajectory the most.",
+    "source": "Synthesis using project methodology; mechanism-specific intervention research."
+  }
+}

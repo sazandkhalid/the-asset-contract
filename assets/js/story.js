@@ -23,6 +23,15 @@ window.addEventListener('resize', function () {
   });
 }, { passive: true });
 
+/* Earlier revision auto-resized the action-plan iframe via
+   postMessage from the figure. The figure uses viewport-
+   relative units internally, so resizing the iframe taller
+   made its scrollHeight grow again, which made us resize
+   again — a runaway feedback loop that produced a giant
+   black tail under the figure. Reverted: the iframe now
+   has a generous fixed height + internal scrolling enabled
+   (see the iframe markup in index.qmd). */
+
 
 (function () {
   'use strict';
@@ -362,27 +371,13 @@ window.addEventListener('resize', function () {
      Used by CSS to switch story-nav contrast against the
      theme of the page under the reader. */
   function initThemeTracker() {
-    var DARK_SELECTORS = [
-      '#opening-video',
-      '#orientation',
-      '.video-section',
-      'section.narrative-section[data-chapter="The Mechanism"]',
-      'section.narrative-section[data-chapter="The Inflection"]',
-      'section.narrative-section[data-chapter="Consequences"]',
-      'section.narrative-section[data-chapter="Recommendations"]',
-      '#methodology'
-    ];
-    var LIGHT_SELECTORS = [
-      'section.narrative-section[data-chapter="The Architecture"]',
-      'section.narrative-section[data-chapter="What Worked"]',
-      'section.narrative-section[data-chapter="What Averages Conceal"]',
-      'section.narrative-section[data-chapter="The Mechanisms"]',
-      'section.narrative-section[data-chapter="The Asset Gap"]',
-      'section.narrative-section[data-chapter="Find Yourself"]',
-      'section.narrative-section:not([data-chapter])',
-      'section.analysis-section',
-      '#dream-index-scrolly'
-    ];
+    // Cinematic register = dark contrast for the story-nav.
+    // Document and editorial registers both contrast against
+    // a light background, so they share the "reading-light"
+    // body class.
+    var DARK_SELECTORS  = ['section.register-cinematic', '.video-section'];
+    var LIGHT_SELECTORS = ['section.register-editorial',
+                           'section.register-document'];
     var darkNodes  = document.querySelectorAll(DARK_SELECTORS.join(','));
     var lightNodes = document.querySelectorAll(LIGHT_SELECTORS.join(','));
     var sections = [];

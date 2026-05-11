@@ -139,30 +139,10 @@ body, html {
   display: block;
   flex-shrink: 0;
 }
-.place-card-visual .card-body {
-  border-left: 2px solid var(--card-accent, #c9a96e);
-  background: #080808;
-  padding: 0.8rem 1.2rem;
-}
-.place-card-visual .card-body .name {
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: #e0ddd8;
-  margin-bottom: 0.2rem;
-  letter-spacing: 0.02em;
-}
-.place-card-visual .card-body .mechanism {
-  font-size: 0.75rem;
-  color: var(--card-accent, #c9a96e);
-  font-style: italic;
-  margin-bottom: 0.7rem;
-}
-.place-card-visual .card-body p {
-  font-size: 0.88rem;
-  color: #666;
-  line-height: 1.75;
-  margin: 0;
-}
+/* The old dark .place-card-visual .card-body rules have
+   been replaced by the editorial-register block in the
+   theme section further down. Keeping this comment as a
+   forwarding pointer. */
 
 /* Photo on the right (alternating layout) */
 .place-card-visual.photo-right {
@@ -432,17 +412,13 @@ body, html {
    against Bootstrap's global body-font rules.
    ═══════════════════════════════════════════════════════════ */
 
-section.narrative-section .photo-text-grid .grid-text p,
-section.narrative-section .inner p,
-section.narrative-section[data-chapter] p:not(.section-eyebrow):not(.eyebrow):not(.name):not(.mechanism) {
-  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif !important;
-  font-size: 1.06rem !important;
-  font-weight: 400 !important;
-  line-height: 1.85 !important;
-  color: #d4cfc4 !important;
-  letter-spacing: 0.005em;
-  margin-bottom: 1.4rem;
-}
+/* Body-paragraph color is now driven by the theme system
+   (.theme-light p / dark fallback further down in this file).
+   The previous chained-:not() rule had specificity (0,10,9)
+   !important and was permanently winning against theme-light's
+   color, leaving Architecture body text effectively invisible.
+   It has been removed; the useful non-color declarations live
+   on theme-aware selectors below. */
 
 section.narrative-section h2,
 section.narrative-section .grid-text h2 {
@@ -555,8 +531,8 @@ section.narrative-section[data-chapter="The Architecture"]
   .photo-text-grid > .grid-text:last-child > p {
   font-size: 0.94rem !important;
   line-height: 1.75 !important;
-  color: #a8a39a !important;
   font-style: italic;
+  /* color inherited from .theme-light p (#2a2520) */
   margin-bottom: 2rem;
   max-width: 360px;
 }
@@ -898,7 +874,6 @@ section.narrative-section[data-chapter="Recommendations"] p,
 section.narrative-section[data-chapter="The Architecture"],
 section.narrative-section[data-chapter="What Worked"],
 section.narrative-section[data-chapter="What Averages Conceal"],
-section.narrative-section[data-chapter="The Mechanisms"],
 section.narrative-section[data-chapter="The Asset Gap"],
 section.narrative-section[data-chapter="Find Yourself"],
 section.narrative-section:not([data-chapter]),
@@ -914,8 +889,6 @@ section.narrative-section[data-chapter="What Worked"] h2,
 section.narrative-section[data-chapter="What Worked"] h3,
 section.narrative-section[data-chapter="What Averages Conceal"] h2,
 section.narrative-section[data-chapter="What Averages Conceal"] h3,
-section.narrative-section[data-chapter="The Mechanisms"] h2,
-section.narrative-section[data-chapter="The Mechanisms"] h3,
 section.narrative-section[data-chapter="The Asset Gap"] h2,
 section.narrative-section[data-chapter="The Asset Gap"] h3,
 section.narrative-section[data-chapter="Find Yourself"] h2,
@@ -929,20 +902,12 @@ section.analysis-section h3,
   color: var(--light-text) !important;
 }
 
-section.narrative-section[data-chapter="The Architecture"] p,
-section.narrative-section[data-chapter="What Worked"] p,
-section.narrative-section[data-chapter="What Averages Conceal"] p,
-section.narrative-section[data-chapter="The Mechanisms"] p,
-section.narrative-section[data-chapter="The Asset Gap"] p,
-section.narrative-section[data-chapter="Find Yourself"] p,
-section.narrative-section:not([data-chapter]) p,
-section.analysis-section p,
-#dream-index-scrolly p {
-  color: var(--light-text-muted) !important;
-  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
-  font-size: 1.06rem;
-  line-height: 1.85;
-}
+/* Chapter-specific p color rules removed — they were
+   setting var(--light-text-muted) at specificity (0,2,2)
+   !important and overriding .theme-light p's #2a2520
+   (which lives at (0,1,1) !important). Body color is now
+   uniformly handled by the .theme-light p block further
+   down in this file. */
 
 section.narrative-section[data-chapter="The Architecture"] .eyebrow,
 section.narrative-section[data-chapter="The Architecture"] .section-eyebrow,
@@ -1012,7 +977,6 @@ section.narrative-section[data-chapter="Recommendations"] figure img,
 section.narrative-section[data-chapter="The Architecture"] figure img,
 section.narrative-section[data-chapter="What Worked"] figure img,
 section.narrative-section[data-chapter="What Averages Conceal"] figure img,
-section.narrative-section[data-chapter="The Mechanisms"] figure img,
 section.narrative-section[data-chapter="The Asset Gap"] figure img,
 section.narrative-section[data-chapter="Find Yourself"] figure img,
 section.narrative-section:not([data-chapter]) figure img,
@@ -1075,6 +1039,24 @@ section.analysis-section .desc {
   font-size: 1.06rem !important;
   line-height: 1.85 !important;
   font-weight: 400 !important;
+  margin-bottom: 1.4rem;
+}
+
+/* Dark-section body paragraphs — no !important needed because
+   nothing else is fighting for these selectors after the
+   :not()-chain rule was removed. */
+.video-section p,
+#orientation p,
+#methodology p,
+section.narrative-section[data-chapter="The Mechanism"] p,
+section.narrative-section[data-chapter="The Inflection"] p,
+section.narrative-section[data-chapter="Consequences"] p,
+section.narrative-section[data-chapter="Recommendations"] p {
+  color: #d4cfc4;
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1.06rem;
+  line-height: 1.85;
+  margin-bottom: 1.4rem;
 }
 
 .theme-light h1,
@@ -1155,4 +1137,390 @@ section[data-theme="light"] i {
 /* ── figcaption on light ── */
 .theme-light figcaption {
   color: #7a7268 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THEME-DARK — class hook mirroring .theme-light.
+   Used for narrative sections that need the cinematic
+   dark register inside the otherwise light-themed run
+   (e.g. "Seven Findings" before the closing figures).
+   No !important needed — nothing on the dark side of the
+   cascade is fighting for these selectors after the
+   chained-:not() rule was removed.
+   ═══════════════════════════════════════════════════════════ */
+section.theme-dark,
+.theme-dark {
+  background: var(--dark-bg, #15110d);
+  color: var(--dark-text, #e8e3d8);
+}
+
+.theme-dark p {
+  color: #d4cfc4;
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1.06rem;
+  line-height: 1.85;
+  margin-bottom: 1.4rem;
+}
+
+.theme-dark h1,
+.theme-dark h2,
+.theme-dark h3 {
+  color: #e8e3d8;
+}
+
+.theme-dark .eyebrow,
+.theme-dark .section-eyebrow {
+  color: #c9a96e;
+}
+
+.theme-dark em,
+.theme-dark i {
+  color: #d4cfc4;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NESTED-CONTAINER BACKGROUND RESET ON LIGHT SECTIONS
+   The original .narrative-section .inner { background: #0f0d0b }
+   rule from the dark-theme era still paints a dark inset
+   panel inside our newly-light sections. Force transparent
+   so the parent section's cream shows through.
+   ═══════════════════════════════════════════════════════════ */
+.theme-light .inner,
+.theme-light .photo-text-grid,
+.theme-light .grid-text,
+.theme-light .fade-up,
+section.analysis-section .inner,
+section.analysis-section .photo-text-grid,
+section.analysis-section .header,
+#dream-index-scrolly .inner,
+#dream-index-scrolly .scrolly-text,
+#dream-index-scrolly .scrolly-container {
+  background: transparent !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THREE-REGISTER VISUAL SYSTEM
+   Replaces the prior binary theme-light / theme-dark scheme.
+     CINEMATIC — warm near-black, video / emotional moments
+     EDITORIAL — warm aged paper, analytical reading
+     DOCUMENT  — cooler off-white, reference / methodology
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* CINEMATIC */
+  --cinematic-bg:        #15110d;
+  --cinematic-bg-deep:   #0d0a08;
+  --cinematic-surface:   #1f1a14;
+  --cinematic-text:      #e8e3d8;
+  --cinematic-heading:   #f0ebe0;
+  --cinematic-muted:     #a8a39a;
+  --cinematic-dim:       #6a6258;
+  --cinematic-accent:    #c9a96e;
+
+  /* EDITORIAL */
+  --editorial-bg:        #ebe3d1;
+  --editorial-surface:   #f3edde;
+  --editorial-text:      #2a2520;
+  --editorial-heading:   #15110d;
+  --editorial-muted:     #4a443c;
+  --editorial-dim:       #7a7268;
+  --editorial-accent:    #8b6914;
+  --editorial-rust:      #8a3018;
+  --editorial-green:     #1e5a3f;
+
+  /* DOCUMENT */
+  --document-bg:         #f0ece0;
+  --document-surface:    #f5f1e6;
+  --document-text:       #2a2520;
+  --document-heading:    #15110d;
+  --document-muted:      #5a544c;
+  --document-rule:       #c4bca8;
+  --document-graphite:   #6a6258;
+}
+
+/* ── CINEMATIC REGISTER ── */
+.register-cinematic,
+section.register-cinematic,
+.video-section {
+  background: var(--cinematic-bg) !important;
+  color: var(--cinematic-text);
+}
+.register-cinematic p,
+.register-cinematic .inner p,
+.register-cinematic .grid-text p,
+.register-cinematic .desc,
+.video-section p {
+  color: var(--cinematic-text) !important;
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1.06rem;
+  line-height: 1.85;
+  margin-bottom: 1.4rem;
+}
+.register-cinematic h1,
+.register-cinematic h2,
+.register-cinematic h3,
+.video-section h2,
+.video-section h3 {
+  color: var(--cinematic-heading) !important;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+.register-cinematic .eyebrow,
+.register-cinematic .section-eyebrow {
+  color: var(--cinematic-accent) !important;
+  font-family: 'Inter', sans-serif;
+}
+.register-cinematic em,
+.register-cinematic i {
+  color: var(--cinematic-muted);
+  font-style: italic;
+}
+.register-cinematic .pull-quote {
+  background: rgba(20,18,16,0.6);
+  border-left: 3px solid var(--cinematic-accent);
+  color: var(--cinematic-heading);
+  font-style: italic;
+}
+.register-cinematic .place-card {
+  background: var(--cinematic-surface);
+  border-left: 3px solid var(--cinematic-accent);
+  color: var(--cinematic-text);
+}
+
+/* ── EDITORIAL REGISTER ── */
+.register-editorial,
+section.register-editorial {
+  background: var(--editorial-bg) !important;
+  color: var(--editorial-text);
+}
+.register-editorial p,
+.register-editorial .inner p,
+.register-editorial .grid-text p,
+.register-editorial .desc {
+  color: var(--editorial-text) !important;
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1.06rem;
+  line-height: 1.85;
+  margin-bottom: 1.4rem;
+}
+.register-editorial h1,
+.register-editorial h2,
+.register-editorial h3 {
+  color: var(--editorial-heading) !important;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+.register-editorial .eyebrow,
+.register-editorial .section-eyebrow {
+  color: var(--editorial-accent) !important;
+  font-family: 'Inter', sans-serif;
+}
+.register-editorial em,
+.register-editorial i {
+  color: var(--editorial-muted);
+  font-style: italic;
+}
+.register-editorial .pull-quote {
+  background: var(--editorial-surface);
+  border-left: 3px solid var(--editorial-accent);
+  color: var(--editorial-heading);
+  font-style: italic;
+}
+.register-editorial .place-card {
+  background: var(--editorial-surface);
+  border-left: 3px solid var(--editorial-accent);
+  color: var(--editorial-text);
+}
+.register-editorial .place-card .name {
+  color: var(--editorial-heading);
+}
+.register-editorial .place-card .mechanism {
+  color: var(--editorial-accent);
+  font-style: italic;
+}
+
+/* Reset nested-container backgrounds so the section's color
+   reads through (mirrors the same fix we made earlier for
+   .theme-light). */
+.register-editorial .inner,
+.register-editorial .photo-text-grid,
+.register-editorial .grid-text,
+.register-editorial .fade-up,
+.register-document .inner,
+.register-document .fade-up {
+  background: transparent !important;
+}
+
+/* ── DOCUMENT REGISTER ── */
+.register-document,
+section.register-document {
+  background: var(--document-bg) !important;
+  color: var(--document-text);
+  border-top: 1px solid var(--document-rule);
+  border-bottom: 1px solid var(--document-rule);
+}
+.register-document p,
+.register-document .inner p,
+.register-document .desc {
+  color: var(--document-text) !important;
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 0.98rem;
+  line-height: 1.8;
+  margin-bottom: 1.4rem;
+}
+.register-document h1,
+.register-document h2,
+.register-document h3 {
+  color: var(--document-heading) !important;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+.register-document .eyebrow,
+.register-document .section-eyebrow {
+  color: var(--document-graphite) !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
+.register-document em,
+.register-document i {
+  color: var(--document-muted);
+  font-style: italic;
+}
+.register-document hr,
+.register-document .doc-rule {
+  border: 0;
+  border-top: 1px solid var(--document-rule);
+  margin: 2rem 0;
+}
+
+/* ── REGISTER TRANSITIONS ── */
+.register-transition {
+  width: 100%;
+  position: relative;
+  margin: 0;
+}
+
+.transition-cine-edit {
+  height: 140px;
+  background: linear-gradient(
+    to bottom,
+    var(--cinematic-bg) 0%,
+    #2a2520 30%,
+    #6a5a40 60%,
+    var(--editorial-bg) 100%
+  );
+}
+
+.transition-edit-cine {
+  height: 140px;
+  background: linear-gradient(
+    to bottom,
+    var(--editorial-bg) 0%,
+    #6a5a40 40%,
+    #2a2520 70%,
+    var(--cinematic-bg) 100%
+  );
+}
+
+.transition-edit-doc {
+  height: 60px;
+  background: linear-gradient(
+    to bottom,
+    var(--editorial-bg) 0%,
+    var(--document-bg) 100%
+  );
+  border-top: 1px solid var(--document-rule);
+  border-bottom: 1px solid var(--document-rule);
+}
+
+.transition-doc-edit {
+  height: 60px;
+  background: linear-gradient(
+    to bottom,
+    var(--document-bg) 0%,
+    var(--editorial-bg) 100%
+  );
+}
+
+.transition-cine-doc {
+  height: 140px;
+  background: linear-gradient(
+    to bottom,
+    var(--cinematic-bg) 0%,
+    #4a443c 50%,
+    var(--document-bg) 100%
+  );
+}
+
+.transition-doc-cine {
+  height: 140px;
+  background: linear-gradient(
+    to bottom,
+    var(--document-bg) 0%,
+    #4a443c 50%,
+    var(--cinematic-bg) 100%
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DEFENSIVE VISIBILITY OVERRIDE
+   .fade-up and .section-hidden start at opacity:0 in the
+   original scss, depending on story.js's IntersectionObserver
+   to add `.in-view` / `.section-active`. If the observer
+   misses an element (timing, scroll position at load, JS
+   error elsewhere), figures inside stay invisible. Force
+   opacity: 1 here — the slide-up motion still plays via the
+   transform property, but content is always visible.
+   ═══════════════════════════════════════════════════════════ */
+.fade-up,
+.section-hidden,
+.figure-embed-container,
+.figure-iframe,
+section.register-editorial,
+section.register-cinematic,
+section.register-document {
+  opacity: 1 !important;
+}
+
+/* ── PLACE CARDS (visual variant with paired image) ──
+   Used in The Mechanisms section. Mirrors .place-card
+   editorial styling; --card-accent provides the
+   mechanism-specific border color from inline style. */
+.register-editorial .place-card-visual .card-body,
+.theme-light .place-card-visual .card-body,
+section.register-editorial .place-card-visual .card-body {
+  background: var(--editorial-surface, #f3edde) !important;
+  border: 1px solid rgba(139,105,20,0.18);
+  border-left: 3px solid var(--card-accent, #8b6914);
+  padding: 1.6rem 1.8rem;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.register-editorial .place-card-visual .card-body .name,
+.theme-light .place-card-visual .card-body .name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--editorial-heading, #15110d) !important;
+  margin: 0 0 0.4rem 0;
+  letter-spacing: -0.005em;
+}
+
+.register-editorial .place-card-visual .card-body .mechanism,
+.theme-light .place-card-visual .card-body .mechanism {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--card-accent, var(--editorial-accent, #8b6914)) !important;
+  margin: 0 0 0.9rem 0;
+}
+
+.register-editorial .place-card-visual .card-body p:not(.name):not(.mechanism),
+.theme-light .place-card-visual .card-body p:not(.name):not(.mechanism) {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 0.96rem;
+  line-height: 1.75;
+  color: var(--editorial-text, #2a2520) !important;
+  margin: 0;
+  font-style: normal;
+  font-weight: 400;
 }
