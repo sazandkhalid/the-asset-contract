@@ -1399,25 +1399,23 @@ section.register-document {
 }
 
 .transition-cine-edit {
-  height: 140px;
+  height: 200px;
   background: linear-gradient(
     to bottom,
     var(--cinematic-bg) 0%,
-    #2a2520 30%,
-    #6a5a40 60%,
     var(--editorial-bg) 100%
   );
+  border: none;
 }
 
 .transition-edit-cine {
-  height: 140px;
+  height: 200px;
   background: linear-gradient(
     to bottom,
     var(--editorial-bg) 0%,
-    #6a5a40 40%,
-    #2a2520 70%,
     var(--cinematic-bg) 100%
   );
+  border: none;
 }
 
 .transition-edit-doc {
@@ -1427,8 +1425,7 @@ section.register-document {
     var(--editorial-bg) 0%,
     var(--document-bg) 100%
   );
-  border-top: 1px solid var(--document-rule);
-  border-bottom: 1px solid var(--document-rule);
+  border: none;
 }
 
 .transition-doc-edit {
@@ -1438,26 +1435,27 @@ section.register-document {
     var(--document-bg) 0%,
     var(--editorial-bg) 100%
   );
+  border: none;
 }
 
 .transition-cine-doc {
-  height: 140px;
+  height: 200px;
   background: linear-gradient(
     to bottom,
     var(--cinematic-bg) 0%,
-    #4a443c 50%,
     var(--document-bg) 100%
   );
+  border: none;
 }
 
 .transition-doc-cine {
-  height: 140px;
+  height: 200px;
   background: linear-gradient(
     to bottom,
     var(--document-bg) 0%,
-    #4a443c 50%,
     var(--cinematic-bg) 100%
   );
+  border: none;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1524,3 +1522,242 @@ section.register-editorial .place-card-visual .card-body {
   font-style: normal;
   font-weight: 400;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   FIX PASS — Issues 1 / 2 / 4 / 7 from May 12 pass
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Issue 1: orientation / journey readability ── */
+#orientation .orientation-claim,
+#orientation .orientation-context,
+#orientation .orientation-lineage,
+#orientation .orientation-map-label,
+#orientation .ch-title,
+#orientation .ch-desc {
+  color: #2a2520 !important;
+  opacity: 1 !important;
+}
+#orientation .orientation-eyebrow .orientation-label,
+#orientation .orientation-label {
+  color: #5a544a !important;
+}
+#orientation .ch-num {
+  color: #8b6914 !important;
+}
+#orientation .orientation-scroll-cue {
+  color: #5a544a !important;
+}
+
+/* ── Issue 2: Architecture section lede paragraph ── */
+.section-lede {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: #5a544a !important;
+  line-height: 1.75;
+  margin: 0 0 2.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid #c9a96e;
+}
+
+/* ── Issue 4: Promise → Dream Index bridge ── */
+.section-bridge {
+  max-width: 720px;
+  margin: 4rem auto 5rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  border-top: 1px solid #d4cfc4;
+  border-bottom: 1px solid #d4cfc4;
+}
+.bridge-eyebrow {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #8b6914;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+.bridge-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.7rem;
+  color: #1a1816 !important;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 0 0 1.4rem;
+}
+.bridge-text {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #2a2520 !important;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ── Issue 7: photo-text-grid image fills its block ── */
+.photo-text-grid {
+  align-items: stretch !important;
+}
+.photo-text-grid .grid-photo {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+.photo-text-grid .grid-photo img {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 360px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+.photo-text-grid .grid-photo figcaption {
+  margin-top: 0.6rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  color: #5a544a !important;
+  line-height: 1.5;
+}
+.photo-text-grid .grid-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ── Architecture-style 2-column layout ──
+   Generic: any narrative section that adds
+   .architecture-grid-2col on its .photo-text-grid gets
+   a clean text-left / photo-right layout. Applies to
+   the Architecture and the Mechanisms sections. */
+section.narrative-section .photo-text-grid.architecture-grid-2col {
+  display: grid !important;
+  grid-template-columns: 1.5fr 1fr !important;
+  gap: 4rem !important;
+  align-items: start;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+section.narrative-section .photo-text-grid.architecture-grid-2col
+  > .grid-text {
+  padding-top: 0;
+  max-width: none;
+}
+section.narrative-section .photo-text-grid.architecture-grid-2col
+  > .grid-photo {
+  margin-top: 4.5rem;
+  position: sticky;
+  top: 6rem;
+}
+@media (max-width: 1100px) {
+  section.narrative-section .photo-text-grid.architecture-grid-2col {
+    grid-template-columns: 1fr !important;
+  }
+  section.narrative-section .photo-text-grid.architecture-grid-2col
+    > .grid-photo {
+    position: static;
+    margin-top: 1rem;
+  }
+}
+
+/* ── Mechanism blocks (in the Mechanisms section) ──
+   Each block is a small text card: place name (display
+   serif), short italic mechanism tag in amber, then the
+   body paragraph. Vertical rhythm matches the
+   Architecture lede/quote spacing. */
+.mechanisms-grid .mechanism-block {
+  margin: 2rem 0 0;
+  padding-left: 1rem;
+  border-left: 2px solid #c9a96e;
+}
+.mechanisms-grid .mech-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.35rem;
+  color: #15110d;
+  margin: 0 0 0.35rem;
+  line-height: 1.25;
+}
+.mechanisms-grid .mech-tag {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-style: italic;
+  color: #8b6914 !important;
+  font-size: 0.95rem;
+  margin: 0 0 0.6rem !important;
+  line-height: 1.4;
+}
+.mechanisms-grid .mechanism-block > p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Analysis section, document register ──
+   The generic .analysis-section rule forces var(--light-bg)
+   with !important. To let the basket-composition figure
+   blend into the document beige (#f0ece0) so the iframe
+   reads as part of the page instead of floating on a
+   different cream, override at higher specificity. */
+section.analysis-section.register-document,
+section.narrative-section.register-document {
+  background: var(--document-bg) !important;
+  color: var(--document-text);
+  /* No top/bottom rules — the page now relies on
+     register-transition gradients for visual cuts, and
+     these 1px tan lines read as hard edges right at the
+     gradient seams. The orientation section keeps its
+     borders because they sit on the registered-base
+     element (.register-document), not these
+     analysis/narrative variants. */
+  border-top: none !important;
+  border-bottom: none !important;
+}
+section.analysis-section.register-document h2,
+section.analysis-section.register-document h3,
+section.narrative-section.register-document h2,
+section.narrative-section.register-document h3 {
+  color: var(--document-heading) !important;
+}
+section.analysis-section.register-document .eyebrow,
+section.analysis-section.register-document .section-eyebrow,
+section.narrative-section.register-document .eyebrow,
+section.narrative-section.register-document .section-eyebrow {
+  color: var(--document-graphite) !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
+section.analysis-section.register-document p,
+section.analysis-section.register-document .desc,
+section.narrative-section.register-document p,
+section.narrative-section.register-document .desc,
+section.narrative-section.register-document .grid-text p {
+  color: var(--document-text) !important;
+}
+
+/* ── Soft section separators ──
+   .section-separator was a 60px near-black band with a
+   hairline center divider — that's the "huge black
+   section" between figures on a beige spine. Reduce to
+   transparent neutral spacing; the inherited section bg
+   shows through. Same-color sections flow; real register
+   changes are carried by register-transition gradients. */
+.section-separator {
+  background: transparent !important;
+  height: 36px !important;
+  border: none !important;
+  display: block !important;
+}
+.section-separator::after,
+.section-separator::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* ── Issue 1 grab-bag: low-contrast greys bumped ── */
+.register-editorial .notecard-badge,
+.register-editorial .notecard__source { color: #5a544a; }

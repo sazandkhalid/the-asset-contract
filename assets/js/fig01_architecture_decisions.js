@@ -141,33 +141,37 @@
     if (svgSel.attr('data-init') === '1') return;
     svgSel.attr('data-init', '1');
 
-    // ── LAYOUT CONSTANTS (viewBox 1800 × 660) ──────
-    // The ribbon sits low enough to give build labels three
-    // comfortable rows above; the dismantle zone runs deep
-    // enough below to accommodate four rows for the 1996/
-    // 1999/2003 cluster without crashing the period label.
-    var V = {w: 1800, h: 660};
-    var X_PAD_LEFT  = 60;
-    var X_PAD_RIGHT = 60;
-    var PIVOT_LABEL_TOP    = 16;
-    var RIBBON_TOP    = 290;
-    var RIBBON_BOTTOM = 340;
-    var PERIOD_LABEL_Y = 645;
+    // ── LAYOUT CONSTANTS (viewBox 2400 × 760) ──────
+    // Width widened from 1800 to 2400 so the ribbon
+    // stretches farther left and right and every policy
+    // gets ~33% more horizontal pixels per year. The
+    // ribbon sits low enough to give build labels three
+    // comfortable rows above; the dismantle zone runs
+    // deep enough below to accommodate four rows for the
+    // 1996/1999/2003 cluster without crashing the period
+    // label.
+    var V = {w: 2400, h: 760};
+    var X_PAD_LEFT  = 80;
+    var X_PAD_RIGHT = 80;
+    var PIVOT_LABEL_TOP    = 0;
+    var RIBBON_TOP    = 340;
+    var RIBBON_BOTTOM = 390;
+    var PERIOD_LABEL_Y = 745;
 
     // Row geometry.
-    //   BASE_STEM = 70: the lowest-row dot sits 70px from the
+    //   BASE_STEM = 78: the lowest-row dot sits 78px from the
     //                   ribbon edge, never touching it.
-    //   ROW_GAP   = 50: each row pulls its dot another 50px
+    //   ROW_GAP   = 58: each row pulls its dot another 58px
     //                   away from the ribbon, giving the
-    //                   stacked label pair 36px of header
-    //                   space (year 14px + name 12px + gap).
-    var BASE_STEM      = 70;
-    var ROW_GAP        = 50;
-    var LABEL_PAD      = 18;   // horizontal breathing room between
+    //                   stacked label pair its own band of
+    //                   clear space.
+    var BASE_STEM      = 78;
+    var ROW_GAP        = 58;
+    var LABEL_PAD      = 38;   // horizontal breathing room between
                                 // centered label boxes on the same row
     var DOT_RADIUS     = 11;
-    var DOT_LABEL_GAP  = 18;   // dot edge → nearest label baseline
-    var YEAR_NAME_GAP  = 14;   // baseline-to-baseline between year & name
+    var DOT_LABEL_GAP  = 20;   // dot edge → nearest label baseline
+    var YEAR_NAME_GAP  = 16;   // baseline-to-baseline between year & name
 
     var x = d3.scaleLinear()
       .domain([1932, 2026])
@@ -175,10 +179,13 @@
     var pivotX = x(1978);
 
     // ── 1. PIVOT LINE (drawn FIRST so it sits behind everything) ──
+    // y1 starts BELOW the two header labels (which sit at
+    // y=14 "THE PIVOT" and y=38 "1978 · 401(k) enacted")
+    // so the dashed line never crosses through the text.
     svgSel.append('line')
       .attr('class', 'pivot-line')
       .attr('x1', pivotX).attr('x2', pivotX)
-      .attr('y1', 10).attr('y2', V.h - 10)
+      .attr('y1', 60).attr('y2', V.h - 10)
       .attr('stroke', '#8a3018')
       .attr('stroke-width', 2)
       .attr('stroke-dasharray', '8,5')
@@ -315,8 +322,71 @@
     var buildPolicies     = POLICIES.filter(function (p) { return p.direction === 'build'; });
     var dismantlePolicies = POLICIES.filter(function (p) { return p.direction === 'dismantle'; });
 
-    var aboveMeta = buildMeta(buildPolicies);   assignRows(aboveMeta);
-    var belowMeta = buildMeta(dismantlePolicies); assignRows(belowMeta);
+    var aboveMeta = buildMeta(buildPolicies);
+    var belowMeta = buildMeta(dismantlePolicies);
+
+    // ── Same-year horizontal nudge ──
+    // Two policies in the same year share an x-position;
+    // the row-stacker handles vertical separation, but
+    // they still read as one vertical column. A small
+    // lateral spread (±13 px) breaks them into distinct
+    // visual markers without losing the year alignment.
+    function spreadSameYear(meta) {
+      var byYear = {};
+      meta.forEach(function (m) {
+        (byYear[m.policy.year] = byYear[m.policy.year] || [])
+          .push(m);
+      });
+      Object.keys(byYear).forEach(function (year) {
+        var group = byYear[year];
+        if (group.length < 2) return;
+        var step = 18;                                  // px
+        var start = -((group.length - 1) / 2) * step;
+        group.forEach(function (m, i) {
+          m.x += start + i * step;
+        });
+      });
+    }
+    spreadSameYear(aboveMeta);
+    spreadSameYear(belowMeta);
+
+    // Extra push for 1974 ERISA so it sits well clear of
+    // the 1977 Community Reinvestment label (long name,
+    // only 3 years away).
+    aboveMeta.forEach(function (m) {
+      if (m.policy.year === 1974 &&
+          m.policy.domain === 'retirement') {
+        m.x += 16;
+      }
+    });
+
+    assignRows(aboveMeta);
+    assignRows(belowMeta);
+
+    // Force ERISA above its 1974 sibling + 1977 neighbour
+    // so it lands in the cleared top space, not wedged
+    // between two larger labels.
+    function forceAbove(meta, predicate, neighbourYears) {
+      var target = meta.find(predicate);
+      if (!target) return;
+      var maxNeighbour = meta
+        .filter(function (m) {
+          return m !== target &&
+                 neighbourYears.indexOf(m.policy.year) >= 0;
+        })
+        .reduce(function (a, m) { return Math.max(a, m.row); }, -1);
+      var forced = Math.max(target.row, maxNeighbour + 1);
+      if (forced !== target.row) {
+        target.row = forced;
+        target.stem = BASE_STEM + forced * ROW_GAP;
+      }
+    }
+    forceAbove(aboveMeta,
+      function (m) {
+        return m.policy.year === 1974 &&
+               m.policy.domain === 'retirement';
+      },
+      [1974, 1977]);
 
     temp.remove();
 

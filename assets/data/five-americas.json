@@ -1,0 +1,235 @@
+{
+  "communities": [
+    {
+      "id": "delta",
+      "name": "Mississippi Delta",
+      "mechanism": "Excluded by design since Reconstruction",
+      "color": "#B5451B",
+      "lat": 33.6,
+      "lon": -90.6,
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Twelve_year-old_son_of_a_cotton_sharecropper_near_Cleveland%2C_Mississippi%2C_8b32066.jpg/500px-Twelve_year-old_son_of_a_cotton_sharecropper_near_Cleveland%2C_Mississippi%2C_8b32066.jpg",
+      "photo_caption": "Son of a cotton sharecropper near Cleveland, Mississippi, 1939. Library of Congress / Wikimedia Commons. Public domain.",
+      "stats": [
+        {"value": "55%",  "label": "Median income vs. national",
+         "note": "Has never exceeded 65% in 60 years."},
+        {"value": "40%",  "label": "Poverty rate (Sunflower Co.)",
+         "note": "Roughly 4x the national average."},
+        {"value": "55%",  "label": "Homeownership rate",
+         "note": "10 points below the national rate."}
+      ],
+      "context": "The Delta is the original exclusion. The federal mortgage programs, the GI Bill, and the education funding that built the white middle class were administered through state and local institutions that enforced segregation. Sixty years of compounded returns on assets that one population was prevented from buying is what the racial wealth gap is, materially. The Delta is where that arithmetic was set in motion.",
+      "quote": "We did everything they asked. They moved the goalposts every time.",
+      "quote_attribution": "Civil rights organizer, Sunflower County",
+      "income": [
+        {"year": 1960, "value": 0.55},
+        {"year": 1970, "value": 0.52},
+        {"year": 1980, "value": 0.50},
+        {"year": 1990, "value": 0.55},
+        {"year": 2000, "value": 0.58},
+        {"year": 2010, "value": 0.55},
+        {"year": 2020, "value": 0.55}
+      ],
+      "poverty": [
+        {"year": 1960, "value": 48},
+        {"year": 1970, "value": 38},
+        {"year": 1980, "value": 35},
+        {"year": 1990, "value": 40},
+        {"year": 2000, "value": 35},
+        {"year": 2010, "value": 38},
+        {"year": 2020, "value": 35}
+      ],
+      "homeownership": [
+        {"year": 1970, "value": 53},
+        {"year": 1980, "value": 58},
+        {"year": 1990, "value": 58},
+        {"year": 2000, "value": 60},
+        {"year": 2010, "value": 57},
+        {"year": 2020, "value": 55}
+      ]
+    },
+    {
+      "id": "coal",
+      "name": "Coal Country",
+      "mechanism": "Extractive abandonment",
+      "color": "#666666",
+      "lat": 37.4,
+      "lon": -81.7,
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Coal_cars_and_houses._Southern_Coal_Corporation%2C_Bradshaw_Mine%2C_Bradshaw%2C_McDowell_County%2C_West_Virginia._-_NARA_-_541021.jpg/500px-Coal_cars_and_houses._Southern_Coal_Corporation%2C_Bradshaw_Mine%2C_Bradshaw%2C_McDowell_County%2C_West_Virginia._-_NARA_-_541021.jpg",
+      "photo_caption": "Coal cars and houses, Bradshaw Mine, McDowell County, West Virginia. NARA / Wikimedia Commons. Public domain.",
+      "stats": [
+        {"value": "-76%", "label": "Population since 1950",
+         "note": "McDowell County: 100,000 to 17,000."},
+        {"value": "33%",  "label": "Poverty rate",
+         "note": "3x the national rate."},
+        {"value": "50%",  "label": "Median income vs. national",
+         "note": "Peaked at 71% in 1970."}
+      ],
+      "context": "Coal Country is what happens when an asset economy is built on one underlying asset and that asset is depleted. The companies extracted the resource, paid wages while they did, and left when extraction was no longer profitable. They took the infrastructure with them. The opioid crisis is the final chapter of an economy that the rest of the country first depended on, then abandoned.",
+      "quote": "When the mine closed, the company left. The town stayed.",
+      "quote_attribution": "Former miner, McDowell County",
+      "income": [
+        {"year": 1960, "value": 0.65},
+        {"year": 1970, "value": 0.71},
+        {"year": 1980, "value": 0.62},
+        {"year": 1990, "value": 0.55},
+        {"year": 2000, "value": 0.52},
+        {"year": 2010, "value": 0.50},
+        {"year": 2020, "value": 0.50}
+      ],
+      "poverty": [
+        {"year": 1960, "value": 38},
+        {"year": 1970, "value": 22},
+        {"year": 1980, "value": 28},
+        {"year": 1990, "value": 33},
+        {"year": 2000, "value": 35},
+        {"year": 2010, "value": 32},
+        {"year": 2020, "value": 33}
+      ],
+      "homeownership": [
+        {"year": 1970, "value": 62},
+        {"year": 1980, "value": 72},
+        {"year": 1990, "value": 76},
+        {"year": 2000, "value": 77},
+        {"year": 2010, "value": 74},
+        {"year": 2020, "value": 72}
+      ]
+    },
+    {
+      "id": "rust",
+      "name": "Rust Belt",
+      "mechanism": "Manufacturing displaced by globalization",
+      "color": "#8B4513",
+      "lat": 41.0,
+      "lon": -80.78,
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Typical_Mill_workers_at_lunch%2C_Pittsburgh%2C_Pa.jpg/500px-Typical_Mill_workers_at_lunch%2C_Pittsburgh%2C_Pa.jpg",
+      "photo_caption": "Mill workers at lunch, Pittsburgh, PA. Wikimedia Commons. Public domain.",
+      "stats": [
+        {"value": "-89%", "label": "Manufacturing jobs since 1960",
+         "note": "Mahoning County: 110,000 to 12,000."},
+        {"value": "5,000", "label": "Jobs lost in one day",
+         "note": "September 19, 1977, Black Monday."},
+        {"value": "80%",  "label": "Median income vs. national",
+         "note": "Was 110% of national in 1970."}
+      ],
+      "context": "The Rust Belt is what happens when the asset contract is extended fully, homeownership, pensions, union wages, middle-class education, and then the underlying employment is moved overseas. The plant was the contract. When the plant closed, the contract ended overnight. The buildings remained, the houses remained, the people remained, but the economy that made them all possible did not.",
+      "quote": "I worked the line for thirty years. My son works two part-time jobs and rents.",
+      "quote_attribution": "Retired steelworker, Youngstown",
+      "income": [
+        {"year": 1960, "value": 1.05},
+        {"year": 1970, "value": 1.10},
+        {"year": 1980, "value": 0.95},
+        {"year": 1990, "value": 0.85},
+        {"year": 2000, "value": 0.85},
+        {"year": 2010, "value": 0.78},
+        {"year": 2020, "value": 0.80}
+      ],
+      "poverty": [
+        {"year": 1960, "value": 11},
+        {"year": 1970, "value": 9},
+        {"year": 1980, "value": 14},
+        {"year": 1990, "value": 17},
+        {"year": 2000, "value": 15},
+        {"year": 2010, "value": 19},
+        {"year": 2020, "value": 17}
+      ],
+      "homeownership": [
+        {"year": 1970, "value": 72},
+        {"year": 1980, "value": 74},
+        {"year": 1990, "value": 72},
+        {"year": 2000, "value": 74},
+        {"year": 2010, "value": 71},
+        {"year": 2020, "value": 69}
+      ]
+    },
+    {
+      "id": "pineridge",
+      "name": "Pine Ridge",
+      "mechanism": "Never inside the Dream",
+      "color": "#2D6A4F",
+      "lat": 43.3,
+      "lon": -102.2,
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Two_Strike%28%27s%29_band_%28Brul%C3%A9_Lakota%29_Pine_Ridge_1891_-_photo_made_by_S.D._Butcher_%26_Son%2C_Kearney%2C_Neb._LCCN2005693371.jpg/500px-Two_Strike%28%27s%29_band_%28Brul%C3%A9_Lakota%29_Pine_Ridge_1891_-_photo_made_by_S.D._Butcher_%26_Son%2C_Kearney%2C_Neb._LCCN2005693371.jpg",
+      "photo_caption": "Two Strike's band (Brulé Lakota), Pine Ridge, 1891. Photo by S.D. Butcher and Son. Library of Congress / Wikimedia Commons. Public domain.",
+      "stats": [
+        {"value": "63%",  "label": "Poverty rate (Oglala Lakota Co.)",
+         "note": "Highest in the United States."},
+        {"value": "35%",  "label": "Median income vs. national",
+         "note": "Has never approached parity."},
+        {"value": "low",  "label": "Homeownership (formal title)",
+         "note": "Most reservation land is held in trust."}
+      ],
+      "context": "Pine Ridge is the colonial baseline. The asset contract was not denied here so much as it was never offered. The land is held in federal trust, which means residents cannot use it as collateral for mortgages or business loans, the foundational mechanism by which all the rest of the asset economy compounds. The Dream did not fail here. It was never extended.",
+      "quote": "You can't build wealth on land you don't own.",
+      "quote_attribution": "Pine Ridge community leader",
+      "income": [
+        {"year": 1970, "value": 0.30},
+        {"year": 1980, "value": 0.32},
+        {"year": 1990, "value": 0.30},
+        {"year": 2000, "value": 0.35},
+        {"year": 2010, "value": 0.32},
+        {"year": 2020, "value": 0.35}
+      ],
+      "poverty": [
+        {"year": 1970, "value": 55},
+        {"year": 1980, "value": 56},
+        {"year": 1990, "value": 63},
+        {"year": 2000, "value": 52},
+        {"year": 2010, "value": 54},
+        {"year": 2020, "value": 63}
+      ],
+      "homeownership": [
+        {"year": 1970, "value": 55},
+        {"year": 1980, "value": 45},
+        {"year": 1990, "value": 45},
+        {"year": 2000, "value": 50},
+        {"year": 2010, "value": 55},
+        {"year": 2020, "value": 58}
+      ]
+    },
+    {
+      "id": "bay",
+      "name": "Bay Area / NYC",
+      "mechanism": "Asset economy winning, and still broken",
+      "color": "#4a7ba7",
+      "lat": 37.77,
+      "lon": -122.42,
+      "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/San_Francisco_skyline_from_Marin_Headlands.jpg/500px-San_Francisco_skyline_from_Marin_Headlands.jpg",
+      "photo_caption": "San Francisco skyline from Marin Headlands. Wikimedia Commons. Public domain.",
+      "stats": [
+        {"value": "143%", "label": "Median income vs. national",
+         "note": "Yet households cannot afford the local basket."},
+        {"value": "$1.4M", "label": "Median home price",
+         "note": "~10x the national median home price."},
+        {"value": "36%",  "label": "Homeownership rate (SF Co.)",
+         "note": "Far below the national 65% rate."}
+      ],
+      "context": "The Bay Area and NYC are what the asset contract looks like when it functions exactly as designed. Capital concentrates, asset values rise, the people who already owned compound their gains. The break here is not the failure of the contract but the success of it. Even households at 1.5x the national median income cannot afford the local market, because the contract was not built for them either. It was built for capital.",
+      "quote": "We did everything right. Two degrees, two jobs. We still can't buy the house my parents owned.",
+      "quote_attribution": "Bay Area resident, age 36",
+      "income": [
+        {"year": 1970, "value": 1.05},
+        {"year": 1980, "value": 1.10},
+        {"year": 1990, "value": 1.20},
+        {"year": 2000, "value": 1.43},
+        {"year": 2010, "value": 1.40},
+        {"year": 2020, "value": 1.43}
+      ],
+      "poverty": [
+        {"year": 1970, "value": 14},
+        {"year": 1980, "value": 13},
+        {"year": 1990, "value": 12},
+        {"year": 2000, "value": 11},
+        {"year": 2010, "value": 13},
+        {"year": 2020, "value": 12}
+      ],
+      "homeownership": [
+        {"year": 1970, "value": 28},
+        {"year": 1980, "value": 32},
+        {"year": 1990, "value": 34},
+        {"year": 2000, "value": 35},
+        {"year": 2010, "value": 36},
+        {"year": 2020, "value": 36}
+      ]
+    }
+  ]
+}

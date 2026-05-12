@@ -9,18 +9,18 @@
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
  :root {
- --bg: #0a0807;
- --card: #141210;
- --card-2: #1a1814;
- --border: #2a2520;
- --text: #d4cfc4;
- --heading: #e8e3d8;
- --muted: #8a847a;
- --dim: #5a544a;
- --amber: #c9a96e;
- --rust: #B5451B;
- --green: #2d6a4f;
- --blue: #4a7ba7;
+ --bg: #faf7f1;
+ --card: #f5f1ea;
+ --card-2: #f0ece0;
+ --border: #d4cfc4;
+ --text: #2a2520;
+ --heading: #15110d;
+ --muted: #6a6258;
+ --dim: #8a847a;
+ --amber: #8b6914;
+ --rust: #a04020;
+ --green: #3d6e54;
+ --blue: #3a6a92;
  }
  * { box-sizing: border-box; }
  html, body {
@@ -64,13 +64,13 @@
  overflow: hidden;
  transition: border-color 0.18s ease;
  }
- .panel:hover { border-color: #3a342d; }
+ .panel:hover { border-color: #b8b0a0; }
  .panel-head {
  display: flex; align-items: center; justify-content: space-between;
  padding: 0.95rem 1.2rem;
  cursor: pointer; user-select: none;
  }
- .panel-head:hover { background: #18150f; }
+ .panel-head:hover { background: #f0ece0; }
  .panel-head-left { display: flex; align-items: center; gap: 0.85rem; }
  .panel-letter {
  font-family: 'Playfair Display', Georgia, serif;
@@ -134,9 +134,9 @@
  cursor: pointer; transition: all 0.15s ease;
  user-select: none;
  }
- .pill:hover { color: var(--amber); border-color: #4a423a; }
+ .pill:hover { color: var(--amber); border-color: #b8b0a0; }
  .pill.active {
- background: var(--amber); color: #1a1410;
+ background: var(--amber); color: #faf7f1;
  border-color: var(--amber); font-weight: 600;
  }
 
@@ -156,7 +156,7 @@
  /* ========== GENERATE BUTTON ========== */
  .generate-row { display: flex; justify-content: center; margin: 1.4rem 0 0.4rem; }
  .btn-generate {
- background: var(--amber); color: #1a1410;
+ background: var(--amber); color: #faf7f1;
  border: none;
  padding: 0.85rem 2rem;
  font-family: 'Inter', sans-serif;
@@ -165,7 +165,7 @@
  cursor: pointer; border-radius: 3px;
  transition: all 0.18s ease;
  }
- .btn-generate:hover { background: #d6b87a; transform: translateY(-1px); }
+ .btn-generate:hover { background: #a07a14; transform: translateY(-1px); }
  .btn-generate:active { transform: translateY(0); }
 
  /* ========== DIAGNOSIS PANEL ========== */
@@ -1650,12 +1650,12 @@ function renderMiniBarChart(container, current, recommended, verdict) {
  .attr('x', 0).attr('y', 4)
  .attr('width', Math.max(2, current * scale))
  .attr('height', 12)
- .attr('fill', '#3a342d');
+ .attr('fill', '#b8b0a0');
  svg.append('text')
  .attr('x', current * scale + 6).attr('y', 14)
  .attr('font-family', 'Inter')
  .attr('font-size', 9)
- .attr('fill', '#8a847a')
+ .attr('fill', '#6a6258')
  .text('current');
  /* recommended bar */
  svg.append('rect')
@@ -1770,19 +1770,19 @@ function renderScenarioChart(inputs) {
  g.append('g')
  .attr('transform', `translate(0,${h})`)
  .call(d3.axisBottom(xScale).tickFormat(d => `${d}`).ticks(8))
- .call(s => s.selectAll('line, path').attr('stroke', '#2a2520'))
- .call(s => s.selectAll('text').attr('fill', '#8a847a').attr('font-size', 11));
+ .call(s => s.selectAll('line, path').attr('stroke', '#b8b0a0'))
+ .call(s => s.selectAll('text').attr('fill', '#6a6258').attr('font-size', 11));
 
  g.append('g')
  .call(d3.axisLeft(yScale).tickFormat(d => '$' + (d/1000000).toFixed(1) + 'M').ticks(6))
- .call(s => s.selectAll('line, path').attr('stroke', '#2a2520'))
- .call(s => s.selectAll('text').attr('fill', '#8a847a').attr('font-size', 11));
+ .call(s => s.selectAll('line, path').attr('stroke', '#b8b0a0'))
+ .call(s => s.selectAll('text').attr('fill', '#6a6258').attr('font-size', 11));
 
  /* gridlines */
  g.append('g')
  .attr('class', 'grid')
  .call(d3.axisLeft(yScale).ticks(6).tickSize(-w).tickFormat(''))
- .call(s => s.selectAll('line').attr('stroke', '#1a1814').attr('stroke-dasharray', '1,3'))
+ .call(s => s.selectAll('line').attr('stroke', '#e3dccf').attr('stroke-dasharray', '1,3'))
  .call(s => s.selectAll('path').attr('stroke', 'transparent'));
 
  /* fill between */
@@ -1842,7 +1842,7 @@ function renderScenarioChart(inputs) {
  g.append('text')
  .attr('x', w / 2).attr('y', h + 32)
  .attr('text-anchor', 'middle')
- .attr('fill', '#8a847a')
+ .attr('fill', '#6a6258')
  .attr('font-size', 10).attr('font-family', 'Inter')
  .text('age');
 
@@ -1850,7 +1850,7 @@ function renderScenarioChart(inputs) {
  .attr('transform', `rotate(-90)`)
  .attr('x', -h/2).attr('y', -52)
  .attr('text-anchor', 'middle')
- .attr('fill', '#8a847a')
+ .attr('fill', '#6a6258')
  .attr('font-size', 10).attr('font-family', 'Inter')
  .text('net worth');
 
@@ -1937,18 +1937,41 @@ window.addEventListener('resize', () => {
  }, 200);
 });
 
-/* postMessage parent on resize */
+/* postMessage parent on resize.
+   Debounced: many mutations fire during initial paint
+   and during the panel-open transition. Without
+   debouncing, each one posts a height and the parent
+   iframe creeps taller in many small steps. */
+let notifyTimer = null;
+let lastReportedH = 0;
 function notifyParent() {
+ if (notifyTimer) return;
+ notifyTimer = setTimeout(() => {
+ notifyTimer = null;
  try {
- if (window.parent !== window) {
- const h = document.documentElement.scrollHeight;
- window.parent.postMessage({ type: 'fig12-height', height: h }, '*');
- }
+ if (window.parent === window) return;
+ /* Measure the wrapper's content height, not
+    documentElement.scrollHeight. The latter can
+    inflate slightly during transitions and never
+    relax. */
+ const c = document.querySelector('.container');
+ const h = c ? c.getBoundingClientRect().bottom : document.body.scrollHeight;
+ const rounded = Math.ceil(h);
+ if (Math.abs(rounded - lastReportedH) < 6) return;
+ lastReportedH = rounded;
+ window.parent.postMessage(
+   { type: 'fig12-height', height: rounded }, '*'
+ );
  } catch(e) {}
+ }, 120);
 }
 const obs = new MutationObserver(notifyParent);
 obs.observe(document.body, { childList: true, subtree: true, attributes: true });
 window.addEventListener('load', notifyParent);
+/* Re-measure after any CSS transition (panel open/close
+   animations are 0.3s). Without this, the parent could
+   stay locked to the height read mid-animation. */
+document.body.addEventListener('transitionend', notifyParent);
 </script>
 
 </body>

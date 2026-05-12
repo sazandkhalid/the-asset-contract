@@ -1,0 +1,325 @@
+/* ──────────────────────────────────────────────────────────
+ * Policy Memos, constellation wheel.
+ *
+ * Seven memo nodes arranged on a circular ring around a
+ * center hub. Dotted arcs connect related memos. Hovering
+ * a node lights up its connections and dims the rest.
+ * Clicking opens the full memo as a centered modal.
+ * ────────────────────────────────────────────────────────── */
+
+/* ── SECTION CONTAINER ── */
+.policy-memos-section {
+  background: #f5f1ea;
+  padding: 6rem 0 7rem;
+}
+
+.policy-memos-section .header {
+  max-width: 720px;
+  margin: 0 auto 3rem;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.policy-memos-section .header .eyebrow {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #8b6914;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.policy-memos-section .header h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.4rem;
+  color: #1a1816;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 1.4rem;
+}
+
+.policy-memos-section .header p.lede {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 1.08rem;
+  color: #2a2520;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ── WHEEL CONTAINER ── */
+#policy-memos-grid {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+}
+
+.memo-wheel-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── NODES ── */
+.memo-node {
+  cursor: pointer;
+}
+
+/* No CSS transform on the group, the JS sets
+   transform="translate(x, y)" as an SVG attribute and a
+   CSS transform on hover would replace it, snapping the
+   node to (0, 0) and creating a hover-flicker loop. The
+   visual hover feedback lives entirely on the disc
+   instead. */
+
+.memo-node__disc {
+  transition: filter 0.3s, stroke-width 0.3s;
+}
+
+.memo-node:hover .memo-node__disc {
+  filter: drop-shadow(0 4px 12px rgba(20,16,10,0.18));
+  stroke-width: 3;
+}
+
+.memo-node__numeral {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+  font-weight: 500;
+  fill: #faf7f1;
+  text-anchor: middle;
+}
+
+.memo-node__category {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  fill: #1a1816;
+  text-anchor: middle;
+  text-transform: uppercase;
+}
+
+.memo-node__headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 14px;
+  font-weight: 500;
+  fill: #1a1816;
+  text-anchor: middle;
+}
+
+.memo-node__title {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  fill: #2a2520;
+  text-anchor: middle;
+  line-height: 1.35;
+}
+
+.memo-node__icon {
+  stroke-width: 1.6;
+  fill: none;
+}
+
+/* Hover state: dimmed nodes lose saturation */
+.memo-wheel-svg.has-hover .memo-node:not(.is-related) {
+  opacity: 0.25;
+}
+
+.memo-wheel-svg.has-hover .memo-connection:not(.is-active) {
+  opacity: 0.08;
+}
+
+/* ── CONNECTIONS ── */
+.memo-connection {
+  fill: none;
+  stroke: #8b6914;
+  stroke-width: 1.4;
+  stroke-dasharray: 3 4;
+  opacity: 0.35;
+  transition: opacity 0.3s, stroke-width 0.3s;
+}
+
+.memo-connection.is-active {
+  opacity: 0.85;
+  stroke-width: 2.2;
+  stroke-dasharray: none;
+}
+
+/* ── CENTER HUB ── */
+.memo-hub {
+  pointer-events: none;
+}
+
+.memo-hub__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  fill: #1a1816;
+  text-anchor: middle;
+  font-weight: 400;
+}
+
+.memo-hub__subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  fill: #8b6914;
+  text-anchor: middle;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* ── MEMO MODAL ── */
+.memo-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  pointer-events: none;
+}
+
+.memo-modal.is-open {
+  display: block;
+  pointer-events: auto;
+}
+
+.memo-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 16, 10, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.memo-modal.is-open .memo-modal__backdrop {
+  opacity: 1;
+}
+
+.memo-modal__card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(640px, calc(100% - 3rem));
+  max-height: 88vh;
+  overflow-y: auto;
+  transform: translate(-50%, -50%) scale(0.94);
+  background: #faf7f1;
+  border: 1px solid #d4cfc4;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+  opacity: 0;
+  transition: opacity 0.4s ease,
+              transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+
+.memo-modal.is-open .memo-modal__card {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.memo-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #6a6258;
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.memo-modal__close:hover {
+  color: #1a1816;
+  background: rgba(0,0,0,0.05);
+}
+
+.memo-modal__header {
+  padding: 1rem 2rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #faf7f1;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.memo-modal__numeral {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+.memo-modal__body {
+  padding: 2rem 2.4rem 2.4rem;
+}
+
+.memo-modal__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.8rem;
+  color: #1a1816;
+  font-weight: 400;
+  line-height: 1.22;
+  margin: 0 0 1.8rem;
+}
+
+.memo-modal__section {
+  margin-bottom: 1.4rem;
+}
+
+.memo-modal__label {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #8b6914;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.memo-modal__text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.96rem;
+  line-height: 1.8;
+  color: #2a2520;
+  margin: 0;
+}
+
+.memo-modal__footer {
+  margin-top: 1.8rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid #ebe5d7;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.74rem;
+  color: #6a6258;
+  font-style: italic;
+}
+
+body.memo-modal-open {
+  overflow: hidden;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 720px) {
+  .memo-modal__card {
+    width: calc(100% - 1rem);
+    max-height: 92vh;
+  }
+  .memo-modal__body { padding: 1.5rem 1.4rem 2rem; }
+  .memo-modal__title { font-size: 1.4rem; }
+}

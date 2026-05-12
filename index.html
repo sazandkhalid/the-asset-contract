@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-18110d4ac76a58447af137ea21cb090a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-af2e2a500ad8d32cda3412a9450274d3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-dark-a6fa13bf725a9ec23b319bcbceb3bd80.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-18110d4ac76a58447af137ea21cb090a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -76,12 +76,16 @@ ul.task-list li input[type="checkbox"] {
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f5f1ea'/%3E%3Ctext x='16' y='23' font-family='Georgia' font-size='22' fill='%238b6914' text-anchor='middle' font-style='italic'%3EA%3C/text%3E%3C/svg%3E">
 
 
 <link rel="stylesheet" href="styles/custom.css">
 <link rel="stylesheet" href="assets/css/fig02_scrolly.css">
 <link rel="stylesheet" href="assets/css/notecards.css">
+<link rel="stylesheet" href="assets/css/five-americas-atlas.css">
+<link rel="stylesheet" href="assets/css/fig_asset_gap_scrolly.css">
+<link rel="stylesheet" href="assets/css/policy-memos.css">
 </head>
 
 <body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
@@ -293,7 +297,12 @@ ul.task-list li input[type="checkbox"] {
 <!-- ════════════════════════════════════════════════ -->
 <section id="opening-video" class="register-cinematic">
 
- <video id="dm-opening" class="video-local" playsinline="" muted="" preload="auto" src="assets/video/video_final.mov"></video>
+ <video id="dm-opening" class="video-local opening-video" autoplay="" muted="" playsinline="" preload="auto" poster="assets/video/dylan-opening-poster.jpg">
+   <source src="assets/video/dylan-opening.webm" type="video/webm">
+   <source src="assets/video/dylan-opening.mp4" type="video/mp4">
+   Your browser does not support the video tag. Please
+   use a modern browser to view the opening sequence.
+ </video>
 
  <div class="video-gradient"></div>
 
@@ -396,21 +405,16 @@ ul.task-list li input[type="checkbox"] {
         </li>
         <li>
           <span class="ch-num">VII</span>
-          <span class="ch-title">The Crossing</span>
-          <span class="ch-desc">2011, the year the basket cost more than median income</span>
-        </li>
-        <li>
-          <span class="ch-num">VIII</span>
           <span class="ch-title">Human Cost</span>
           <span class="ch-desc">delayed marriage, falling fertility, shortened lives</span>
         </li>
         <li>
-          <span class="ch-num">IX</span>
+          <span class="ch-num">VIII</span>
           <span class="ch-title">Find Yourself</span>
           <span class="ch-desc">your life on the Dream Index</span>
         </li>
         <li>
-          <span class="ch-num">X</span>
+          <span class="ch-num">IX</span>
           <span class="ch-title">The Reckoning</span>
           <span class="ch-desc">recommendations and the action plan</span>
         </li>
@@ -444,7 +448,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="register-transition transition-doc-edit"></div>
 
 <section class="narrative-section register-editorial" data-chapter="The Architecture">
- <div class="photo-text-grid fade-up">
+ <div class="photo-text-grid fade-up architecture-grid-2col">
  <div class="grid-text">
  <div class="section-chip">
  <div class="section-chip__line"></div>
@@ -453,11 +457,26 @@ ul.task-list li input[type="checkbox"] {
  <span class="section-eyebrow">The Architecture</span>
  <h2 class="anchored">What was built, deliberately</h2>
 
+ <p class="section-lede">
+   Before the numbers, the policies. This chapter is a
+   walk through the legislative architecture that built
+   the postwar American middle class, and the laws that
+   later disassembled it. The Dream Index, the measurement
+   that tracks what those policies produced, arrives in
+   the next chapter.
+ </p>
+
  <p>The GI Bill sent eight million veterans to college on
  the federal government's account. The FHA drove
  homeownership from 44% in 1940 to 62% by 1960. Union
  membership reached 35% of the workforce. For the people
  inside this architecture, it worked.</p>
+
+ <p>But the architecture had exclusions built in. The FHA's
+ own manuals recommended against insuring mortgages in
+ racially mixed neighborhoods. Black veterans found the GI
+ Bill administered locally by the same people who enforced
+ segregation. The Dream was always rationed.</p>
 
  <div class="pull-quote">
  "In 1960, a median household spent 44 cents of every
@@ -470,47 +489,17 @@ ul.task-list li input[type="checkbox"] {
  <img src="https://upload.wikimedia.org/wikipedia/commons/6/64/LevittownPA.jpg" alt="Levittown, Pennsylvania, mass-produced postwar suburbs built with GI Bill financing and FHA mortgages. Public domain." loading="lazy" class="figure-img">
  <figcaption>
  Levittown, Pennsylvania, late 1950s. Built for returning
- veterans using GI Bill financing and FHA-insured mortgages 
+ veterans using GI Bill financing and FHA-insured mortgages
  the postwar architecture of mass homeownership.
  Wikimedia Commons. Public domain.
  </figcaption>
  </figure>
-
- <div class="grid-text">
- <p>But the architecture had exclusions built in. The FHA's
- own manuals recommended against insuring mortgages in
- racially mixed neighborhoods. Black veterans found the GI
- Bill administered locally by the same people who enforced
- segregation. The Dream was always rationed.</p>
-
- <div class="place-card-visual fade-up" style="--card-accent: #8a3018;">
- <img class="card-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Twelve_year-old_son_of_a_cotton_sharecropper_near_Cleveland%2C_Mississippi%2C_8b32066.jpg/500px-Twelve_year-old_son_of_a_cotton_sharecropper_near_Cleveland%2C_Mississippi%2C_8b32066.jpg" alt="Son of a cotton sharecropper near Cleveland, Mississippi. Public domain." loading="lazy">
- <div class="card-body">
- <p class="name">Mississippi Delta, 1960</p>
- <p class="mechanism">Excluded by design since Reconstruction</p>
- <p>In Sunflower County in 1960, 74% of residents lived
- below the poverty line. The Promise was not delayed here.
- It was never extended.</p>
- </div>
- </div>
-
- <div class="place-card-visual photo-right fade-up" style="--card-accent: #1e5a3f;">
- <img class="card-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Two_Strike%28%27s%29_band_%28Brul%C3%A9_Lakota%29_Pine_Ridge_1891_-_photo_made_by_S.D._Butcher_%26_Son%2C_Kearney%2C_Neb._LCCN2005693371.jpg/500px-Two_Strike%28%27s%29_band_%28Brul%C3%A9_Lakota%29_Pine_Ridge_1891_-_photo_made_by_S.D._Butcher_%26_Son%2C_Kearney%2C_Neb._LCCN2005693371.jpg" alt="Two Strike's band (Brulé Lakota), Pine Ridge, 1891. Public domain." loading="lazy">
- <div class="card-body">
- <p class="name">Pine Ridge Reservation, 1960</p>
- <p class="mechanism">Never inside the Dream, the colonial baseline</p>
- <p>The Oglala Lakota Nation is the project's floor,
- what complete structural exclusion looks like across
- generations. The poverty rate has never fallen below 35%.</p>
- </div>
- </div>
- </div>
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-edit-doc"></div>
 
-<section class="analysis-section fade-up register-editorial" id="fig-01">
+<section class="analysis-section fade-up register-document" id="fig-01">
  <div class="header">
  <span class="eyebrow">Figure 1, The Architecture, in Decisions</span>
  <h3 class="anchored">The asset contract was built between 1934 and 1977, then dismantled in the decades that followed.</h3>
@@ -525,12 +514,12 @@ ul.task-list li input[type="checkbox"] {
  the chart itself.</p>
  </div>
  <div id="architecture-figure" class="figure-fullwidth">
- <svg id="architecture-svg" viewbox="0 0 1800 660" preserveaspectratio="xMidYMid meet" style="width:100%; height:auto; display:block;">
+ <svg id="architecture-svg" viewbox="0 0 2400 760" preserveaspectratio="xMidYMid meet" style="width:100%; height:auto; display:block;">
  </svg>
  </div>
 </section>
 
-<div class="register-transition transition-edit-cine"></div>
+<div class="register-transition transition-doc-cine"></div>
 
 <!-- ════════════════════════════════════════════════ -->
 <!-- SECTION 3: THE PROMISE, 1945–1973 -->
@@ -563,12 +552,12 @@ ul.task-list li input[type="checkbox"] {
  <div class="fade-to-black"></div>
 </section>
 
-<div class="register-transition transition-cine-edit"></div>
+<div class="register-transition transition-cine-doc"></div>
 
-<section class="narrative-section register-editorial short">
+<section class="narrative-section register-document short" data-chapter="The Dream Index">
  <div class="inner fade-up">
  <span class="section-eyebrow">What is the Dream Index?</span>
- <h2 class="anchored">A measurement, not a metaphor</h2>
+ <h2 class="anchored">How do you put a number on a broken promise?</h2>
 
  <p>The Dream Index measures the annual cost of a canonical
  middle-class American life, a median home mortgage, family
@@ -592,7 +581,7 @@ ul.task-list li input[type="checkbox"] {
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-doc-edit"></div>
 
 <!-- ════════════════════════════════════════════════ -->
 <!-- FIGURE 2, STICKY SCROLLY DREAM INDEX -->
@@ -745,9 +734,9 @@ ul.task-list li input[type="checkbox"] {
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-edit-doc"></div>
 
-<section class="analysis-section fade-up register-editorial" id="fig-03">
+<section class="analysis-section fade-up register-document" id="fig-03">
  <div class="header">
  <span class="eyebrow">Figure 3, The Bifurcation</span>
  <h3 class="anchored">What got cheaper. What got more expensive.</h3>
@@ -760,7 +749,7 @@ ul.task-list li input[type="checkbox"] {
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-doc-edit"></div>
 
 <section class="analysis-section fade-up register-editorial" id="fig-04">
  <div class="header">
@@ -810,19 +799,39 @@ ul.task-list li input[type="checkbox"] {
 <div class="register-transition transition-cine-edit"></div>
 
 <section class="narrative-section register-editorial" data-chapter="The Mechanism">
- <div class="photo-text-grid fade-up">
+ <div class="photo-text-grid fade-up architecture-grid-2col">
  <div class="grid-text">
  <div class="section-chip">
  <div class="section-chip__line"></div>
  <span class="section-chip__text">The Mechanism</span>
  </div>
+ <span class="section-eyebrow">The Mechanism</span>
  <h2 class="anchored">When labor stopped being rewarded</h2>
 
- <p>Union membership began its long decline from 35% toward
- 10%. Trade policy opened manufacturing to global competition.
- Corporate governance shifted toward shareholder returns.
- Each change redirected productivity gains away from workers
- and toward capital.</p>
+ <p class="section-lede">
+   Union membership began its long decline from 35% toward
+   10%. Trade policy opened manufacturing to global
+   competition. Corporate governance shifted toward
+   shareholder returns. Each change redirected productivity
+   gains away from workers and toward capital.
+ </p>
+
+ <p>The figure below makes this concrete. Nonfarm business
+ output per hour, a standard measure of economic productivity,
+ is indexed alongside real manufacturing wages, both set to
+ 100 in 1960. Until 1973 the lines move together, confirming
+ that workers were capturing the gains of the economy they
+ built. After 1973, they do not. The gap between what the
+ economy produced and what workers were paid has widened
+ every decade since.</p>
+
+ <p>The shaded area beneath the divergence is not abstract:
+ it represents wages that were earned by the economy but not
+ distributed to the workers who generated them. The figure
+ also shows a third line, what wages would be today if they
+ had tracked productivity since 1973. The distance between
+ that hypothetical line and actual wages is the arithmetic
+ of the asset contract.</p>
 
  <div class="pull-quote">
  "If wages had tracked productivity since 1973, the median
@@ -840,46 +849,12 @@ ul.task-list li input[type="checkbox"] {
  Wikimedia Commons. Public domain.
  </figcaption>
  </figure>
-
- <div class="grid-text">
- <p>The figure below makes this concrete. Nonfarm business
- output per hour, a standard measure of economic productivity
-, is indexed alongside real manufacturing wages, both set to
- 100 in 1960. Until 1973 the lines move together, confirming
- that workers were capturing the gains of the economy they
- built. After 1973, they do not. The gap between what the
- economy produced and what workers were paid has widened every
- decade since. The shaded area beneath the divergence is not
- abstract: it represents wages that were earned by the economy
- but not distributed to the workers who generated them. The
- figure also shows a third line, what wages would be today
- if they had tracked productivity since 1973. The distance
- between that hypothetical line and actual wages is the
- arithmetic of the asset contract.</p>
-
- <div class="place-card" style="border-color:#2C2C2C;">
- <p class="name">Coal Country, McDowell County, WV</p>
- <p class="mechanism">Extraction economy abandoned after the asset ran out</p>
- <p>McDowell County peaked in the 1950s with 100,000 people
- and wages above the national median. When the coal ran out
- and strip mining mechanized extraction, nothing replaced
- it. Today: 18,000 residents. Median income 47% of national.</p>
- </div>
-
- <div class="place-card" style="border-color:#8B4513;">
- <p class="name">Rust Belt, Youngstown, OH / Janesville, WI</p>
- <p class="mechanism">Manufacturing made disposable by globalization</p>
- <p>Youngstown's Black Monday in 1977. Janesville's GM
- closure in 2008. The same story, thirty years apart.
- The local Dream Index collapsed in a single year both times.</p>
- </div>
- </div>
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-edit-doc"></div>
 
-<section class="analysis-section fade-up register-editorial" id="fig-05">
+<section class="analysis-section fade-up register-document" id="fig-05">
  <div class="header">
  <span class="eyebrow">Figure 5, Wages vs. Productivity</span>
  <h3 class="anchored">Wages vs. Productivity, 1960–2024</h3>
@@ -892,7 +867,7 @@ ul.task-list li input[type="checkbox"] {
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-doc-edit"></div>
 
 <section class="analysis-section fade-up register-editorial" id="fig-06">
  <div class="header">
@@ -909,9 +884,9 @@ ul.task-list li input[type="checkbox"] {
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-edit-doc"></div>
 
-<section class="analysis-section fade-up register-editorial" id="fig-07">
+<section class="analysis-section fade-up register-document" id="fig-07">
  <div class="header">
  <span class="eyebrow">Figure 7, Where the gains went</span>
  <h3 class="anchored">The productivity gains went to the top 1%</h3>
@@ -930,7 +905,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- ════════════════════════════════════════════════ -->
 <!-- WHAT WORKED, AND FOR WHOM -->
 <!-- ════════════════════════════════════════════════ -->
-<div class="section-separator"></div>
+<div class="register-transition transition-doc-edit"></div>
 
 <section class="narrative-section register-editorial" data-chapter="What Worked" style="padding: 6rem 0;">
 
@@ -1000,9 +975,9 @@ ul.task-list li input[type="checkbox"] {
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-edit-doc"></div>
 
-<section class="analysis-section fade-up register-editorial" id="fig-08">
+<section class="analysis-section fade-up register-document" id="fig-08">
  <div class="header">
  <span class="eyebrow">Figure 8, Women and the Dream</span>
  <h3 class="anchored">Women entered the economy. The basket helped require it.</h3>
@@ -1019,7 +994,7 @@ ul.task-list li input[type="checkbox"] {
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-doc-edit"></div>
 
 <section class="analysis-section fade-up register-editorial" id="fig-09">
  <div class="header">
@@ -1067,148 +1042,58 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="register-transition transition-cine-edit"></div>
 
-<section class="narrative-section register-editorial" data-chapter="What Averages Conceal">
- <div class="photo-text-grid fade-up">
- <div class="grid-text">
- <span class="section-eyebrow">Six Decades of Economic Divergence</span>
- <h2 class="anchored">What national averages conceal</h2>
+<section class="narrative-section fade-up register-editorial" data-chapter="Five Americas">
+ <div class="five-americas-intro" style="max-width:760px; margin:0 auto; padding:0 3rem;">
 
- <p>The national Dream Index describes an average, but
- averages conceal as much as they reveal. To understand
- how the asset contract operates in practice, this project
- examines five communities whose economic trajectories have
- diverged sharply from national benchmarks since 1960.
- Each place was chosen because it embodies a distinct
- structural mechanism: racial exclusion from the original
- postwar architecture, extraction economy collapse,
- manufacturing displacement, colonial land dispossession,
- and concentrated asset-economy gains.</p>
- </div>
+ <span class="section-eyebrow">Five Americas, Five Mechanisms</span>
+ <h2 class="anchored">Why these five communities</h2>
 
- <figure class="grid-photo figure">
- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Sharecropper_plowing%2C_Montgomery_County%2C_Alabama.jpg/1280px-Sharecropper_plowing%2C_Montgomery_County%2C_Alabama.jpg" alt="Sharecropper plowing, Montgomery County, Alabama. The economy of exclusion that preceded and persisted through the postwar Dream. Library of Congress / Wikimedia Commons. Public domain." loading="lazy" class="figure-img">
- <figcaption>
- Sharecropper plowing, Montgomery County, Alabama, c. 1937.
- In Sunflower County, Mississippi in 1960, 74% of residents
- lived below the poverty line. The GI Bill and FHA were
- administered locally, by the same institutions that
- enforced segregation.
- Library of Congress / Wikimedia Commons. Public domain.
- </figcaption>
- </figure>
+ <p class="section-lede">
+   The national Dream Index is a single number. The country
+   is not. To average a contract that worked for some and
+   never reached others is to describe nothing accurately.
+ </p>
 
- <div class="grid-text">
- <p>The three metrics, median income relative to national,
- poverty rate, and homeownership rate, are measured at each
- decennial census from 1960 to 2020 using county-level data
- from the National Historical Geographic Information System
- (NHGIS). What you are looking at is not natural variation.
- It is the geography of policy decisions made between 1944
- and 2000 whose consequences are still compounding.</p>
- </div>
+ <p>This chapter looks at five specific American
+ communities. They are not random examples. Together they
+ form a typology of asset contract failure, each one
+ representing a structurally distinct way the postwar
+ economic deal either never extended, was withdrawn, was
+ made obsolete, or worked as designed and still broke.</p>
+
+ <p>The <strong>Mississippi Delta</strong> shows the
+ contract deliberately denied. <strong>Pine Ridge</strong>
+ shows it never extended. <strong>Coal Country</strong>
+ shows it extended and then abandoned when the underlying
+ asset ran out. The <strong>Rust Belt</strong> shows it
+ extended and then made obsolete by globalization. The
+ <strong>Bay Area and NYC</strong> show what happens when
+ the contract works exactly as designed, and locally breaks
+ anyway.</p>
+
+ <p>Five communities. Five mechanisms. One contract, five
+ different ways of failing.</p>
+
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-edit-doc"></div>
 
-<section class="narrative-section register-editorial" data-chapter="The Mechanisms">
- <div class="inner">
- <div class="section-chip">
- <div class="section-chip__line"></div>
- <span class="section-chip__text">Five Mechanisms</span>
- </div>
- <div class="fade-up">
- <h2 class="anchored">Five mechanisms. One contract.</h2>
- </div>
-
- <div class="place-card-visual fade-up" style="--card-accent: #8a3018;">
- <img class="card-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Twelve_year-old_son_of_a_cotton_sharecropper_near_Cleveland%2C_Mississippi%2C_8b32066.jpg/500px-Twelve_year-old_son_of_a_cotton_sharecropper_near_Cleveland%2C_Mississippi%2C_8b32066.jpg" alt="Son of a cotton sharecropper near Cleveland, Mississippi. Public domain." loading="lazy">
- <div class="card-body">
- <p class="name">Mississippi Delta</p>
- <p class="mechanism">Excluded by design since Reconstruction</p>
- <p>The original exclusion. Sixty years of compounded returns
- on an asset you were prevented from buying is the racial
- wealth gap.</p>
- </div>
- </div>
-
- <div class="place-card-visual photo-right fade-up" style="--card-accent: #6a4a20;">
- <img class="card-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Coal_cars_and_houses._Southern_Coal_Corporation%2C_Bradshaw_Mine%2C_Bradshaw%2C_McDowell_County%2C_West_Virginia._-_NARA_-_541021.jpg/500px-Coal_cars_and_houses._Southern_Coal_Corporation%2C_Bradshaw_Mine%2C_Bradshaw%2C_McDowell_County%2C_West_Virginia._-_NARA_-_541021.jpg" alt="Coal cars and houses, Bradshaw Mine, McDowell County, West Virginia. Public domain." loading="lazy">
- <div class="card-body">
- <p class="name">Coal Country</p>
- <p class="mechanism">Extraction economy abandoned after the asset ran out</p>
- <p>When the coal ran out, the company left and took the
- infrastructure with it. The opioid crisis is the final
- chapter of economic abandonment.</p>
- </div>
- </div>
-
- <div class="place-card-visual fade-up" style="--card-accent: #555555;">
- <img class="card-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Typical_Mill_workers_at_lunch%2C_Pittsburgh%2C_Pa.jpg/500px-Typical_Mill_workers_at_lunch%2C_Pittsburgh%2C_Pa.jpg" alt="Mill workers at lunch, Pittsburgh, PA. Public domain." loading="lazy">
- <div class="card-body">
- <p class="name">Rust Belt</p>
- <p class="mechanism">Manufacturing made disposable by globalization</p>
- <p>The plant was a social contract. When it closed, the
- contract ended overnight.</p>
- </div>
- </div>
-
- <div class="place-card-visual photo-right fade-up" style="--card-accent: #1e5a3f;">
- <img class="card-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Two_Strike%28%27s%29_band_%28Brul%C3%A9_Lakota%29_Pine_Ridge_1891_-_photo_made_by_S.D._Butcher_%26_Son%2C_Kearney%2C_Neb._LCCN2005693371.jpg/500px-Two_Strike%28%27s%29_band_%28Brul%C3%A9_Lakota%29_Pine_Ridge_1891_-_photo_made_by_S.D._Butcher_%26_Son%2C_Kearney%2C_Neb._LCCN2005693371.jpg" alt="Two Strike's band (Brulé Lakota), Pine Ridge, 1891. Public domain." loading="lazy">
- <div class="card-body">
- <p class="name">Pine Ridge</p>
- <p class="mechanism">Never inside the Dream, the colonial baseline</p>
- <p>Not a place where the Dream failed. A place the Dream
- never reached. The poverty rate has never fallen below 35%.</p>
- </div>
- </div>
-
- <div class="place-card-visual fade-up" style="--card-accent: #8b6914;">
- <img class="card-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/San_Francisco_skyline_from_Marin_Headlands.jpg/500px-San_Francisco_skyline_from_Marin_Headlands.jpg" alt="San Francisco skyline from Marin Headlands. Public domain." loading="lazy">
- <div class="card-body">
- <p class="name">Bay Area / NYC</p>
- <p class="mechanism">What winning the asset economy looks like</p>
- <p>The inverse. Even a median income at 1.5× the national
- average cannot afford the local housing market. The Dream
- is broken here too, in the opposite direction.</p>
- </div>
- </div>
- </div>
-</section>
-
-<div class="section-separator"></div>
-
-<section class="analysis-section fade-up register-editorial" id="fig-10">
+<section class="five-americas-atlas-section fade-up" id="fig-atlas">
  <div class="header">
- <span class="eyebrow">Figure 10, Five Mechanisms map</span>
- <h3 class="anchored">Five places, mapped.</h3>
- <p class="desc">Each marker is one community. Each community
- is one mechanism by which the asset contract operates: who
- was excluded, who was abandoned, who was disposed of, who
- was never offered the contract at all, and who collected
- the gains. Hover any marker to read its story.</p>
+   <span class="eyebrow">Five Americas, Mapped</span>
+   <h2 class="anchored">The atlas</h2>
+   <p>
+     Five markers. Five mechanisms. Click any community to
+     read its full story, the photo, the data, the quotes,
+     the trajectories across six decades.
+   </p>
  </div>
- <div class="figure-embed-container">
- <iframe class="figure-iframe" style="height:620px" src="outputs/figures/fig01_five_mechanisms_map.html" frameborder="0" scrolling="no" loading="lazy" onload="resizeFigure(this)" title="Figure 10, Five Mechanisms map"></iframe>
- </div>
+
+ <div id="five-americas-atlas"></div>
 </section>
 
-<div class="section-separator"></div>
-
-<section class="analysis-section fade-up register-editorial" id="fig-11">
- <div class="header">
- <span class="eyebrow">Figure 11, Five Americas</span>
- <h3 class="anchored">Economic trajectories since 1960</h3>
- <p class="desc">Median income, poverty rate, and homeownership
- for each community against national benchmarks. The grey
- dashed line is the national average. Hover to explore.</p>
- </div>
- <div class="figure-embed-container">
- <iframe class="figure-iframe" style="height:920px" src="outputs/figures/fig04_five_places.html" frameborder="0" scrolling="no" loading="lazy" onload="resizeFigure(this)" title="Figure 11, Five Americas"></iframe>
- </div>
-</section>
-
-<div class="section-separator"></div>
+<div class="register-transition transition-doc-edit"></div>
 
 <section class="analysis-section fade-up register-editorial" id="fig-12">
  <div class="header">
@@ -1227,64 +1112,97 @@ ul.task-list li input[type="checkbox"] {
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition" style="height:60px; border:none;
+            background: linear-gradient(to bottom,
+                          #ebe3d1 0%, #f5f1ea 100%);"></div>
 
-<section class="narrative-section register-editorial short" data-chapter="The Asset Gap">
- <div class="photo-text-grid fade-up">
- <div class="grid-text">
- <span class="section-eyebrow">Income vs. Wealth</span>
- <h2 class="anchored">The gap that income policy cannot close</h2>
-
- <p>The racial income gap has narrowed by six percentage
- points in 57 years. That is real progress. But the racial
- wealth gap, the difference in what households own, not
- what they earn, has barely moved. Black households held
- 9.3 cents of wealth for every dollar held by white
- households in 1989. Today they hold 12 cents.</p>
- </div>
-
- <figure class="grid-photo figure">
- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Brooklyn%2C_New_York_HOLC_Redlining_Map.jpg/1280px-Brooklyn%2C_New_York_HOLC_Redlining_Map.jpg" alt="HOLC redlining map, Brooklyn, late 1930s. The Home Owners Loan Corporation graded neighborhoods by racial composition, designating Black neighborhoods as high-risk and ineligible for FHA-insured mortgages. Public domain." loading="lazy" class="figure-img">
- <figcaption>
- Home Owners' Loan Corporation security map, Brooklyn, late
- 1930s. Red zones, majority-Black neighborhoods, were
- systematically denied FHA mortgage insurance. This single
- policy instrument created the wealth gap that persists today.
- Wikimedia Commons. Public domain.
- </figcaption>
- </figure>
-
- <div class="grid-text">
- <p>This is the asset contract's central evidence. Income
- and wages move together when the economy grows. Wealth
- compounds independently of current income, it accumulates
- from assets bought decades ago, from inheritances, from
- equity in homes purchased before prices ran away. A policy
- that addresses only wages addresses only half the mechanism.
- The other half is the asset itself: who owns it, who was
- prevented from owning it, and how many decades of
- compounding that prevention represents.</p>
- </div>
- </div>
-</section>
-
-<div class="section-separator"></div>
-
-<section class="analysis-section fade-up register-editorial" id="fig-13">
+<section class="asset-gap-scrolly-section fade-up" data-chapter="The Asset Gap">
  <div class="header">
- <span class="eyebrow">Figure 13, Income vs. Wealth by Race</span>
- <h3 class="anchored">Income gap narrowed. Wealth gap barely moved.</h3>
- <p class="desc">Black household income as a share of white
- household income (left) vs. Black household wealth as a share of
- white household wealth (right). Income: Census H-5, 1967–2024.
- Wealth: Federal Reserve SCF / DFA, 1989–2024.</p>
+   <span class="eyebrow">The Asset Gap</span>
+   <h2 class="anchored">How the gap is made.</h2>
  </div>
- <div class="figure-embed-container">
- <iframe class="figure-iframe" style="height:540px" src="outputs/figures/fig06_income_wealth_race.html" frameborder="0" scrolling="no" loading="lazy" onload="resizeFigure(this)" title="Figure 13, Income vs. Wealth by Race"></iframe>
+
+ <div class="asset-gap-scrolly">
+   <div class="asset-gap-scrolly__steps">
+
+     <div class="asset-gap-step is-active" data-step="0">
+       <span class="step-eyebrow">Act I, The income gap</span>
+       <h3 class="anchored">Black households earn 64¢ for every $1 white
+       households earn.</h3>
+       <div class="stat-callout">64¢</div>
+       <p>This gap has narrowed. In 1967 the ratio was
+       55¢. Six decades later it sits at 64¢, a 9-cent
+       gain across two generations.</p>
+       <p>Income narrows when wages rise. Wages have
+       risen, slowly, unevenly, but they have risen. The
+       labor market, for all its faults, partially
+       responded.</p>
+     </div>
+
+     <div class="asset-gap-step" data-step="1">
+       <span class="step-eyebrow">Act II, The wealth gap</span>
+       <h3 class="anchored">But Black households own 12¢ for every $1 of
+       wealth white households own.</h3>
+       <div class="stat-callout">12¢</div>
+       <p>In 1989 the ratio was 9¢. Today it is 12¢.
+       Three cents in 33 years. The wealth gap has barely
+       moved while the income gap has slowly narrowed.</p>
+       <p>This is the question the chapter exists to
+       answer: why?</p>
+     </div>
+
+     <div class="asset-gap-step" data-step="2">
+       <span class="step-eyebrow">Act III, The mechanism</span>
+       <h3 class="anchored">Imagine two households in 1989. Identical in
+       every way except one thing.</h3>
+       <p>Both earn the same income. Both save 8% of it.
+       Both invest in assets that return 6% a year.</p>
+       <p>The only difference is their starting balance.
+       The median white household held $100,000 in
+       assets. The median Black household held $9,300.</p>
+       <p>This is not because of effort. It is because of
+       sixty prior years of denied access to the asset
+       contract, the FHA mortgages, the GI Bill, the
+       union pensions, the suburbs.</p>
+     </div>
+
+     <div class="asset-gap-step" data-step="3">
+       <span class="step-eyebrow">Act IV, Compounding</span>
+       <h3 class="anchored">Project them forward 35 years.</h3>
+       <p>Same savings rate. Same return. Same effort.
+       The trajectories diverge, not because one earned
+       more, but because compound interest pays a return
+       on what you already own.</p>
+       <p>The absolute gap widens with every year.
+       Compounding does not close gaps. It amplifies
+       them.</p>
+     </div>
+
+     <div class="asset-gap-step" data-step="4">
+       <span class="step-eyebrow">Act V, Today</span>
+       <h3 class="anchored">This is the wealth gap today.</h3>
+       <p>The median white household has roughly
+       $285,000 in net worth. The median Black household
+       has roughly $44,000.</p>
+       <p>The gap is not made by who earned more this
+       year. It is made by who was allowed to buy assets
+       sixty years ago, and who has therefore been
+       compounding ever since.</p>
+       <p>This is the asset contract's central trick. It
+       rewards what you already own.</p>
+     </div>
+
+   </div>
+
+   <div class="asset-gap-scrolly__chart">
+     <svg id="asset-gap-svg"></svg>
+   </div>
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition" style="height:60px; border:none;
+            background: linear-gradient(to bottom,
+                          #f5f1ea 0%, #ebe3d1 100%);"></div>
 
 <section class="analysis-section fade-up register-editorial" id="fig-14">
  <div class="header">
@@ -1296,108 +1214,15 @@ ul.task-list li input[type="checkbox"] {
  your family's compound.</p>
  </div>
  <div class="figure-embed-container">
- <iframe class="figure-iframe" style="height: 800px;" src="outputs/figures/fig06b_asset_compound.html" frameborder="0" scrolling="no" loading="lazy" title="Figure 14, Asset Compound Calculator">
+ <iframe class="figure-iframe" style="height: 500px;" src="outputs/figures/fig06b_asset_compound.html" frameborder="0" scrolling="no" loading="lazy" title="Figure 14, Asset Compound Calculator">
  </iframe>
  </div>
 </section>
 
-<div class="section-separator"></div>
-
-<section class="narrative-section register-editorial short">
- <div class="inner fade-up" style="max-width:660px; margin:0 auto; padding:2.5rem 3rem;">
- <p style="font-family:Georgia,serif; font-size:1.15rem;
- line-height:1.85; color:#777; font-style:italic;">
- These five communities did not experience what came
- next as a national statistic. Each had already lived
- its own version of the Break. But in 2011, the national
- mathematics crossed a threshold that made their local
- conditions the new median American condition. The Dream
- Index exceeded 1.0 for the first time. The basket cost
- more than the median household earned. What had been
- exceptional became average.
- </p>
- </div>
-</section>
-
 <div class="register-transition transition-edit-cine"></div>
 
 <!-- ════════════════════════════════════════════════ -->
-<!-- SECTION 6: THE CROSSING, 2000–2015 -->
-<!-- ════════════════════════════════════════════════ -->
-<section id="section-crossing" class="video-section register-cinematic" data-chapter="The Crossing" data-eyebrow="2000, 2015">
- <div class="yt-cover">
- <iframe data-yt-id="crossing" data-start="30" data-end="120" src="https://www.youtube.com/embed/Tqu9ibhrlXo?enablejsapi=1&amp;autoplay=1&amp;mute=1&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1&amp;start=30&amp;end=120" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
- </div>
- <div class="video-gradient"></div>
-
- <div class="video-section__content fade-up">
- <span class="section-eyebrow">2000, 2015</span>
- <h2 class="section-title anchored">The Crossing</h2>
- <p class="section-body">
- In 2011, for the first time in American history,
- the cost of a canonical middle-class life exceeded
- the median household income.
- </p>
- <p class="section-body">
- The Dream Index crossed 1.0. The math that had been
- tilting for thirty years finally broke through.
- </p>
- </div>
- <p class="video-source">
- "Inside America's Capital of Despair: Youngstown", YouTube
- </p>
- <div class="fade-to-black"></div>
-</section>
-
-<div class="register-transition transition-cine-edit"></div>
-
-<section class="narrative-section register-editorial" data-chapter="The Inflection">
- <div class="inner">
- <div class="section-chip">
- <div class="section-chip__line"></div>
- <span class="section-chip__text">The Inflection</span>
- </div>
- <div class="fade-up">
- <h2 class="anchored">When the math finally broke</h2>
- </div>
-
- <p class="fade-up">The financial crisis of 2008 dropped
- median incomes while healthcare and education costs kept
- rising. By 2011, the accumulated weight of thirty years
- of divergence reached the tipping point.</p>
-
- <p class="fade-up">Low interest rates between 2012 and
- 2020 created a temporary window, falling mortgage
- payments made housing affordable despite rising prices.
- Americans who bought in that window got the last
- affordable entry point. In 2022, rates doubled. The
- window closed permanently.</p>
-
- <div class="pull-quote fade-up">
- "The rate floor was a reprieve, not a recovery.
- The Dream Index has not returned below 1.0."
- </div>
- </div>
-</section>
-
-<div class="section-separator"></div>
-
-<section class="analysis-section fade-up register-editorial" id="fig-15">
- <div class="header">
- <span class="eyebrow">Figure 15, The Crossing, in detail</span>
- <h3 class="anchored">Three moments: 2011, the rate floor, 2022</h3>
- <p class="desc">The Dream Index annotated at its three
- critical inflection points. Hover to explore each year.</p>
- </div>
- <div class="figure-embed-container">
- <iframe class="figure-iframe" style="height:540px" src="outputs/figures/fig02_crossing.html" frameborder="0" scrolling="no" loading="lazy" onload="resizeFigure(this)" title="Figure 15, The Crossing, in detail"></iframe>
- </div>
-</section>
-
-<div class="register-transition transition-edit-cine"></div>
-
-<!-- ════════════════════════════════════════════════ -->
-<!-- SECTION 7: HUMAN COST -->
+<!-- SECTION 6: HUMAN COST -->
 <!-- ════════════════════════════════════════════════ -->
 <section id="section-cost" class="video-section register-cinematic" data-chapter="Human Cost" data-eyebrow="The Consequences">
  <div class="yt-cover">
@@ -1422,68 +1247,44 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="register-transition transition-cine-edit"></div>
 
-<section class="narrative-section register-editorial" data-chapter="Consequences">
- <div class="inner">
- <div class="section-chip">
- <div class="section-chip__line"></div>
- <span class="section-chip__text">The Consequences</span>
- </div>
- <div class="fade-up">
- <h2 class="anchored">Economic statistics are human statistics</h2>
- </div>
+<section class="narrative-section fade-up register-editorial" data-chapter="Human Cost">
+ <div style="max-width:720px; margin:0 auto;
+             padding:6rem 3rem;">
 
- <p class="fade-up">Median age at first marriage rose by
- six years since 1960. Americans say in surveys they want
- more children than they have, they cite cost as the
- reason. The U.S. is the only wealthy country where life
- expectancy declined after 2014.</p>
+   <span class="section-eyebrow">The Consequences</span>
+   <h2 class="anchored">Economic distress does not stay in
+   financial statements.</h2>
 
- <div class="pull-quote fade-up">
- "The country is paying its bills in lifespans
- and childlessness."
- </div>
+   <p style="margin-top:2rem;">When households cannot
+   afford the basket of basic life, they restructure the
+   shape of their lives. They delay marriage because
+   forming a household requires two incomes and a deposit
+   they cannot save. They have fewer children than they
+   say they want because childcare costs more than rent in
+   most American cities. They move back in with parents
+   because renting alone consumes more than 30% of
+   take-home income. And in communities where economic
+   abandonment is most complete, they die younger.</p>
 
- <p class="fade-up">Working-age Americans without college
- degrees started dying earlier in the 2000s from suicide,
- overdose, and alcohol. These deaths map almost precisely
- onto the geography of economic abandonment shown in the
- Five Americas data.</p>
- </div>
-</section>
+   <p>The four indicators below, median age at first
+   marriage, total fertility rate, share of adults in
+   multigenerational households, life expectancy at
+   birth, are not separate phenomena. They are four
+   measurements of the same underlying pressure. Each has
+   moved in the direction the Dream Index would predict.
+   Each accelerated after 2000, when the index began its
+   final climb toward 1.0.</p>
 
-<div class="section-separator"></div>
+   <p>This is what the data looks like when you measure
+   it not in dollars, but in years of life and choices
+   foreclosed.</p>
 
-<section class="narrative-section register-editorial short">
- <div class="inner fade-up">
- <span class="section-eyebrow">The Price Paid in Years and Choices</span>
- <h2 class="anchored">Economic distress does not stay in financial statements</h2>
-
- <p>When households cannot afford the basket of basic life,
- they respond rationally, by restructuring the shape of
- their lives. They delay marriage because forming a household
- requires two incomes and a deposit they cannot save. They
- have fewer children than they say they want because childcare
- costs more than rent in most American cities. They move back
- in with parents because renting alone consumes more than 30%
- of take-home income. And in communities where economic
- abandonment is most complete, they die younger.</p>
-
- <p>The four indicators below, median age at first marriage,
- total fertility rate, share of adults in multigenerational
- households, and life expectancy at birth, are not separate
- phenomena. They are four different measurements of the same
- underlying pressure. Each has moved in the direction the
- Dream Index would predict, and each movement accelerated
- after 2000, when the index began its final climb toward 1.0.</p>
-
- <p>This is what the data looks like when you measure it
- not in dollars, but in years of life and choices foreclosed.</p>
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-edit-doc"></div>
 
-<section class="analysis-section fade-up register-editorial" id="fig-16">
+<section class="analysis-section fade-up register-document" id="fig-16">
  <div class="header">
  <span class="eyebrow">Figure 16, Way of Life</span>
  <h3 class="anchored">What Americans gave up to keep paying</h3>
@@ -1497,30 +1298,12 @@ ul.task-list li input[type="checkbox"] {
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition transition-doc-edit"></div>
 
 <!-- ════════════════════════════════════════════════ -->
 <!-- SECTION 8: FIND YOURSELF -->
 <!-- ════════════════════════════════════════════════ -->
-<section class="narrative-section register-editorial short" data-chapter="Find Yourstyle=" display:flex;="" align-items:center;"nter;"="">
- <div class="inner">
- <div class="section-chip">
- <div class="section-chip__line"></div>
- <span class="section-chip__text">Your Place</span>
- </div>
- <div class="fade-up">
- <h2 class="anchored">Find Yourself in the Data</h2>
- </div>
- <p class="fade-up">The national story describes a system.
- This section asks where you sit within it. Select your
- profile, the Dream Index recalculates for your cohort
- and your community.</p>
- </div>
-</section>
-
-<div class="section-separator"></div>
-
-<section class="analysis-section fade-up register-editorial" id="fig-17">
+<section class="analysis-section fade-up register-editorial" id="fig-17" data-chapter="Find Yourself">
  <div class="header">
  <span class="eyebrow">Figure 17, Your Life on the Dream Index</span>
  <h3 class="anchored">Find yourself in the Dream Index</h3>
@@ -1539,14 +1322,14 @@ ul.task-list li input[type="checkbox"] {
 <!-- ════════════════════════════════════════════════ -->
 <!-- SECTION 9: RECKONING -->
 <!-- ════════════════════════════════════════════════ -->
-<section id="section-reckoning" class="video-section register-cinematic" data-chapter="Reckoning" data-eyebrow="What This Means">
+<section id="section-reckoning" class="video-section register-cinematic" data-chapter="Reckoning" data-eyebrow="April 3, 1968">
  <div class="yt-cover">
- <iframe data-yt-id="reckoning" data-start="0" data-end="120" src="https://www.youtube.com/embed/3kch_eJrPo8?enablejsapi=1&amp;autoplay=1&amp;mute=1&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1&amp;end=120" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+ <iframe data-yt-id="reckoning" data-start="2490" data-end="2595" src="https://www.youtube.com/embed/gC6qxf3b3FI?enablejsapi=1&amp;autoplay=1&amp;mute=1&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1&amp;start=2490&amp;end=2595" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
  </div>
  <div class="video-gradient"></div>
 
  <div class="video-section__content fade-up">
- <span class="section-eyebrow">What This Means</span>
+ <span class="section-eyebrow">April 3, 1968</span>
  <h2 class="section-title anchored">The Reckoning</h2>
  <p class="section-body">
  The asset contract was not destiny. It was decided.
@@ -1555,86 +1338,76 @@ ul.task-list li input[type="checkbox"] {
  </p>
  </div>
  <p class="video-source">
- "The City of Sensitive Frauds", YouTube (2025)
+ Martin Luther King Jr., Mason Temple, Memphis, April 3, 1968.
+ The night before his assassination, in support of the
+ sanitation workers' strike.
  </p>
  <div class="fade-to-black"></div>
 </section>
 
-<div class="section-separator"></div>
-
-<section class="narrative-section register-cinematic" data-chapter="Recommendations">
- <div class="inner">
- <div class="section-chip">
- <div class="section-chip__line"></div>
- <span class="section-chip__text">Recommendations</span>
- </div>
- <div class="fade-up">
- <h2 class="anchored">What the evidence demands</h2>
- </div>
-
- <p class="fade-up"><strong>Federal policymakers</strong>
- should fund universal asset-building accounts at birth
- because our analysis found the racial wealth gap has
- barely closed in six decades despite narrowing income
- gaps, wealth cannot be addressed through wage policy alone.
- </p>
-
- <p class="fade-up"><strong>State legislators</strong>
- should preempt restrictive zoning because our analysis
- found housing costs have outpaced wages in every metro
- area since 1990, with supply constraint as the primary
- structural driver.</p>
-
- <p class="fade-up"><strong>Congress</strong> should restore
- the GI Bill as an asset-transfer program because our
- analysis found contemporary veterans' wealth outcomes
- diverge from WWII-era veterans specifically where the
- original GI Bill provided asset access.</p>
-
- <div class="pull-quote fade-up">
- "The architecture of the Dream was built through
- specific decisions. Rebuilding it requires specific
- decisions, not generic growth, but targeted
- structural repair."
- </div>
- </div>
-</section>
-
-<div class="section-separator"></div>
-
-<section class="narrative-section register-cinematic short" data-chapter="Seven Findings">
- <div class="inner fade-up">
- <span class="section-eyebrow">What This Project Found</span>
- <h2 class="anchored">Seven findings. One story.</h2>
-
- <p>The evidence assembled across this project points to
- a single structural shift: the American economy transitioned,
- between roughly 1973 and 2011, from a system that delivered
- middle-class life through wages to one that requires asset
- ownership, credentialed employment, or inherited capital.
- The seven findings below are not separate arguments. They
- are seven different measurements of the same underlying change,
- each confirming it from a distinct angle, the basket, the
- labor market, the racial wealth gap, the geography of
- abandonment, and the shape of American lives.</p>
- </div>
-</section>
-
 <div class="register-transition transition-cine-edit"></div>
 
-<section class="analysis-section fade-up register-editorial" id="fig-18">
- <div class="header">
- <span class="eyebrow">Figure 18, Seven findings, one story</span>
- <h3 class="anchored">Seven findings. One story.</h3>
- <p class="desc">The seven anchoring numbers of this project,
- consolidated into a portable summary.</p>
- </div>
- <div class="figure-embed-container">
- <iframe class="figure-iframe" style="height:920px" src="outputs/figures/fig11_seven_findings.html" frameborder="0" scrolling="no" loading="lazy" onload="resizeFigure(this)" title="Figure 18, Seven findings, one story"></iframe>
+<section class="narrative-section fade-up register-editorial" data-chapter="The Reckoning">
+ <div style="max-width:720px; margin:0 auto;
+             padding:6rem 3rem 4rem;">
+
+   <span class="section-eyebrow">The Reckoning</span>
+   <h2 class="anchored">Seven findings. One contract to rewrite.</h2>
+
+   <p style="margin-top:2rem;">The evidence assembled across
+   this project points to a single structural shift: the
+   American economy transitioned, between roughly 1973 and
+   2011, from a system that delivered middle-class life
+   through wages to one that requires asset ownership,
+   credentialed employment, or inherited capital.</p>
+
+   <p>The seven memos that follow are not separate
+   arguments. They are seven different measurements of the
+   same underlying change, and seven concrete
+   interventions, each tied to one mechanism documented in
+   the preceding chapters. Each could be delivered to a
+   working policymaker today.</p>
+
+   <p style="font-family: Georgia, serif;
+             font-style: italic;
+             color: #c9a96e;
+             margin-top: 2rem;">
+     The architecture of the Dream was built through
+     specific decisions. Rebuilding it requires specific
+     decisions, not generic growth, but targeted structural
+     repair.
+   </p>
+
  </div>
 </section>
 
-<div class="section-separator"></div>
+<div class="register-transition" style="height:60px; border:none;
+            background: linear-gradient(to bottom,
+                          #ebe3d1 0%, #f5f1ea 100%);"></div>
+
+<section class="policy-memos-section fade-up" data-chapter="The Reckoning">
+
+ <div class="header">
+   <span class="eyebrow">The Reckoning</span>
+   <h2 class="anchored">Seven policy memos.</h2>
+   <p class="lede">
+     The data analysis ends here. What follows is the case
+     it makes, seven concrete policy interventions, each
+     addressing one mechanism documented in the preceding
+     chapters. Each memo is a brief that could be delivered
+     to a working policymaker today.
+   </p>
+ </div>
+
+ <div id="policy-memos-grid" class="policy-memos-grid">
+   <!-- Memos render from assets/data/policy-memos.json -->
+ </div>
+
+</section>
+
+<div class="register-transition" style="height:60px; border:none;
+            background: linear-gradient(to bottom,
+                          #f5f1ea 0%, #ebe3d1 100%);"></div>
 
 <section class="analysis-section fade-up register-editorial" id="fig-19" data-chapter="Your Path">
  <div class="header">
@@ -1648,7 +1421,7 @@ ul.task-list li input[type="checkbox"] {
  findings. No data leaves your browser.</p>
  </div>
  <div class="figure-embed-container">
- <iframe class="figure-iframe" style="height: 3200px; overflow:auto;" src="outputs/figures/fig12_action_plan.html" frameborder="0" scrolling="auto" loading="lazy" title="Figure 19, Your Action Plan">
+ <iframe class="figure-iframe" style="height: 500px;" src="outputs/figures/fig12_action_plan.html" frameborder="0" scrolling="no" loading="lazy" title="Figure 19, Your Action Plan">
  </iframe>
  </div>
 </section>
@@ -1704,6 +1477,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="assets/js/dm-opening.js"></script>
 <script src="assets/js/fig02_scrolly.js"></script>
 <script src="assets/js/fig01_architecture_decisions.js"></script>
+<script src="assets/js/five-americas-atlas.js"></script>
+<script src="assets/js/fig_asset_gap_scrolly.js"></script>
+<script src="assets/js/policy-memos.js"></script>
 <script src="assets/js/notecards.js"></script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

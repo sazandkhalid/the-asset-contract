@@ -1,0 +1,320 @@
+/* ──────────────────────────────────────────────────────────
+ * Five Americas Atlas styles.
+ *
+ * A landscape US map with five clickable markers + a
+ * right-slide-in modal that surfaces each community's full
+ * detail panel (photo, stats, context, quote, mini-charts).
+ * ────────────────────────────────────────────────────────── */
+
+/* ── ATLAS CONTAINER ── */
+.five-americas-atlas-section {
+  padding: 6rem 0;
+  /* document-beige, matches register-document so the
+     transition-edit-doc / transition-doc-edit gradients
+     on either side land cleanly without a hard color
+     edge. */
+  background: #f0ece0;
+}
+
+.five-americas-atlas-section .header {
+  max-width: 760px;
+  margin: 0 auto 3rem;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.five-americas-atlas-section .header .eyebrow {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #8b6914;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.five-americas-atlas-section .header h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.4rem;
+  color: #1a1816;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 1rem;
+}
+
+.five-americas-atlas-section .header p {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #2a2520;
+  line-height: 1.75;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#five-americas-atlas {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+}
+
+.atlas-map {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.atlas-map .marker text {
+  text-shadow:
+    0 0 6px #faf7f1,
+    0 0 6px #faf7f1,
+    0 0 6px #faf7f1;
+  pointer-events: none;
+}
+
+.atlas-map .marker .pulse-ring {
+  animation: marker-pulse 2.2s ease-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes marker-pulse {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(2.4); opacity: 0;   }
+}
+
+/* ── MODAL ── */
+.atlas-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  pointer-events: none;
+}
+
+.atlas-modal.is-open {
+  display: block;
+  pointer-events: auto;
+}
+
+.atlas-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 16, 10, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.atlas-modal.is-open .atlas-modal__backdrop {
+  opacity: 1;
+}
+
+.atlas-modal__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(640px, 100%);
+  background: #faf7f1;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.18);
+}
+
+.atlas-modal.is-open .atlas-modal__panel {
+  transform: translateX(0);
+}
+
+.atlas-modal__close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.4rem;
+  background: rgba(20, 16, 12, 0.85);
+  color: #faf7f1;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.atlas-modal__close:hover {
+  background: #1a1816;
+}
+
+.atlas-modal__body {
+  padding: 3rem 2.5rem 4rem;
+}
+
+/* Modal content */
+.modal-header { margin-bottom: 1.6rem; }
+
+.modal-eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.modal-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem;
+  color: #1a1816;
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.modal-photo {
+  margin: 1.8rem 0 1.6rem;
+}
+
+.modal-photo img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  filter: grayscale(20%) brightness(0.95);
+  display: block;
+}
+
+.modal-photo figcaption {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  color: #6a6258;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.modal-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  margin: 2rem 0;
+}
+
+.stat-block {
+  padding: 1rem 1.2rem;
+  background: #f5f1ea;
+  border-left: 3px solid #8b6914;
+}
+
+.stat-value {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: #1a1816;
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #2a2520;
+  font-weight: 600;
+  margin: 0.3rem 0 0.2rem;
+}
+
+.stat-note {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: #6a6258;
+}
+
+.modal-context p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.85;
+  color: #2a2520;
+  margin: 2rem 0;
+}
+
+.modal-quote {
+  border-left: 3px solid #8b6914;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  margin: 2rem 0;
+}
+
+.modal-quote p {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #1a1816;
+  line-height: 1.7;
+  margin: 0 0 0.5rem;
+}
+
+.modal-quote cite {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  color: #8b6914;
+  font-weight: 600;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.modal-charts {
+  margin-top: 2.6rem;
+  padding-top: 2rem;
+  border-top: 1px solid #d4cfc4;
+}
+
+.charts-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.2rem;
+  color: #1a1816;
+  font-weight: 500;
+  margin: 0 0 1.4rem;
+}
+
+.charts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chart-cell {
+  background: #f5f1ea;
+  padding: 1rem 1.2rem 0.6rem;
+}
+
+.chart-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  color: #2a2520;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.mini-chart {
+  width: 100%;
+  height: 140px;
+  display: block;
+}
+
+body.atlas-modal-open {
+  overflow: hidden;
+}
+
+@media (max-width: 720px) {
+  .atlas-modal__panel { width: 100%; }
+  .atlas-modal__body  { padding: 2rem 1.4rem 3rem; }
+  .modal-title { font-size: 1.6rem; }
+  .modal-photo img { height: 180px; }
+}

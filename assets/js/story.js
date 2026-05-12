@@ -23,14 +23,37 @@ window.addEventListener('resize', function () {
   });
 }, { passive: true });
 
-/* Earlier revision auto-resized the action-plan iframe via
-   postMessage from the figure. The figure uses viewport-
-   relative units internally, so resizing the iframe taller
-   made its scrollHeight grow again, which made us resize
-   again — a runaway feedback loop that produced a giant
-   black tail under the figure. Reverted: the iframe now
-   has a generous fixed height + internal scrolling enabled
-   (see the iframe markup in index.qmd). */
+/* Action-plan iframe auto-resize.
+   The figure posts { type: 'fig12-height', height: H }
+   on every DOM mutation. We sync the iframe element's
+   height to H so the page extends only as the user
+   expands panels / generates output. The previous
+   runaway-loop concern was driven by viewport-relative
+   units inside the figure CSS, which have since been
+   removed; the figure now uses pixel/rem units only. */
+/* Generic figure auto-resize listener.
+   Figures send { type: 'figN-height', height: H }; we
+   match the type to the iframe whose src contains a
+   matching keyword and resize that iframe to fit. */
+window.addEventListener('message', function (event) {
+  var data = event.data;
+  if (!data || !data.type || !data.height) return;
+  var match = data.type.match(/^fig(\d+)-height$/);
+  if (!match) return;
+  var keyMap = {
+    '12': 'fig12_action_plan',
+    '14': 'fig06b_asset_compound',
+  };
+  var srcKey = keyMap[match[1]];
+  if (!srcKey) return;
+  var iframe = document.querySelector(
+    'iframe[src*="' + srcKey + '"]'
+  );
+  if (!iframe) return;
+  var newH = Math.max(300, Math.min(6000, data.height));
+  if (Math.abs(iframe.offsetHeight - newH) < 6) return;
+  iframe.style.height = newH + 'px';
+});
 
 
 (function () {
@@ -190,25 +213,53 @@ window.addEventListener('resize', function () {
     videoSections.forEach(function (s) { observer.observe(s); });
   }
 
-  /* ── 3. STORY NAVIGATION DOTS ────────────────────────────── */
+  /* ── 3. STORY NAVIGATION DOTS ────────────────────────────────
+     One dot per chapter in the orientation TOC, not one per
+     [data-chapter] element. Many sections share a chapter
+     attribute (a video section, a narrative section, and a
+     figure section can all carry data-chapter="The Reckoning"),
+     so the old build produced 25+ dots. Now we build the rail
+     from a fixed CHAPTERS list, locating the first DOM section
+     per chapter — exactly matching the table of contents. */
+
+  var CHAPTERS = [
+    { label: 'The Architecture',   sel: '[data-chapter="The Architecture"]' },
+    { label: 'The Dream Index',    sel: '#fig-02, [data-chapter="The Dream Index"]' },
+    { label: 'The Break',          sel: '#section-break' },
+    { label: 'What Worked',        sel: '[data-chapter="What Worked"]' },
+    { label: 'Five Americas',      sel: '#section-five' },
+    { label: 'The Asset Gap',      sel: '[data-chapter="The Asset Gap"]' },
+    { label: 'Human Cost',         sel: '#section-cost' },
+    { label: 'Find Yourself',      sel: '[data-chapter="Find Yourself"], #fig-17' },
+    { label: 'The Reckoning',      sel: '#section-reckoning' },
+  ];
+
+  function resolveChapterAnchors() {
+    return CHAPTERS
+      .map(function (ch) {
+        var el = document.querySelector(ch.sel);
+        return el ? { label: ch.label, el: el } : null;
+      })
+      .filter(Boolean);
+  }
+
   function buildStoryNav() {
-    var sections = document.querySelectorAll('[data-chapter]');
-    if (!sections.length) return;
+    var anchors = resolveChapterAnchors();
+    if (!anchors.length) return;
 
     var nav = document.createElement('nav');
     nav.id = 'story-nav';
     nav.setAttribute('aria-label', 'Story navigation');
 
-    sections.forEach(function (section, i) {
-      var chapter = section.getAttribute('data-chapter');
+    anchors.forEach(function (a, i) {
       var item = document.createElement('div');
       item.className = 'story-nav__item';
-      item.setAttribute('data-target', section.id || ('section-' + i));
+      item.setAttribute('data-target', a.el.id || ('section-' + i));
       item.innerHTML =
-        '<span class="story-nav__label">' + chapter + '</span>' +
+        '<span class="story-nav__label">' + a.label + '</span>' +
         '<span class="story-nav__dot"></span>';
       item.addEventListener('click', function () {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        a.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
       nav.appendChild(item);
     });
@@ -217,13 +268,13 @@ window.addEventListener('resize', function () {
   }
 
   function updateStoryNav() {
-    var sections = document.querySelectorAll('[data-chapter]');
+    var anchors = resolveChapterAnchors();
     var navItems = document.querySelectorAll('.story-nav__item');
     var midpoint = window.innerHeight * 0.5;
 
     var currentIndex = 0;
-    sections.forEach(function (section, i) {
-      var rect = section.getBoundingClientRect();
+    anchors.forEach(function (a, i) {
+      var rect = a.el.getBoundingClientRect();
       if (rect.top <= midpoint) currentIndex = i;
     });
 

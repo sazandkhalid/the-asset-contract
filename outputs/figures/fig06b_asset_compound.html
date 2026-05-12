@@ -604,6 +604,41 @@ window.addEventListener('resize', () => {
 
 setupChart();
 update(false);
+
+/* ── Auto-resize handshake with the parent page ──
+   Posts the container's measured bottom to the parent
+   so the iframe element grows to fit the content,
+   instead of being cut off or padded with dead space.
+   Debounced + threshold-gated to avoid the runaway
+   feedback loop the original implementation hit. */
+let _figNotifyTimer = null;
+let _figLastReportedH = 0;
+function _fig14NotifyParent() {
+ if (_figNotifyTimer) return;
+ _figNotifyTimer = setTimeout(() => {
+   _figNotifyTimer = null;
+   try {
+     if (window.parent === window) return;
+     const c = document.querySelector('.container');
+     const h = c
+       ? c.getBoundingClientRect().bottom
+       : document.body.scrollHeight;
+     const rounded = Math.ceil(h);
+     if (Math.abs(rounded - _figLastReportedH) < 6) return;
+     _figLastReportedH = rounded;
+     window.parent.postMessage(
+       { type: 'fig14-height', height: rounded }, '*'
+     );
+   } catch (e) {}
+ }, 120);
+}
+const _fig14Obs = new MutationObserver(_fig14NotifyParent);
+_fig14Obs.observe(document.body, {
+ childList: true, subtree: true, attributes: true,
+});
+window.addEventListener('load', _fig14NotifyParent);
+document.body.addEventListener('transitionend',
+  _fig14NotifyParent);
 </script>
 
 </body>

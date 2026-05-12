@@ -1,0 +1,98 @@
+/* ──────────────────────────────────────────────────────────
+ * Mountaintop closing video.
+ *
+ * Full-viewport cinematic embed of MLK's April 3 1968
+ * speech, played as the Reckoning chapter's opening
+ * moment. Mirrors the Dylan opening (dm-opening.js) so
+ * the project bookends with two cinematic videos.
+ * ────────────────────────────────────────────────────────── */
+
+.mountaintop-closing {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  background: #000;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.mountaintop-closing__iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 56.25vw;         /* 16:9 sized to viewport width */
+  min-height: 100vh;
+  min-width: 177.78vh;     /* 16:9 sized to viewport height */
+  transform: translate(-50%, -50%);
+  border: none;
+  pointer-events: none;
+}
+
+.mountaintop-closing__caption {
+  position: absolute;
+  bottom: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #faf7f1;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+  max-width: 760px;
+  padding: 0 2rem;
+}
+
+.mountaintop-closing__caption.is-visible {
+  opacity: 1;
+}
+
+.mountaintop-closing__caption .speaker {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.mountaintop-closing__caption .context {
+  font-size: 0.78rem;
+  color: rgba(250, 247, 241, 0.78);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mountaintop-closing__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.25) 0%,
+    rgba(0,0,0,0)    30%,
+    rgba(0,0,0,0)    70%,
+    rgba(0,0,0,0.55) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* The fade-to-black that fires at the hard cut */
+.mountaintop-closing__blackout {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.mountaintop-closing.is-cut .mountaintop-closing__blackout {
+  opacity: 1;
+}
